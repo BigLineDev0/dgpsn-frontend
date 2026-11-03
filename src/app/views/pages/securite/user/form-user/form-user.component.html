@@ -1,0 +1,123 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <!-- <div class="mb-3">
+                <label for="code" class="form-label">Structure</label>
+                <ng-select [items]="structures"
+                    bindLabel="nom"
+                    bindValue="id"
+                    placeholder="Structure"
+                    formControlName="structureId">
+                </ng-select>
+            </div> -->
+            <!-- <div class="col-sm-12 col-md-6 mb-3">
+                <label for="code" class="form-label">Agent <small style="color: red;">*</small></label>
+                <ng-select [items]="agents"
+                    bindLabel="fullname"
+                    bindValue="id"
+                    placeholder="Agent"
+                    formControlName="agentId" [readonly]="isUpdate">
+                </ng-select>
+            </div> -->
+            <div class="col-md-6 col-sm-12 mb-3" style="position: relative;">
+                <label class="form-label">Agent<small style="color: red;">*</small></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Sélectionner un agent"
+                  formControlName="agentId"
+                  [value]="selectedAgentName"
+                  readonly
+                  (click)="openBasicModal(matriculeModal,'agentId')"
+                />
+                <button type="button" class="btn btn-warning btn-icon mt-3" ngbTooltip="Rechercher Agent"
+                        style="position: absolute; top: 47%; right: 5px; transform: translateY(-50%);"
+                        (click)="openBasicModal(matriculeModal,'agentId')">
+                  <i class="feather icon-search"></i>
+                </button>
+              </div>
+            <div class="col-sm-12 col-md-6 mb-3">
+                <label for="code" class="form-label">Profil <small style="color: red;">*</small></label>
+                <ng-select [items]="profiles"
+                    bindLabel="libelle"
+                    bindValue="id"
+                    placeholder="Profil"
+                    formControlName="profileId">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3" *ngIf="userToUpdate == undefined">
+                <label for="login" class="form-label">Login <small style="color: red;">*</small></label>
+                <input type="text" class="form-control form-control-lg" id="login" placeholder="Login" formControlName="login">
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3" *ngIf="userToUpdate == undefined">
+                <label for="password" class="form-label">Mot de passe <small style="color: red;">*</small></label>
+                <p style="position: relative;">
+                    <input #password type="password" class="form-control form-control-lg" id="password" placeholder="Mot de passe" formControlName="password">
+                    <i (click)="togglePassword(password)" style="position: absolute; top:15px; right: 10px;" [ngClass]="{'cursor-pointer': true, 'feather': true, 'icon-eye': getIcon(password).on, 'icon-eye-off': getIcon(password).off}"></i>
+                </p>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3">
+                <div class="form-check form-switch mb-3">
+                    <label for="status" class="form-label">Statut</label>
+                    <input type="checkbox" class="form-check-input" id="status" formControlName="status">
+                </div>
+            </div>
+        </div>
+      </form>
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="create()">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-sm-12 col-md-7 mb-3">
+                <label for="code" class="form-label">Unité</label>
+                <ng-select [items]="structures"
+                    bindLabel="nom"
+                    bindValue="id"
+                    placeholder="Structure"
+                    formControlName="structureId">
+                </ng-select>
+            </div>
+            <div class="col-sm-7 col-md-5 mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" class="form-control form-control-lg" id="login" placeholder="Login" formControlName="login">
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3">
+                <label for="code" class="form-label">Agent</label>
+                <ng-select [items]="agents"
+                    bindLabel="prenom"
+                    bindValue="id"
+                    placeholder="Agent"
+                    formControlName="agentId">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3">
+                <label for="code" class="form-label">Profil</label>
+                <ng-select [items]="profiles"
+                    bindLabel="libelle"
+                    bindValue="id"
+                    placeholder="Profil"
+                    formControlName="profileId">
+                </ng-select>
+            </div>
+        </div>
+      </form>
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+       </div>
+</section>
+
+
+<ng-template #matriculeModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Sélectionner Agent</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-agent-to-select [modal]="modal"></app-agent-to-select>
+    </div>
+</ng-template>

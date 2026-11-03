@@ -1,0 +1,37 @@
+<section>   
+  <form [formGroup]="form">
+    <div class="col-sm-6">
+      <div class="mb-3">
+        <label for="projet" class="form-label">Projet<small style="color: red;">*</small></label>
+        <ng-select 
+                   bindLabel="code"
+                   placeholder="Projet"
+                   formControlName="projetId"
+                >
+                <ng-option *ngFor="let option of projets" [value]="option.code">{{ option.code }}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="cadreLogique" class="form-label">CadreLogique<small style="color: red;">*</small></label>
+          <ng-select 
+                     bindLabel="libelle"
+                     placeholder="CadreLogique"
+                     formControlName="cadreLogiqueId"
+                  >
+                  <ng-option *ngFor="let option of cadrelogiques" [value]="option.libelle">{{ option.libelle }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+
+</section>

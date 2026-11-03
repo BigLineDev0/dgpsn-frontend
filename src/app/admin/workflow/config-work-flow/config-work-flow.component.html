@@ -1,0 +1,245 @@
+<div class="workflow-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">settings</mat-icon>
+            <h4>Configuration des workflows</h4>
+        </div>
+        <!-- <p class="header-subtitle">Gérez vos workflows, étapes et validations</p> -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="workflow-content">
+        <div class="row g-4">
+            <!-- Colonne Workflows -->
+            <div class="col-lg-4 col-md-6">
+                <mat-card class="workflow-card" [class.selected]="selectedWorkflow">
+                    <mat-card-header class="card-header">
+                        <div class="card-header-content">
+                            <div class="header-left">
+                                <mat-icon class="header-icon">folder</mat-icon>
+                                <h3>Workflows</h3>
+                                <span class="badge">{{ workflows.length }}</span>
+                            </div>
+                            <div class="header-actions">
+                                <button mat-mini-fab class="text-white" (click)="openCreateWorkflow()"
+                                        matTooltip="Ajouter un workflow">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                                <button mat-mini-fab class="text-white" *ngIf="selectedWorkflow"
+                                        (click)="onDeleteWorkflow()"
+                                        matTooltip="Supprimer le workflow">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-header>
+
+                    <mat-divider></mat-divider>
+
+                    <mat-card-content class="card-content">
+                        <div class="list-container">
+                            <mat-selection-list #workflowList [multiple]="false"
+                                                (selectionChange)="onWorkflowSelect($event.options[0].value)">
+                                <mat-list-option
+                                        *ngFor="let workflow of workflows; let i = index"
+                                        [value]="workflow"
+                                        [selected]="selectedWorkflow?.id === workflow.id"
+                                        class="custom-list-item">
+                                    <div class="list-item-content">
+                                        <div class="item-icon">
+                                            <mat-icon>description</mat-icon>
+                                        </div>
+                                        <div class="item-text">
+                                            <span class="item-title" ngbTooltip="{{workflow.libelle}}" placement="top" container="body" >{{ workflow.libelle }}</span>
+                                            <span class="item-subtitle">{{ workflow.type }}</span>
+                                        </div>
+                                        <mat-icon class="item-chevron">chevron_right</mat-icon>
+                                    </div>
+                                </mat-list-option>
+                            </mat-selection-list>
+
+                            <div *ngIf="workflows.length === 0" class="empty-state">
+                                <mat-icon>folder_open</mat-icon>
+                                <p>Aucun workflow disponible</p>
+                                <button mat-stroked-button class="text-white" (click)="openCreateWorkflow()">
+                                    <mat-icon>add</mat-icon>
+                                    Créer un workflow
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <!-- Colonne Étapes -->
+            <div class="col-lg-4 col-md-6" *ngIf="selectedWorkflow">
+                <mat-card class="workflow-card animate-in" [class.selected]="selectedStep">
+                    <mat-card-header class="card-header">
+                        <div class="card-header-content">
+                            <div class="header-left">
+                                <mat-icon class="header-icon">list</mat-icon>
+                                <h3>Étapes</h3>
+                                <span class="badge">{{ workflowSteps.length }}</span>
+                            </div>
+                            <div class="header-actions">
+                                <button mat-mini-fab class="text-white" (click)="openCreateEtape()"
+                                        matTooltip="Ajouter une étape">
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                                <button mat-mini-fab class="text-white" *ngIf="selectedStep"
+                                        (click)="onDeleteStep()"
+                                        matTooltip="Supprimer l'étape">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-header>
+
+                    <mat-divider></mat-divider>
+
+                    <mat-card-content class="card-content">
+                        <div class="list-container">
+                            <mat-selection-list #stepList [multiple]="false"
+                                                (selectionChange)="onStepSelect($event.options[0].value)">
+                                <mat-list-option
+                                        *ngFor="let step of workflowSteps; let i = index"
+                                        [value]="step"
+                                        [selected]="selectedStep?.id === step.id"
+                                        class="custom-list-item">
+                                    <div class="list-item-content">
+                                        <div class="item-number">{{ step.ordre }}</div>
+                                        <div class="item-text">
+                                            <span class="item-title"  ngbTooltip="{{step.libelle}}" placement="top" container="body" >{{ step.libelle }}</span>
+                                        </div>
+                                        <mat-icon class="item-chevron">chevron_right</mat-icon>
+                                    </div>
+                                </mat-list-option>
+                            </mat-selection-list>
+
+                            <div *ngIf="workflowSteps.length === 0" class="empty-state">
+                                <mat-icon>playlist_add</mat-icon>
+                                <p>Aucune étape définie</p>
+                                <button mat-stroked-button color="primary" (click)="openCreateEtape()">
+                                    <mat-icon>add</mat-icon>
+                                    Créer une étape
+                                </button>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <!-- Colonne Configuration -->
+            <div class="col-lg-4 col-md-12" *ngIf="selectedStep">
+                <mat-card class="workflow-card config-card animate-in">
+                    <mat-card-header class="card-header">
+                        <div class="card-header-content">
+                            <div class="header-left">
+                                <mat-icon class="header-icon">tune</mat-icon>
+                                <h3>Configuration</h3>
+                            </div>
+                        </div>
+                    </mat-card-header>
+
+                    <mat-divider></mat-divider>
+
+                    <mat-card-content class="card-content config-content">
+                        <!-- Type de validation -->
+                        <div class="config-section">
+                            <label class="section-label">Type de validation</label>
+                            <mat-radio-group [(ngModel)]="validationType" class="validation-radio-group">
+                                <mat-radio-button value="INDIVIDUELLE" class="custom-radio">
+                                    <div class="radio-content">
+                                        <mat-icon>person</mat-icon>
+                                        <span>Individuelle</span>
+                                    </div>
+                                </mat-radio-button>
+                                <mat-radio-button value="COMMUNE" class="custom-radio">
+                                    <div class="radio-content">
+                                        <mat-icon>groups</mat-icon>
+                                        <span>Commune</span>
+                                    </div>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+
+                        <mat-divider class="section-divider"></mat-divider>
+
+                        <!-- Gestion des utilisateurs -->
+                        <div class="config-section">
+                            <div class="section-header">
+                                <label class="section-label">
+                                    <mat-icon>people</mat-icon>
+                                    Utilisateurs validateurs
+                                    <span class="user-count">{{ selectedUsers.length }}</span>
+                                </label>
+                                <button mat-raised-button color="primary"
+                                        (click)="openNew(selectedStep, selectedUsers)"
+                                        class="config-btn">
+                                    <mat-icon>edit</mat-icon>
+                                    Ajouter
+                                </button>
+                            </div>
+
+                            <!-- Champ de recherche -->
+                            <mat-form-field class="search-field" appearance="outline">
+                                <mat-label>Rechercher un utilisateur</mat-label>
+                                <input matInput #filterInput placeholder="Nom ou prénom...">
+                                <mat-icon matPrefix>search</mat-icon>
+                            </mat-form-field>
+
+                            <!-- Liste des utilisateurs avec drag & drop -->
+                            <div class="users-container">
+                                <div cdkDropList
+                                                                                                                                                                                                                                                                                                        (cdkDropListDropped)="dropUser($event)"
+                                     class="users-list"
+                                     *ngIf="selectedUsers.length > 0">
+                                    <div *ngFor="let user of selectedUsers; let i = index"
+                                        cdkDrag
+                                        class="user-card">
+                                        <div class="user-drag-handle" cdkDragHandle>
+                                            <mat-icon>drag_indicator</mat-icon>
+                                        </div>
+                                        <div class="user-avatar">
+                                            <mat-icon>account_circle</mat-icon>
+                                        </div>
+                                        <div class="user-info">
+                                            <span class="user-name">{{ user?.prenom }} {{ user?.nom }}</span>
+                                            <span class="user-order">Ordre: {{ i + 1 }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="selectedUsers.length === 0" class="empty-users">
+                                    <mat-icon>person_add</mat-icon>
+                                    <p>Aucun utilisateur configuré</p>
+                                    <button mat-stroked-button color="primary"
+                                            (click)="openNew(selectedStep, selectedUsers)">
+                                        <mat-icon>add</mat-icon>
+                                        Ajouter des utilisateurs
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <mat-divider class="section-divider"></mat-divider>
+
+                        <!-- Bouton de validation -->
+                        <div class="actions-section">
+                            <button
+                                    mat-raised-button
+                                    color="accent"
+                                    [disabled]="disableSaveValidationButton()"
+                                    (click)="saveValidationConfig()"
+                                    class="save-btn">
+                                <mat-icon>check_circle</mat-icon>
+                                Enregistrer la configuration
+                            </button>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

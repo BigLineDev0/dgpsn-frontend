@@ -1,0 +1,402 @@
+<div class="fiche-synthese-container">
+    <!-- En-tête -->
+    <div class="header-section">
+        <div class="header-main">
+      <span class="span-logo">
+        <img src="assets/img/logo/logo-dgpsn2.png" alt="Logo Sénégal" width="70%" onerror="this.style.display='none'" />
+      </span>
+            <p class="info d-flex flex-column justify-content-center">
+                <span class="fw-bold">République du Sénégal</span>
+                <span class="fw-bold">Délégation Générale à la Protection Sociale et à la Solidarité Nationale</span>
+                <span class="text-uppercase fw-bold mt-2">Fiche de Synthèse Budgétaire</span>
+            </p>
+            <div class="d-flex gap-2 align-items-start">
+                <button class="btn btn-outline-success btn-sm" (click)="imprimer()">
+                    <i class="feather icon-printer me-1" appFeatherIcon></i> Imprimer
+                </button>
+                <button class="btn btn-outline-success btn-sm" >
+                    <!-- (click)="exporter()" -->
+                    <i class="feather icon-download me-1" appFeatherIcon></i> Exporter
+                </button>
+            </div>
+        </div>
+
+        <!-- Infos budget -->
+        <div class="detail mt-3">
+            <div class="detail-header">
+                <span>Informations du Budget</span>
+            </div>
+            <div class="detail-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Code Budget : </strong> {{ budgetData.code }}</p>
+                        <p class="mb-2"><strong>Libellé : </strong> {{ budgetData.libelle }}</p>
+                        <p class="mb-0"><strong>Année : </strong> {{ budgetData.annee }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Total Recettes : </strong> <span class="text-success fs-6 fw-bold">{{ formatMontant(budgetData.montantTotalRecettes) }}</span></p>
+                        <p class="mb-2"><strong>Total Dépenses : </strong> <span class="text-danger fs-6 fw-bold">{{ formatMontant(budgetData.montantTotalDepenses) }}</span></p>
+                        <p class="mb-0"><strong>Solde : </strong> <span class="text-primary fs-6 fw-bold">{{ formatMontant(budgetData.montantTotalRecettes - budgetData.montantTotalDepenses) }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sélecteur période -->
+        <div class="detail mt-3">
+            <div class="detail-header">
+                <span>Sélection de la Période</span>
+            </div>
+            <div class="detail-body">
+                <div class="row justify-content-center align-items-center g-3">
+                    <div class="col-md-4">
+                        <select class="form-select" [(ngModel)]="periodeSelectionnee" (change)="onPeriodeChange()">
+                            <option *ngFor="let periode of periodeOptions" [value]="periode.value">{{ periode.label }}</option>
+                        </select>
+                    </div>
+                    <!-- <div class="col-md-3" *ngIf="periodeSelectionnee() === 'trimestre'">
+                        <label class="form-label mb-1 fw-semibold text-dark">Trimestre</label>
+                        <select class="form-select" [(ngModel)]="trimestreSelectionne">
+                            <option *ngFor="let trimestre of trimestreOptions" [value]="trimestre">{{ trimestre }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="periodeSelectionnee() === 'mois'">
+                        <label class="form-label mb-1 fw-semibold text-dark">Mois</label>
+                        <select class="form-select" [(ngModel)]="moisSelectionne">
+                            <option *ngFor="let mois of moisOptions" [value]="mois">{{ mois }}</option>
+                        </select>
+                    </div> -->
+                    <!-- Dans votre template -->
+<div class="col-md-3" *ngIf="periodeSelectionnee() === 'trimestre'">
+    <label class="form-label mb-1 fw-semibold text-dark">Trimestre</label>
+    <select class="form-select" [(ngModel)]="trimestreSelectionne" (change)="onTrimestreChange()">
+        <option *ngFor="let trimestre of trimestreOptions" [value]="trimestre">{{ trimestre }}</option>
+    </select>
+</div>
+
+<div class="col-md-3" *ngIf="periodeSelectionnee() === 'mois'">
+    <label class="form-label mb-1 fw-semibold text-dark">Mois</label>
+    <select class="form-select" [(ngModel)]="moisSelectionne" (change)="onMoisChange()">
+        <option *ngFor="let mois of moisOptions" [value]="mois">{{ mois }}</option>
+    </select>
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu -->
+    <div class="content-sections mt-3">
+        <!-- VUE ANNUELLE -->
+        <div *ngIf="periodeSelectionnee() === 'annee'">
+            <!-- KPI Recettes vs Dépenses -->
+            <div class="detail">
+                <div class="detail-header">
+                    <span><i class="feather icon-bar-chart-2 me-2" appFeatherIcon></i>Vue d'Ensemble Recettes vs Dépenses</span>
+                </div>
+                <div class="detail-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="kpi-card kpi-recettes">
+                                <div class="kpi-header bg-success">
+                                    <h5 class="text-white mb-0"><i class="feather icon-arrow-down-circle me-2" appFeatherIcon></i>RECETTES</h5>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Budget Initial:</span>
+                                        <strong class="text-success">{{ formatMontant(budgetData.montantTotalRecettes) }}</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Réalisations:</span>
+                                        <strong class="text-primary">{{ formatMontant(budgetData.montantRealiseRecettes) }}</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Taux d'Exécution:</span>
+                                        <strong [class]="getTauxClass(budgetData.tauxExecutionRecettes)">{{ budgetData.tauxExecutionRecettes }}%</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Reste à Réaliser:</span>
+                                        <strong class="text-warning">{{ formatMontant(budgetData.montantTotalRecettes - budgetData.montantRealiseRecettes) }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="kpi-card kpi-depenses">
+                                <div class="kpi-header bg-danger">
+                                    <h5 class="text-white mb-0"><i class="feather icon-arrow-up-circle me-2" appFeatherIcon></i>DÉPENSES</h5>
+                                </div>
+                                <div class="kpi-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Budget Initial:</span>
+                                        <strong class="text-danger">{{ formatMontant(budgetData.montantTotalDepenses) }}</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Réalisations:</span>
+                                        <strong class="text-primary">{{ formatMontant(budgetData.montantRealiseDepenses) }}</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Taux d'Exécution:</span>
+                                        <strong [class]="getTauxClass(budgetData.tauxExecutionDepenses)">{{ budgetData.tauxExecutionDepenses }}%</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Reste à Réaliser:</span>
+                                        <strong class="text-warning">{{ formatMontant(budgetData.montantTotalDepenses - budgetData.montantRealiseDepenses) }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recettes -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-arrow-down-circle me-2" appFeatherIcon></i>Détail des Recettes de Fonctionnement</span>
+                </div>
+                <div class="detail-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-success">
+                            <tr>
+                                <th>Code</th>
+                                <th>Libellé</th>
+                                <th class="text-end">Budget Initial</th>
+                                <th class="text-end">Réalisations</th>
+                                <th class="text-center">Taux</th>
+                                <th class="text-end">Reste</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let ligne of lignesRecettes">
+                                <td><strong class="text-success">{{ ligne.code }}</strong></td>
+                                <td>{{ ligne.libelle }}</td>
+                                <td class="text-end">{{ formatMontant(ligne.budgetInitial) }}</td>
+                                <td class="text-end"><strong class="text-primary">{{ formatMontant(ligne.realise) }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="{'bg-success': ligne.tauxExecution >= 80, 'bg-warning text-dark': ligne.tauxExecution >= 60 && ligne.tauxExecution < 80, 'bg-danger': ligne.tauxExecution < 60}">{{ ligne.tauxExecution }}%</span>
+                                </td>
+                                <td class="text-end text-muted">{{ formatMontant(ligne.reste) }}</td>
+                            </tr>
+                            <tr class="table-success fw-bold">
+                                <td colspan="2">TOTAL RECETTES</td>
+                                <td class="text-end">{{ formatMontant(calculerTotalBudgetRecettes()) }}</td>
+                                <td class="text-end text-success">{{ formatMontant(calculerTotalRecettes()) }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dépenses -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-arrow-up-circle me-2" appFeatherIcon></i>Détail des Dépenses de Fonctionnement</span>
+                </div>
+                <div class="detail-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-danger">
+                            <tr>
+                                <th>Code</th>
+                                <th>Libellé</th>
+                                <th class="text-end">Budget Initial</th>
+                                <th class="text-end">Réalisations</th>
+                                <th class="text-center">Taux</th>
+                                <th class="text-end">Reste</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let ligne of lignesDepenses">
+                                <td><strong class="text-danger">{{ ligne.code }}</strong></td>
+                                <td>{{ ligne.libelle }}</td>
+                                <td class="text-end">{{ formatMontant(ligne.budgetInitial) }}</td>
+                                <td class="text-end"><strong class="text-primary">{{ formatMontant(ligne.realise) }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="{'bg-success': ligne.tauxExecution >= 80, 'bg-warning text-dark': ligne.tauxExecution >= 60 && ligne.tauxExecution < 80, 'bg-danger': ligne.tauxExecution < 60}">{{ ligne.tauxExecution }}%</span>
+                                </td>
+                                <td class="text-end text-muted">{{ formatMontant(ligne.reste) }}</td>
+                            </tr>
+                            <tr class="table-danger fw-bold">
+                                <td colspan="2">TOTAL DÉPENSES</td>
+                                <td class="text-end">{{ formatMontant(calculerTotalBudgetDepenses()) }}</td>
+                                <td class="text-end text-danger">{{ formatMontant(calculerTotalDepenses()) }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques : Évolution Trimestrielle RECETTES -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-bar-chart-2 me-2" appFeatherIcon></i>Évolution Trimestrielle des RECETTES</span>
+                </div>
+                <div class="detail-body">
+                    <div class="chart-container">
+                        <canvas #chartRecettes></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques : Évolution Trimestrielle DÉPENSES -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-bar-chart-2 me-2" appFeatherIcon></i>Évolution Trimestrielle des DÉPENSES</span>
+                </div>
+                <div class="detail-body">
+                    <div class="chart-container">
+                        <canvas #chartDepenses></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques : Répartition des Dépenses par Catégorie -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-bar-chart me-2" appFeatherIcon></i>Répartition des Dépenses par Catégorie</span>
+                </div>
+                <div class="detail-body">
+                    <div class="chart-container">
+                        <canvas #chartCategories></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Répartition des Sources de Recettes -->
+            <div class="detail mt-3">
+                <div class="detail-header">
+                    <span><i class="feather icon-pie-chart me-2" appFeatherIcon></i>Répartition des Sources de Recettes</span>
+                </div>
+                <div class="detail-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart-container-small">
+                                <canvas #chartRepartition></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-success">
+                                    <tr>
+                                        <th>Source de Recette</th>
+                                        <th class="text-end">Montant</th>
+                                        <th class="text-center">Part (%)</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr *ngFor="let source of repartitionRecettes">
+                                        <td><strong>{{ source.libelle }}</strong></td>
+                                        <td class="text-end">{{ formatMontant(source.montant) }}</td>
+                                        <td class="text-center"><strong>{{ source.pourcentage }}%</strong></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VUE TRIMESTRIELLE -->
+        <div *ngIf="periodeSelectionnee() === 'trimestre'">
+            <div class="detail">
+                <div class="detail-header">
+                    <span><i class="feather icon-calendar me-2" appFeatherIcon></i>Synthèse Trimestrielle - Recettes et Dépenses</span>
+                </div>
+                <div class="detail-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr class="table-secondary">
+                                <th rowspan="2" class="align-middle">Trimestre</th>
+                                <th colspan="3" class="text-center bg-success-light">RECETTES</th>
+                                <th colspan="3" class="text-center bg-danger-light">DÉPENSES</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th class="text-end">Budget</th>
+                                <th class="text-end">Réalisé</th>
+                                <th class="text-center">Taux</th>
+                                <th class="text-end">Budget</th>
+                                <th class="text-end">Réalisé</th>
+                                <th class="text-center">Taux</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let trimestre of donneesTrimestrielles">
+                                <td><strong>{{ trimestre.trimestre }}</strong></td>
+                                <td class="text-end">{{ formatMontant(trimestre.budgetRecettes) }}</td>
+                                <td class="text-end"><strong class="text-success">{{ formatMontant(trimestre.realiseRecettes) }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="{'bg-success': trimestre.tauxRecettes >= 80, 'bg-warning text-dark': trimestre.tauxRecettes >= 60 && trimestre.tauxRecettes < 80, 'bg-danger': trimestre.tauxRecettes < 60, 'bg-secondary': trimestre.tauxRecettes === 0}">{{ trimestre.tauxRecettes }}%</span>
+                                </td>
+                                <td class="text-end">{{ formatMontant(trimestre.budgetDepenses) }}</td>
+                                <td class="text-end"><strong class="text-danger">{{ formatMontant(trimestre.realiseDepenses) }}</strong></td>
+                                <td class="text-center">
+                                    <span class="badge" [ngClass]="{'bg-success': trimestre.tauxDepenses >= 80, 'bg-warning text-dark': trimestre.tauxDepenses >= 60 && trimestre.tauxDepenses < 80, 'bg-danger': trimestre.tauxDepenses < 60, 'bg-secondary': trimestre.tauxDepenses === 0}">{{ trimestre.tauxDepenses }}%</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VUE MENSUELLE -->
+        <div *ngIf="periodeSelectionnee() === 'mois'">
+            <div class="detail">
+                <div class="detail-header">
+                    <span><i class="feather icon-calendar me-2" appFeatherIcon></i>Synthèse Mensuelle - Recettes et Dépenses</span>
+                </div>
+                <div class="detail-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                            <tr class="table-secondary">
+                                <th rowspan="2" class="align-middle">Mois</th>
+                                <th colspan="2" class="text-center bg-success-light">RECETTES</th>
+                                <th colspan="2" class="text-center bg-danger-light">DÉPENSES</th>
+                            </tr>
+                            <tr class="table-secondary">
+                                <th class="text-end">Budget</th>
+                                <th class="text-end">Réalisé</th>
+                                <th class="text-end">Budget</th>
+                                <th class="text-end">Réalisé</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let mois of donneesMensuelles">
+                                <td><strong>{{ mois.mois }}</strong></td>
+                                <td class="text-end">{{ formatMontant(mois.budgetRecettes) }}</td>
+                                <td class="text-end"><strong class="text-success">{{ formatMontant(mois.realiseRecettes) }}</strong></td>
+                                <td class="text-end">{{ formatMontant(mois.budgetDepenses) }}</td>
+                                <td class="text-end"><strong class="text-danger">{{ formatMontant(mois.realiseDepenses) }}</strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-section mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-0 small text-muted">Document généré le {{ 'now' | date:'dd/MM/yyyy à HH:mm' }}</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <p class="mb-0 small text-muted">DGPSN - Système de Gestion Financière</p>
+            </div>
+        </div>
+    </div>
+</div>

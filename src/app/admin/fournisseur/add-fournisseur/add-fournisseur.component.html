@@ -1,0 +1,389 @@
+<section>
+  <form [formGroup]="form">
+    <!-- Informations de base -->
+    <div class="row">
+      <!-- Nom/Raison Sociale -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="raisonSociale" class="form-label">
+            Raison Sociale<small>*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="raisonSociale"
+            placeholder="Ex: SARL DISTRIMAT"
+            formControlName="raisonSociale"
+            maxlength="200"
+          />
+          <div
+            *ngIf="form.get('raisonSociale')?.invalid && (form.get('raisonSociale')?.dirty || form.get('raisonSociale')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('raisonSociale')?.hasError('required')">
+              La raison sociale est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Fournisseur -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="codeFournisseur" class="form-label">
+            Code Fournisseur<small>*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="codeFournisseur"
+            placeholder="Ex: FOUR-001"
+            formControlName="codeFournisseur"
+            maxlength="50"
+          />
+          <div
+            *ngIf="form.get('codeFournisseur')?.invalid && (form.get('codeFournisseur')?.dirty || form.get('codeFournisseur')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('codeFournisseur')?.hasError('required')">
+              Le code fournisseur est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Identifiants fiscaux -->
+    <div class="row">
+      <!-- NINEA -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="ninea" class="form-label">
+            NINEA<small>*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="ninea"
+            placeholder="Ex: 0123456789"
+            formControlName="ninea"
+            maxlength="50"
+          />
+          <div
+            *ngIf="form.get('ninea')?.invalid && (form.get('ninea')?.dirty || form.get('ninea')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('ninea')?.hasError('required')">
+              Le NINEA est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registre de Commerce -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="registreCommerce" class="form-label">
+            Registre de Commerce
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="registreCommerce"
+            placeholder="Ex: SN-DKR-2020-A-12345"
+            formControlName="registreCommerce"
+            maxlength="50"
+          />
+        </div>
+      </div>
+
+      <!-- Type de Fournisseur -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="typeFournisseur" class="form-label">
+            Type<small>*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="typeFournisseur"
+            placeholder="Ex: Entreprise, Particulier, Administration"
+            formControlName="typeFournisseur"
+            maxlength="50"
+          />
+          <div
+            *ngIf="form.get('typeFournisseur')?.invalid && (form.get('typeFournisseur')?.dirty || form.get('typeFournisseur')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('typeFournisseur')?.hasError('required')">
+              Le type est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coordonnées -->
+    <div class="row">
+      <!-- Téléphone -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="telephone" class="form-label">
+            Téléphone<small>*</small>
+          </label>
+          <input
+            type="tel"
+            class="form-control form-control-lg"
+            id="telephone"
+            placeholder="Ex: +221 77 123 45 67"
+            formControlName="telephone"
+            maxlength="20"
+          />
+          <div
+            *ngIf="form.get('telephone')?.invalid && (form.get('telephone')?.dirty || form.get('telephone')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('telephone')?.hasError('required')">
+              Le téléphone est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="email" class="form-label">
+            Email<small>*</small>
+          </label>
+          <input
+            type="email"
+            class="form-control form-control-lg"
+            id="email"
+            placeholder="Ex: contact@fournisseur.com"
+            formControlName="email"
+            maxlength="100"
+          />
+          <div
+            *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('email')?.hasError('required')">
+              L'email est obligatoire.
+            </small>
+            <small *ngIf="form.get('email')?.hasError('email')">
+              Format d'email invalide.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statut -->
+      <div class="col-md-4">
+        <div class="mb-3">
+          <label for="statut" class="form-label">
+            Statut<small>*</small>
+          </label>
+          <select
+            class="form-select form-control-lg"
+            id="statut"
+            formControlName="statut"
+          >
+            <option value="">Sélectionner...</option>
+            <option value="ACTIF">Actif</option>
+            <option value="INACTIF">Inactif</option>
+            <option value="SUSPENDU">Suspendu</option>
+            <option value="BLOQUE">Bloqué</option>
+          </select>
+          <div
+            *ngIf="form.get('statut')?.invalid && (form.get('statut')?.dirty || form.get('statut')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('statut')?.hasError('required')">
+              Le statut est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adresse -->
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-3">
+          <label for="adresse" class="form-label">
+            Adresse<small>*</small>
+          </label>
+          <textarea
+            class="form-control form-control-lg"
+            id="adresse"
+            rows="2"
+            placeholder="Ex: Zone industrielle, Rue 10, Dakar"
+            formControlName="adresse"
+            maxlength="500"
+          ></textarea>
+          <div
+            *ngIf="form.get('adresse')?.invalid && (form.get('adresse')?.dirty || form.get('adresse')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('adresse')?.hasError('required')">
+              L'adresse est obligatoire.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informations bancaires -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="banque" class="form-label">
+            Banque
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="banque"
+            placeholder="Ex: Banque Atlantique"
+            formControlName="banque"
+            maxlength="100"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="rib" class="form-label">
+            RIB/IBAN
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="rib"
+            placeholder="Ex: SN08 SN01 0100 0123 4567 8901 234"
+            formControlName="rib"
+            maxlength="50"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Catégorie et conditions de paiement -->
+    <div class="row">
+      <!-- <div class="col-md-6">
+        <div class="mb-3">
+          <label for="categorieFournisseur" class="form-label">
+            Catégorie
+          </label>
+          <input 
+          type="text"
+            class="form-control  form-control-lg"
+            id="categorieFournisseur"
+            formControlName="categorieFournisseur"
+            placeholder="Ex: Fournitures de bureau"
+          />
+        </div>
+      </div> -->
+      <div class="col-md-6 col-sm-12">
+    <div class="mb-3">
+      <label class="form-label">
+        Catégorie
+      </label>
+      <ng-select
+        [items]="categorieFournisseurId"
+        bindLabel="libelle"
+        bindValue="id"
+        placeholder="Sélectionner une catégorie"
+        formControlName="categorieFournisseurId"
+      >
+      </ng-select>
+    </div>
+  </div> 
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="delaiPaiement" class="form-label">
+            Délai de paiement (jours)
+          </label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="delaiPaiement"
+            placeholder="Ex: 30"
+            formControlName="delaiPaiement"
+            min="0"
+            max="365"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact principal -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="nomContact" class="form-label">
+            Nom du contact principal
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="nomContact"
+            placeholder="Ex: Amadou Diop"
+            formControlName="nomContact"
+            maxlength="100"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="fonctionContact" class="form-label">
+            Fonction du contact
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="fonctionContact"
+            placeholder="Ex: Responsable Commercial"
+            formControlName="fonctionContact"
+            maxlength="100"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-3">
+          <label for="notes" class="form-label">Notes / Observations</label>
+          <textarea
+            class="form-control form-control-lg"
+            id="notes"
+            rows="3"
+            placeholder="Ex: Fournisseur agréé depuis 2020. Livraison rapide."
+            formControlName="notes"
+            maxlength="1000"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Footer avec boutons -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Fermer
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="!form.valid"
+    >
+      {{ fournisseurToUpdate ? 'Modifier' : 'Enregistrer' }}
+    </button>
+  </div>
+</section>

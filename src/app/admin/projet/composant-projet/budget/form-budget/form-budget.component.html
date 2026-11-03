@@ -1,0 +1,125 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-12">
+                <label class="form-label">Libelle</label>
+                <input type="text" class="form-control" placeholder="libelle budget" formControlName="label">
+            </div>
+        </div>
+        <div class="row">
+            <!-- <div class="mb-3 col-md-4">
+                <label class="form-label">Type de budget</label>
+                    <ng-select placeholder="Types budget" formControlName="typeBudgetId">
+                        <ng-option *ngFor="let type of typeBudget" [value]="type.id">
+                           {{ type?.libelle }}
+                        </ng-option>
+                    </ng-select>
+            </div> -->
+            <!-- <div class="mb-3 col-md-4">
+                <label class="form-label"> Date d'allocation</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="allocation">
+            </div> -->
+            <div class="mb-3 col-md-6">
+                <label  class="form-label" for="year">Année</label>
+                <ng-select placeholder="Sélectionner" id="year" [clearable]="false"
+                    class="form-select-custom" formControlName="year">
+                    <ng-option *ngFor="let year of availableYears" [value]="year.value">{{ year.value
+                        }}</ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label for="libelle" class="form-label">Montant Budget</label>
+                <input type="number" class="form-control form-control-lg" id="libelle" placeholder="amount"
+                    formControlName="amount">
+            </div>
+        </div>
+        <!-- Sources de financement pour ACTIVITE -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <label class="form-label"><strong>Sources de Financement</strong></label>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">État</label>
+                <input type="number" class="form-control" formControlName="sourceEtat" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">UCTF PAFSI/PARSA</label>
+                <input type="number" class="form-control" formControlName="sourceUctf" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">UNICEF</label>
+                <input type="number" class="form-control" formControlName="sourceUnicef" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">OIT</label>
+                <input type="number" class="form-control" formControlName="sourceOit" placeholder="0">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">UE</label>
+                <input type="number" class="form-control" formControlName="sourceUe" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">PAM</label>
+                <input type="number" class="form-control" formControlName="sourcePam" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">P/PAD/H</label>
+                <input type="number" class="form-control" formControlName="sourcePpadh" placeholder="0">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">FAO</label>
+                <input type="number" class="form-control" formControlName="sourceFao" placeholder="0">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="comment" class="form-label">Commentaire</label>
+            <div>
+                <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label for="libelle" class="form-label">Montant Budget</label>
+                <input type="number" class="form-control form-control-lg" id="libelle" placeholder="Montant"
+                    formControlName="libelle">
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Type de budget</label>
+                    <ng-select placeholder="Types Requete">
+                        <ng-option *ngFor="let type of typeBudget"value="{{type.id}}">
+                           {{ type?.libelle }}
+                        </ng-option>
+                    </ng-select>
+                <!-- <input type="text" class="form-control" placeholder="dd-mm-yyyy" formControlName="readDate"> -->
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label"> Date d'allocation</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="readDate">
+            </div>
+        </div>
+        <!-- <div class="mb-3">
+          <label for="comment" class="form-label">Commentaire</label>
+         <div>
+              <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+         </div>
+      </div> -->
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

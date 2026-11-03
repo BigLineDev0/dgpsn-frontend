@@ -1,0 +1,127 @@
+<nav class="page-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Alertes</a></li>
+    <li class="breadcrumb-item active" aria-current="page" style="color: #5b62e8;">Liste alertes reçus</li>
+  </ol>
+</nav>
+
+<div class="row mt-3 mb-3">
+<div class="col-12">
+  <div class="card">
+    <div class="card-body p-0">
+      <ngb-accordion [closeOthers]="true">
+        <ngb-panel id="static-1" title="Recherche">
+          <ng-template ngbPanelContent>
+            <form [formGroup]="form">
+              <div class="row">
+                <div class="col-sm-12 col-md-6 mb-3">
+                  <label class="form-label">Lecture</label>
+                  <ng-select [items]="reads"
+                             bindLabel="label"
+                             bindValue="value"
+                             formControlName="read">
+                  </ng-select>
+                </div>
+                <div class="col-sm-12 col-md-6 mb-3">
+                  <label class="form-label">Priorité</label>
+                  <ng-select [items]="priorites"
+                             bindLabel="description"
+                             bindValue="name"
+                             placeholder="Priorité"
+                             formControlName="priority">
+                  </ng-select>
+                </div>
+                
+              </div>
+              <div class="row">
+                <div class="col-sm-8 col-md-4 mb-3">
+                  <label *ngIf="isComprise" class="form-label">Date debut</label>
+                  <label *ngIf="!isComprise" class="form-label">Date</label>
+                  <input type="date" class="form-control"  formControlName="date">
+                </div>
+                <div class="col-sm-8 col-md-4 mb-3">
+                  <label class="form-label">Critère recherche</label>
+                  <ng-select [items]="criteres"
+                             bindLabel="label"
+                             bindValue="value"
+                             placeholder="Critère"
+                             formControlName="critere" (change)="getCritere()">
+                  </ng-select>
+                </div>
+                <div class="col-sm-8 col-md-4 mb-3" *ngIf="isComprise">
+                  <label class="form-label">Date fin</label>
+                  <input type="date" class="form-control"  formControlName="endDate">
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+                </div>
+              </div>
+            </form>
+          </ng-template>
+        </ngb-panel>
+      </ngb-accordion>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-lg-12">
+
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+    <table mat-table [dataSource]="alertes?.content" *ngIf="!loadingIndicator">
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Contenu </th>
+        <td mat-cell *matCellDef="let alerte"  [ngStyle]="{'background-color': getStyle(alerte.read)}"  class="cursor-pointer"> 
+          <p (click)="openBasicModal(basicModal, alerte)" innerHTML="{{getMessage(alerte.message)}}"> 
+          <!-- {{alerte.message | textFormatter:'split:100'}} -->
+        </p>
+      </td>
+      </ng-container>
+
+      <ng-container matColumnDef="priorite">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Priorité </th>
+        <td mat-cell *matCellDef="let alerte" class="text-center" [ngStyle]="{'background-color': getStyle(alerte.read)}">
+          <span class="{{getSeverity(alerte?.priority?.name)}}">{{alerte?.priority.description}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Date </th>
+        <td mat-cell *matCellDef="let alerte" class="text-center" [ngStyle]="{'background-color': getStyle(alerte.read)}"> {{alerte?.date | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+        
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: true"
+        class="table-head-bg"
+      ></tr>
+      <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="paginate">
+      <ngb-pagination [collectionSize]="alertes?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+        [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+        [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
+  </section>
+</div>
+</div>
+
+<!--Add model-->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Détails</h5>
+      <button type="button" class="btn-close" (click)="fermer()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-details-alerte [alerte]="this.alerte"></app-details-alerte>
+  </div>
+</ng-template>
+<!--End Add model-->
+
+<!--End update model-->

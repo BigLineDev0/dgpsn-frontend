@@ -1,0 +1,435 @@
+<div class="candidature-container">
+  <!-- Job Offer Section -->
+  <div class="job-offer-card">
+    <div class="job-header">
+      <h1 class="job-title">
+        <mat-icon class="icon-title">work_outline</mat-icon>
+        {{ jobOffer.title }}
+      </h1>
+      <div class="job-type">
+       <!-- <span> <mat-icon class="text-sm">work</mat-icon></span> -->
+        <span class="job-type-text">{{ jobOffer.type }}</span>
+      </div>
+    </div>
+    
+    <div class="job-meta">
+      <span class="company">
+        <mat-icon class="icon-meta">business</mat-icon>
+        {{ jobOffer.company }}
+      </span>
+      <span class="location">
+        <mat-icon class="icon-meta">location_on</mat-icon>
+        {{ jobOffer.location }}
+      </span>
+      <span class="salary">
+        <mat-icon class="icon-meta">payments</mat-icon>
+        {{ jobOffer.salary }}
+      </span>
+    </div>
+
+    <p class="job-description">{{ jobOffer.description }}</p>
+
+    <div class="job-requirements">
+      <h3>Exigences:</h3>
+      <ul>
+        <li *ngFor="let req of jobOffer.requirements">{{ req }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Application Form -->
+  <div class="form-container">
+    <div class="form-header">
+      <h2>Postuler à cette offre</h2>
+      <p class="form-subtitle">Complétez votre candidature en {{ totalSteps }} étapes</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+      </div>
+      <div class="progress-steps">
+        <div 
+          *ngFor="let step of [1, 2, 3, 4]" 
+          class="progress-step"
+          [class.active]="currentStep === step"
+          [class.completed]="currentStep > step">
+          <div class="step-number">{{ step }}</div>
+          <span class="step-label">
+            {{ step === 1 ? 'Informations' : step === 2 ? 'Qualifications' : step === 3 ? 'Documents' : 'Finalisation' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="candidatureForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Step 1: Personal Information -->
+      <div class="form-step" *ngIf="currentStep === 1">
+        <h3 class="step-title">Informations personnelles</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Prénom *</label>
+            <input 
+              type="text" 
+              id="firstName" 
+              formControlName="firstName"
+              [class.error]="isFieldInvalid('firstName')"
+              placeholder="Jean">
+            <span class="error-message" *ngIf="isFieldInvalid('firstName')">
+              {{ getFieldError('firstName') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Nom *</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              formControlName="lastName"
+              [class.error]="isFieldInvalid('lastName')"
+              placeholder="Dupont">
+            <span class="error-message" *ngIf="isFieldInvalid('lastName')">
+              {{ getFieldError('lastName') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              [class.error]="isFieldInvalid('email')"
+              placeholder="jean.dupont@example.com">
+            <span class="error-message" *ngIf="isFieldInvalid('email')">
+              {{ getFieldError('email') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Téléphone *</label>
+            <input 
+              type="tel" 
+              id="phone" 
+              formControlName="phone"
+              [class.error]="isFieldInvalid('phone')"
+              placeholder="0612345678">
+            <span class="error-message" *ngIf="isFieldInvalid('phone')">
+              {{ getFieldError('phone') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Adresse *</label>
+          <input 
+            type="text" 
+            id="address" 
+            formControlName="address"
+            [class.error]="isFieldInvalid('address')"
+            placeholder="123 Rue de la République">
+          <span class="error-message" *ngIf="isFieldInvalid('address')">
+            {{ getFieldError('address') }}
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="city">Ville *</label>
+            <input 
+              type="text" 
+              id="city" 
+              formControlName="city"
+              [class.error]="isFieldInvalid('city')"
+              placeholder="Paris">
+            <span class="error-message" *ngIf="isFieldInvalid('city')">
+              {{ getFieldError('city') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="postalCode">Code postal *</label>
+            <input 
+              type="text" 
+              id="postalCode" 
+              formControlName="postalCode"
+              [class.error]="isFieldInvalid('postalCode')"
+              placeholder="75001">
+            <span class="error-message" *ngIf="isFieldInvalid('postalCode')">
+              {{ getFieldError('postalCode') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="country">Pays *</label>
+            <input 
+              type="text" 
+              id="country" 
+              formControlName="country"
+              [class.error]="isFieldInvalid('country')">
+            <span class="error-message" *ngIf="isFieldInvalid('country')">
+              {{ getFieldError('country') }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Qualifications -->
+      <div class="form-step" *ngIf="currentStep === 2">
+        <h3 class="step-title">Qualifications et expérience</h3>
+
+        <div class="form-group">
+          <label for="educationLevel">Niveau d'études *</label>
+          <select 
+            id="educationLevel" 
+            formControlName="educationLevel"
+            [class.error]="isFieldInvalid('educationLevel')">
+            <option value="">Sélectionnez votre niveau</option>
+            <option *ngFor="let level of educationLevels" [value]="level">{{ level }}</option>
+          </select>
+          <span class="error-message" *ngIf="isFieldInvalid('educationLevel')">
+            {{ getFieldError('educationLevel') }}
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="diploma">Diplôme *</label>
+            <input 
+              type="text" 
+              id="diploma" 
+              formControlName="diploma"
+              [class.error]="isFieldInvalid('diploma')"
+              placeholder="Master en Informatique">
+            <span class="error-message" *ngIf="isFieldInvalid('diploma')">
+              {{ getFieldError('diploma') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="institution">Établissement *</label>
+            <input 
+              type="text" 
+              id="institution" 
+              formControlName="institution"
+              [class.error]="isFieldInvalid('institution')"
+              placeholder="Université Paris-Saclay">
+            <span class="error-message" *ngIf="isFieldInvalid('institution')">
+              {{ getFieldError('institution') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="graduationYear">Année d'obtention *</label>
+            <input 
+              type="number" 
+              id="graduationYear" 
+              formControlName="graduationYear"
+              [class.error]="isFieldInvalid('graduationYear')"
+              placeholder="2020">
+            <span class="error-message" *ngIf="isFieldInvalid('graduationYear')">
+              {{ getFieldError('graduationYear') }}
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label for="yearsExperience">Années d'expérience *</label>
+            <input 
+              type="number" 
+              id="yearsExperience" 
+              formControlName="yearsExperience"
+              [class.error]="isFieldInvalid('yearsExperience')"
+              placeholder="5">
+            <span class="error-message" *ngIf="isFieldInvalid('yearsExperience')">
+              {{ getFieldError('yearsExperience') }}
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="currentPosition">Poste actuel</label>
+          <input 
+            type="text" 
+            id="currentPosition" 
+            formControlName="currentPosition"
+            placeholder="Développeur Full Stack">
+        </div>
+
+        <div class="form-group">
+          <label for="skills">Compétences clés *</label>
+          <textarea 
+            id="skills" 
+            formControlName="skills"
+            [class.error]="isFieldInvalid('skills')"
+            rows="4"
+            placeholder="Angular, React, Node.js, TypeScript, PostgreSQL..."></textarea>
+          <span class="error-message" *ngIf="isFieldInvalid('skills')">
+            {{ getFieldError('skills') }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Step 3: Documents -->
+      <div class="form-step" *ngIf="currentStep === 3">
+        <h3 class="step-title">Documents requis</h3>
+
+        <!-- CV Upload -->
+        <div class="form-group">
+          <label>CV * (PDF ou Word, max 5MB)</label>
+          <div class="file-upload-area">
+            <input 
+              type="file" 
+              id="cvFile" 
+              (change)="onFileSelect($event, 'cv')"
+              accept=".pdf,.doc,.docx"
+              hidden>
+            <label for="cvFile" class="file-upload-label">
+              <span *ngIf="!cvFile.file">Choisir un fichier</span>
+              <span *ngIf="cvFile.file" class="file-name">{{ cvFile.preview }}</span>
+            </label>
+            <button 
+              type="button" 
+              *ngIf="cvFile.file" 
+              (click)="removeFile('cv')"
+              class="remove-file-btn">
+              Supprimer
+            </button>
+          </div>
+          <span class="error-message" *ngIf="cvFile.error">{{ cvFile.error }}</span>
+        </div>
+
+        <!-- Cover Letter Upload -->
+        <div class="form-group">
+          <label>Lettre de motivation * (PDF ou Word, max 5MB)</label>
+          <div class="file-upload-area">
+            <input 
+              type="file" 
+              id="coverLetterFile" 
+              (change)="onFileSelect($event, 'coverLetter')"
+              accept=".pdf,.doc,.docx"
+              hidden>
+            <label for="coverLetterFile" class="file-upload-label">
+              <span *ngIf="!coverLetterFile.file">Choisir un fichier</span>
+              <span *ngIf="coverLetterFile.file" class="file-name">{{ coverLetterFile.preview }}</span>
+            </label>
+            <button 
+              type="button" 
+              *ngIf="coverLetterFile.file" 
+              (click)="removeFile('coverLetter')"
+              class="remove-file-btn">
+              Supprimer
+            </button>
+          </div>
+          <span class="error-message" *ngIf="coverLetterFile.error">{{ coverLetterFile.error }}</span>
+        </div>
+
+        <!-- Diploma Upload (Optional) -->
+        <div class="form-group">
+          <label>Diplômes (optionnel)</label>
+          <div class="file-upload-area">
+            <input 
+              type="file" 
+              id="diplomaFile" 
+              (change)="onFileSelect($event, 'diploma')"
+              accept=".pdf,.doc,.docx"
+              hidden>
+            <label for="diplomaFile" class="file-upload-label">
+              Ajouter un diplôme
+            </label>
+          </div>
+          <div class="uploaded-files" *ngIf="diplomaFiles.length > 0">
+            <div *ngFor="let diploma of diplomaFiles; let i = index" class="uploaded-file">
+              <span>{{ diploma.preview }}</span>
+              <button type="button" (click)="removeFile('diploma', i)" class="remove-file-btn">
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Finalization -->
+      <div class="form-step" *ngIf="currentStep === 4">
+        <h3 class="step-title">Finalisation de votre candidature</h3>
+
+        <div class="form-group">
+          <label for="motivation">Message de motivation * (min. 100 caractères)</label>
+          <textarea 
+            id="motivation" 
+            formControlName="motivation"
+            [class.error]="isFieldInvalid('motivation')"
+            rows="6"
+            placeholder="Expliquez pourquoi vous êtes le candidat idéal pour ce poste..."></textarea>
+          <span class="error-message" *ngIf="isFieldInvalid('motivation')">
+            {{ getFieldError('motivation') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="availability">Disponibilité *</label>
+          <input 
+            type="text" 
+            id="availability" 
+            formControlName="availability"
+            [class.error]="isFieldInvalid('availability')"
+            placeholder="Immédiate / Dans 1 mois / Préavis de 3 mois">
+          <span class="error-message" *ngIf="isFieldInvalid('availability')">
+            {{ getFieldError('availability') }}
+          </span>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              formControlName="consent"
+              [class.error]="isFieldInvalid('consent')">
+            <span>
+              J'accepte que mes données personnelles soient traitées conformément à la politique de confidentialité *
+            </span>
+          </label>
+          <span class="error-message" *ngIf="isFieldInvalid('consent')">
+            Vous devez accepter les conditions
+          </span>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-secondary"
+          *ngIf="currentStep > 1"
+          (click)="previousStep()">
+          <mat-icon>arrow_back</mat-icon>
+          Précédent
+        </button>
+
+        <button 
+          type="button" 
+          class="btn btn-primary"
+          *ngIf="currentStep < totalSteps"
+          (click)="nextStep()">
+          Suivant
+           <mat-icon>arrow_forward</mat-icon>
+        </button>
+
+        <button 
+          type="submit" 
+          class="btn btn-submit"
+          *ngIf="currentStep === totalSteps"
+          [disabled]="!candidatureForm.valid || !cvFile.file || !coverLetterFile.file">
+          <mat-icon>send</mat-icon>
+          Soumettre ma candidature
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

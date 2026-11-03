@@ -1,0 +1,81 @@
+<section *ngIf="!isSearch">
+  
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Type Financement</label>
+        <ng-select placeholder="Type Financement" (change)="onchangeType($event)" formControlName="souceBudget">
+            <ng-option *ngFor="let type of sourceBudget" [value]="type">
+               {{ type?.description }}
+            </ng-option>
+        </ng-select>
+    </div>
+    <div class="mb-3  col-md-6">
+      <label for="libelle" class="form-label">Libellé</label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+  </div>
+    </div>
+    <div class="row" *ngIf="priveePublicque">
+      <div class="mb-3 col-md-6">
+          <label class="form-label">Part du Privee</label>
+          <input type="number" class="form-control" placeholder="montant" formControlName="privateShare">
+        </div>
+        <div class="mb-3  col-md-6">
+          <label class="form-label">Part du Public</label>
+          <input type="number" class="form-control" placeholder="montant" formControlName="publicShare">
+      </div>
+  </div>
+    <div class="row">
+      <div class="mb-3  col-md-6">
+        <label class="form-label">Montant previsionel</label>
+        <input type="number" class="form-control" placeholder="montant" formControlName="estimatedAmount">
+      </div>
+      <div class="mb-3  col-md-6">
+        <label class="form-label">Montant reel</label>
+        <input type="number" class="form-control" placeholder="montant" formControlName="actualAmount">
+    </div>
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Commentaire</label>
+     <div>
+          <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+     </div>
+  </div>
+    </form>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Type Financement</label>
+        <ng-select placeholder="Categories" (change)="onchangeType($event)" formControlName="categorie">
+            <ng-option *ngFor="let type of sourceBudget" [value]="type?.name">
+               {{ type?.name }}
+            </ng-option>
+        </ng-select>
+    </div>
+    <div class="mb-3  col-md-6">
+      <label for="libelle" class="form-label">Libellé</label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+  </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6 ">
+          <label class="form-label">Montant previsionel</label>
+          <input type="number" class="form-control" placeholder="montant" formControlName="predicatedDate">
+        </div>
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Montant reel</label>
+          <input type="number" class="form-control" placeholder="montant" formControlName="readDate">
+      </div>
+    </div>
+    </form>
+  <div class="modal-footer mt-2">
+      <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

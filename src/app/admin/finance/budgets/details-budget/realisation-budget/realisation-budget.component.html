@@ -1,0 +1,134 @@
+
+<nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" routerLink="/admin/acces/finance/budgets"><a>Budget</a></li>
+    <li class="breadcrumb-item active" style="color: #1d6705;"><a>Rubriques/</a></li>
+     <li class="breadcrumb-item active" style="color: #1d6705;"><a>Realisation</a></li>
+  </ol>
+</nav>
+<div class="d-flex justify-content-end align-items-end flex-wrap grid-margin mb-1">
+  <!-- <div>
+    <h6 class="text-center text-primary" ngbTooltip="{{projetlibelle}}">{{projetlibelle}}</h6>
+  </div> -->
+  <div>
+    <!-- <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button> -->
+    <!-- <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button> -->
+    <button type="button" class="btn btn-primary btn-icon-text mb-2" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouvelle Réalisation
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+    <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Code</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.realisations?.code}} </td>
+      </ng-container>
+      <ng-container matColumnDef="libelle">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Libellé</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.realisations?.libelle}} </td>
+      </ng-container>
+      <ng-container matColumnDef="montant">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Montant</th>
+        <td mat-cell *matCellDef="let realisation" class="text-center"> {{realisation?.montant}} </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Date</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.date | date:'yyyy-MM-dd'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="fournisseur">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Fournisseur</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.fournisseur?.raisonSociale}} </td>
+      </ng-container>
+      <ng-container matColumnDef="numeroBon">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Numéro Bon</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.numeroBon}} </td>
+      </ng-container>
+      <ng-container matColumnDef="numeroBE">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Numéro BE</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.numeroBE}} </td>
+      </ng-container>
+      <ng-container matColumnDef="numeroMandat">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Numéro Mandat</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.numeroMandat}} </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Description</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.description}} </td>
+      </ng-container>
+      <ng-container matColumnDef="ligneBudgetaire">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Ligne Budgetaire</th>
+        <td mat-cell *matCellDef="let realisation"> {{realisation?.ligneBudgetaire?.libelle}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Actions</th>
+        <td mat-cell *matCellDef="let realisation" class="text-center bg-white">
+          <div class="text-center d-inline-block">
+            <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+              <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+            </span>
+            <mat-menu #menu="matMenu" class="bg-white">
+              <a ngbDropdownItem
+                class="d-flex justify-content-between align-items-center"
+                (click)="openBasicModal(modalUpdate, realisation)">
+                <span class="me-2">Modifier</span>
+                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+              </a>
+              <a ngbDropdownItem
+                class="d-flex justify-content-between align-items-center"
+                (click)="deleteRealisation(realisation.id)">
+                <span class="me-2">Supprimer</span>
+                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+              </a>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+      <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+    </table>
+    <div class="paginate">
+      <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+        [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+        [ellipses]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
+  </section>
+</div>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Réalisation</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-realisation [label]="'Enregistrer'" (submit)="close($event)" [isSearch]="false" [fournisseursInput]="fournisseurs()"></app-form-realisation>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification Réalisation</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-realisation [label]="'Modifier'" (submit)="close($event)" [realisationToUpdate]="realisationToUpdate" [isSearch]="false" [fournisseursInput]="fournisseursInput()"></app-form-realisation>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher Réalisation</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-realisation [label]="'Enregistrer'" (submit)="close($event)" [isSearch]="true"></app-form-realisation>
+  </div>
+</ng-template>

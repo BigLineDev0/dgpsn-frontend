@@ -1,0 +1,59 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-12 mb-3">
+        <label class="form-label">Sélectionnez<small style="color: red;">*</small></label>
+
+        <ng-select [items]="datasource" formControlName="marketFileId" [multiple]="true" bindLabel="fileNumber"
+          groupBy="receptionStatus.code" bindValue="id" [selectableGroup]="true" [closeOnSelect]="false">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" /> {{item.receptionStatus.code | uppercase}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" />N° {{item?.fileNumber}}
+            Nom:{{item?.bidderName}}Evaluation:{{item?.noteFinal}}
+          </ng-template>
+        </ng-select>
+
+      </div>
+    </div>
+
+    <div class="row" *ngIf="dossierPreselectionToUpdate">
+      <div class="col-md-12">
+
+        <div class="form-check form-switch d-inline-block d-inline-block-right-space me-2">
+          <label for="copile" class="form-label">Attribuer le marche</label>
+          <input type="checkbox" class="form-check-input" id="copile" formControlName="winner">
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+  </div>
+</section>
+
+
+
+
+<!--        <ng-select [multiple]="true" [closeOnSelect]="false" placeholder="Sélectionnez les présélections">-->
+<!--          <ng-option *ngFor="let dossier of datasource?.content" [value]="dossier">N°:{{dossier?.code}} Nom:{{dossier?.nom}} Evaluation:{{dossier?.eval}}%</ng-option>-->
+<!--        </ng-select>-->
+<!-- <ng-select
+          [items]="datasource?.content"
+          [multiple]="true"
+          bindLabel="code"
+          groupBy="statut"
+          bindValue="code"
+          [selectableGroup]="true"
+          [closeOnSelect]="false">
+          <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox"/> {{item.statut | uppercase}}
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox"/>N° {{item?.code}} Nom:{{item?.nom}} Evaluation:{{item?.eval}}%
+          </ng-template>
+        </ng-select> -->

@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Projets</a></li>
+      <li class="breadcrumb-item active"><a routerLink="/projet">Liste projets</a></li>
+      <li class="breadcrumb-item active">ESG</li>
+      <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+    </ol>
+  </nav>
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <a class="me-4 d-block" ngbTooltip="Environnemental" routerLink="/projet/esg/environnemental" #tooltip1="ngbTooltip">
+<!--      <i class="feather icon-droplet icon-md" [ngClass]="activeUrl('esg/environnemental', tooltip1)"></i>-->
+      <mat-icon class="icon-lg" [ngClass]="activeUrl('esg/environnemental', tooltip1)">spa</mat-icon>
+    </a>
+    <a class="me-4" ngbTooltip="Social"  routerLink="/projet/esg/social" #tooltip2="ngbTooltip">
+      <mat-icon class="icon-lg" [ngClass]="activeUrl('esg/social', tooltip2)">supervised_user_circle</mat-icon>
+<!--      <i class="feather icon-map icon-md" [ngClass]="activeUrl('esg/social', tooltip2)"></i>-->
+    </a>
+    <a class="me-4 d-block" ngbTooltip="Gouvernance" routerLink="/projet/esg/gouvernance" #tooltip3="ngbTooltip">
+      <mat-icon class="icon-lg" [ngClass]="activeUrl('esg/gouvernance', tooltip3)">account_balance</mat-icon>
+<!--      <i class="feather icon-trending-up icon-md" [ngClass]="activeUrl('esg/gouvernance', tooltip3)"></i>-->
+    </a>
+  </div>
+</div>

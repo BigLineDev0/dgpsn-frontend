@@ -1,0 +1,80 @@
+<nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a>Controle & Pilotage</a></li>
+    <li class="breadcrumb-item active"><a>Suivi Budgetaire</a></li>
+  </ol>
+</nav>
+
+<ul ngbNav #fillJustifyNav="ngbNav" [(activeId)]="active" class="nav-tabs nav-fill">
+  
+  <!-- Tab 1: Tableau de Bord -->
+  <li [ngbNavItem]="1">
+    <a ngbNavLink id="tableau-bord">
+      <mat-icon class="align-middle me-1">Bon d'Engagement</mat-icon>
+      Bon d'Engagement
+    </a>
+       <ng-template ngbNavContent>
+    </ng-template>
+  </li>
+    <li [ngbNavItem]="2">
+    <a ngbNavLink id="tableau-bord">
+      <mat-icon class="align-middle me-1">dashboard</mat-icon>
+      Statistiques
+    </a>
+       <ng-template ngbNavContent>
+        <app-statistique></app-statistique>
+    </ng-template>
+  </li>
+
+  <!-- Tab 2: Audit Trail -->
+  <li [ngbNavItem]="3">
+    <a ngbNavLink id="audit-trail">
+      <mat-icon class="align-middle me-1">history</mat-icon>
+      Audit Trail
+    </a>
+    <ng-template ngbNavContent>
+      <!-- <div class="text-center p-5">
+        <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #9333ea;">history</mat-icon>
+        <h4 class="mt-3">Audit Trail</h4>
+        <p class="text-muted">Journal d'audit des modifications des bons d'engagement</p>
+        <p class="badge bg-info">En développement</p>
+      </div> -->
+      <app-audit></app-audit>
+    </ng-template>
+  </li>
+
+  <!-- Tab 3: Gestion des Risques -->
+  <li [ngbNavItem]="4">
+    <a ngbNavLink id="gestion-risques">
+      <mat-icon class="align-middle me-1">shield</mat-icon>
+      Gestion des RisquesRisques
+    </a>
+    <ng-template ngbNavContent>Risques
+      <div class="text-center p-5">
+        <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #f97316;">shield</mat-icon>
+        <h4 class="mt-3">Gestion des Risques</h4>
+        <p class="text-muted">Identification et évaluation des risques budgétaires</p>
+        <p class="badge bg-info">En développement</p>
+      </div>
+    </ng-template>
+  </li>
+
+  <!-- Tab 4: Rapprochements -->
+  <li [ngbNavItem]="5">
+    <a ngbNavLink id="rapprochements">
+      <mat-icon class="align-middle me-1">compare_arrows</mat-icon>
+      Rapprochements
+    </a>
+    <ng-template ngbNavContent>
+      <div class="text-center p-5">
+        <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #10b981;">compare_arrows</mat-icon>
+        <h4 class="mt-3">Rapprochements</h4>
+        <p class="text-muted">Rapprochement des données comptables et budgétaires</p>
+        <p class="badge bg-info">En développement</p>
+      </div>
+    </ng-template>
+  </li>
+
+</ul>
+
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>

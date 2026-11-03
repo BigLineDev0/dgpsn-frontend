@@ -1,0 +1,101 @@
+<section>
+  <form [formGroup]="form">
+    <div class="row">
+      <!-- Champ Code -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="code" class="form-label">
+            Code Classe<small style="color: red">*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="code"
+            placeholder="Ex: 7"
+            formControlName="code"
+            maxlength="100"
+          />
+          <div
+            *ngIf="form.get('code')?.invalid && (form.get('code')?.dirty || form.get('code')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('code')?.hasError('required')">
+              Le code est obligatoire.
+            </small>
+            <small *ngIf="form.get('code')?.hasError('maxlength')">
+              Le code ne peut pas dépasser 100 caractères.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Champ Libellé -->
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label for="libelle" class="form-label">
+            Libellé<small style="color: red">*</small>
+          </label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="libelle"
+            placeholder="Ex: Produits"
+            formControlName="libelle"
+            maxlength="150"
+          />
+          <div
+            *ngIf="form.get('libelle')?.invalid && (form.get('libelle')?.dirty || form.get('libelle')?.touched)"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('libelle')?.hasError('required')">
+              Le libellé est obligatoire.
+            </small>
+            <small *ngIf="form.get('libelle')?.hasError('maxlength')">
+              Le libellé ne peut pas dépasser 150 caractères.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Champ Commentaire -->
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-3">
+          <label for="commentaire" class="form-label">Commentaire</label>
+          <textarea
+            class="form-control form-control-lg"
+            id="commentaire"
+            rows="3"
+            placeholder="Ex: Regroupe les produits et recettes de fonctionnement"
+            formControlName="commentaire"
+            maxlength="255"
+          ></textarea>
+          <div
+            *ngIf="form.get('commentaire')?.invalid && form.get('commentaire')?.touched"
+            class="text-danger mt-1"
+          >
+            <small *ngIf="form.get('commentaire')?.hasError('maxlength')">
+              Le commentaire ne peut pas dépasser 255 caractères.
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Footer avec boutons -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Fermer
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="!form.valid"
+    >
+      {{ classeToUpdate ? 'Modifier' : 'Enregistrer' }}
+    </button>
+  </div>
+</section>

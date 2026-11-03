@@ -1,0 +1,360 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="matricule" class="form-label"
+            >Matricule<small style="color: red">*</small></label
+          >
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="matricule"
+            placeholder="Matricule"
+            formControlName="matricule"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="structure" class="form-label">Structure</label>
+          <ng-select
+            bindLabel="nom"
+            placeholder="Structure"
+            formControlName="structureId"
+          >
+            <ng-option *ngFor="let option of structures" [value]="option.id">{{
+              option?.nom
+            }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label for="direction" class="form-label"
+            >Direction<small style="color: red">*</small></label
+          >
+          <ng-select
+            bindLabel="libelle"
+            placeholder="Direction"
+            formControlName="directionId"
+          >
+            <ng-option *ngFor="let option of dircections" [value]="option.id">{{
+              option?.libelle
+            }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="nom" class="form-label"
+            >Nom<small style="color: red">*</small></label
+          >
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="nom"
+            placeholder="Nom "
+            formControlName="nom"
+          />
+          <div
+            *ngIf="
+              form.get('nom')?.invalid &&
+              (form.get('nom')?.dirty || form.get('nom')?.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="form.get('nom')?.hasError('required')">
+              Ce champs est obligatoire.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="prenom" class="form-label"
+            >Prenom<small style="color: red">*</small></label
+          >
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="prenom"
+            placeholder="Prenom"
+            formControlName="prenom"
+          />
+          <div
+            *ngIf="
+              form.get('prenom')?.invalid &&
+              (form.get('prenom')?.dirty || form.get('prenom')?.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="form.get('prenom')?.hasError('required')">
+              Ce champs est obligatoire.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="dateNaissance" class="form-label"
+            >Date de naissance<small style="color: red">*</small></label
+          >
+          <input
+            type="date"
+            class="form-control form-control-lg"
+            id="dateNaissance"
+            placeholder="Date de naissance"
+            formControlName="dateNaissance"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="dateCreation" class="form-label">Date d'entrée</label>
+          <input
+            type="date"
+            class="form-control form-control-lg"
+            id="dateCreation"
+            placeholder="Date de creation"
+            formControlName="dateCreation"
+          />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Sexe</label>
+        <div class="d-flex gap-3 mb-2">
+          <div *ngFor="let option of sexe">
+            <input
+              type="radio"
+              [id]="option.name"
+              [value]="option.name"
+              formControlName="sexe"
+              name="sexe"
+              class="me-2"
+            />
+            <label [for]="option.name" class="me-4">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label"
+          >Situation matrimoniale <small style="color: red">*</small></label
+        >
+        <div class="d-flex gap-3 mb-2">
+          <div *ngFor="let option of situationMatrimoniale">
+            <input
+              type="radio"
+              [id]="option.name"
+              [value]="option.name"
+              formControlName="situationMatrimoniale"
+              name="situationMatrimoniale"
+              class="me-2"
+            />
+            <label class="mb-2 me-4" [for]="option.name">{{ option.description }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="adresse" class="form-label">Adresse</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="matricule"
+            placeholder="Adresse"
+            formControlName="adresse"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Téléphone</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="telephone"
+            placeholder="Téléphone"
+            formControlName="telephone"
+          />
+          <div
+            *ngIf="
+              form.get('telephone')?.invalid &&
+              (form.get('telephone')?.dirty || form.get('telephone')?.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="form.get('telephone')?.hasError('required')">
+              Le telephone est obligatoire.
+            </div>
+            <div
+              *ngIf="
+                form.get('telephone')?.hasError('maxlength') ||
+                form.get('telephone')?.hasError('minlength')
+              "
+            >
+              Le téléphone ne peut contenir que des chiffres et doit avoir au
+              moins 7 caractères et au plus 9 caractères.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="fonction" class="form-label">Fonction</label>
+          <ng-select
+            bindLabel="libelle"
+            placeholder="Fonction"
+            formControlName="fonctionId"
+          >
+            <ng-option *ngFor="let option of fonctions" [value]="option.id">{{
+              option?.libelle
+            }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Fermer
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="!form.valid"
+    >
+      Enregistrer
+    </button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="nom"
+            placeholder="Nom "
+            formControlName="nom"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="prenom" class="form-label">Prenom</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="prenom"
+            placeholder="Prenom"
+            formControlName="prenom"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="adresse" class="form-label">Adresse</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="matricule"
+            placeholder="Adresse"
+            formControlName="adresse"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Téléphone</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="telephone"
+            placeholder="Téléphone"
+            formControlName="telephone"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="fonction" class="form-label">Fonction</label>
+          <ng-select
+            bindLabel="libelle"
+            placeholder="Fonction"
+            formControlName="fonctionId"
+          >
+            <ng-option *ngFor="let option of fonctions" [value]="option.id">{{
+              option?.libelle
+            }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <label for="structure" class="form-label">Structure</label>
+        <ng-select
+          bindLabel="nom"
+          placeholder="Structure"
+          formControlName="structureId"
+        >
+          <ng-option *ngFor="let option of structures" [value]="option.id">{{
+            option?.nom
+          }}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">
+      Rechercher
+    </button>
+    <!-- <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button> -->
+  </div>
+</section>

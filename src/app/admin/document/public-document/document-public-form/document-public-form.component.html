@@ -1,0 +1,163 @@
+<section *ngIf="!search">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3">
+                    <label for="titre" class="form-label">Titre<small style="color: red;">*</small></label>
+                    <input type="text" class="form-control form-control-lg" id="titre" placeholder="Titre" formControlName="titre">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9">
+                <div class="mb-3">
+                    <label for="auteur" class="form-label">Auteur(s)</label>
+                    <input type="text" class="form-control form-control-lg" id="auteur" placeholder="Auteurs" formControlName="authors">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control form-control-lg" id="date" placeholder="Date" formControlName="date">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="mb-3">
+                    <label for="themes" class="form-label">Thèmes</label>
+                    <input type="text" class="form-control form-control-lg" id="themes" placeholder="Themes" formControlName="themes">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">PAD</label>
+                    <ng-select [items]="partners" [multiple]="true"
+                        bindLabel="nom"
+                        bindValue="id"
+                        placeholder="PAD"
+                        formControlName="partnerIds">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Sectors</label>
+                    <ng-select [items]="sectors" [multiple]="true"
+                        bindLabel="libelle"
+                        bindValue="id"
+                        placeholder="Secteurs"
+                        formControlName="sectorIds">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Type document</label>
+                    <ng-select [items]="typeDocuments"
+                        bindLabel="libelle"
+                        bindValue="id"
+                        placeholder="Type document"
+                        formControlName="documentTypeId">
+                    </ng-select>                
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Dossier</label>
+                    <ng-select [items]="dossiers"
+                        bindLabel="name"
+                        bindValue="id"
+                        placeholder="Dossier"
+                        formControlName="folderId">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="mb-3">
+                  <label class="form-label">Fichier</label>
+                  <input type="file" class="form-control" (change)="fileChange($event)" accept=".docx, .pdf, .xls, .xslt">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-danger" (click)="form.reset()">Annuler</button>
+            <button [disabled]="!form.valid" (click)="save()" type="button" class="btn btn-primary">Enregistrer</button>
+        </div>
+    </form>
+</section>
+
+<section *ngIf="search">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-12">
+                <div class="mb-3">
+                    <label for="titre" class="form-label">Titre</label>
+                    <input type="text" class="form-control form-control-lg" id="titre" placeholder="Titre" formControlName="titre">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9">
+                <div class="mb-3">
+                    <label for="auteur" class="form-label">Auteur(s)</label>
+                    <input type="text" class="form-control form-control-lg" id="auteur" placeholder="Auteurs" formControlName="authors">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-3">
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control form-control-lg" id="date" placeholder="Date" formControlName="date">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="mb-3">
+                    <label for="themes" class="form-label">Thèmes</label>
+                    <input type="text" class="form-control form-control-lg" id="themes" placeholder="Themes" formControlName="themes">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">PAD</label>
+                    <ng-select [items]="partners"
+                        bindLabel="nom"
+                        bindValue="id"
+                        placeholder="PAD"
+                        formControlName="partnerIds">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Sectors</label>
+                    <ng-select [items]="sectors"
+                        bindLabel="libelle"
+                        bindValue="id"
+                        placeholder="Secteurs"
+                        formControlName="sectorIds">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Type document</label>
+                    <ng-select [items]="typeDocuments"
+                        bindLabel="libelle"
+                        bindValue="id"
+                        placeholder="Type document"
+                        formControlName="documentTypeId">
+                    </ng-select>                
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="mb-3">
+                    <label class="form-label">Dossier</label>
+                    <ng-select [items]="dossiers"
+                        bindLabel="name"
+                        bindValue="id"
+                        placeholder="Dossier"
+                        formControlName="folderId">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+            <button type="button" class="btn btn-danger me-4" (click)="form.reset()">Annuler</button>
+            <button (click)="doSearch()" type="button" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+</section>

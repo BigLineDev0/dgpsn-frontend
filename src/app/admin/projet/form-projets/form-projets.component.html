@@ -1,0 +1,560 @@
+<section *ngIf="!isSearch">
+  <mat-stepper [linear]="false" #stepper>
+    <form [formGroup]="detailsForm" #formDetail>
+
+    <mat-step [stepControl]="detailsForm">
+      <ng-template matStepLabel>Détails du projet</ng-template>
+        <fieldset>
+          <!-- <div class="row">
+            <div class="col-12" *ngIf="!toProgram">
+              <label class="form-label">Programmes</label>
+              <ng-select [items]="programmes" *ngIf="!readProject"
+                         bindLabel="name"
+                         bindValue="id"
+                         placeholder="Choisir un programme"
+                         formControlName="parentId">
+              </ng-select>
+              <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.parent?.name}}</p>
+            </div>
+            <div *ngIf="toProgram" class="text-center fs-3">
+              <label class="form-label"><span class="fw-boldest">Programme :</span> {{programmeLibelle}}</label>
+            </div>
+          </div> -->
+          <div class="row mt-2">
+<!--            <div class="col-md-3 col-sm-12 mb-3">-->
+<!--                <label class="form-label">Type <small style="color: red;">*</small></label>-->
+<!--                <ng-select [items]="types"-->
+<!--                           bindLabel="label"-->
+<!--                           bindValue="label"-->
+<!--                           placeholder="Type"-->
+<!--                           formControlName="type">-->
+<!--                </ng-select>-->
+<!--            </div>-->
+<!--            <div class="col-md-3 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="sigle" class="form-label">Sigle<small style="color: red;">*</small></label>-->
+<!--                <input type="text" class="form-control form-control-lg" id="sigle" placeholder="Sigle" formControlName="sigle">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-2 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="cp" class="form-label">CP</label>-->
+<!--                <input type="text" class="form-control form-control-lg" id="cp" placeholder="CP" formControlName="codeCp">-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="col-md-4 col-sm-12">
+              <div class="mb-3">
+                <label for="code" class="form-label">Code projet</label>
+                <input *ngIf="!readProject" type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.code}}</p>
+              </div>
+            </div>
+            <div class="col-md-8 col-sm-12">
+              <div class="mb-3">
+                <label for="libelle" class="form-label">Nom<small style="color: red;">*</small></label>
+                <input *ngIf="!readProject" type="text" class="form-control form-control-lg" id="libelle" placeholder="Libelle" formControlName="name">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.name}}</p>
+              </div>
+            </div>
+<!--            <div class="col-6 mb-3">-->
+<!--                <label class="form-label">Responsable</label>-->
+<!--                <ng-select formControlName="responsibleId" placeholder="Responsable">-->
+<!--                  <ng-option *ngFor="let res of responsables" [value]="res?.id">-->
+<!--                    {{ res?.prenom }} {{ res?.nom }}-->
+<!--                  </ng-option>-->
+<!--                </ng-select>-->
+<!--            </div>-->
+<!--            <div  class="col-6 mb-3">-->
+<!--              <label class="form-label">Catégorie</label>-->
+<!--              <ng-select [multiple]="true"-->
+<!--                         [items]="categories"-->
+<!--                         bindLabel="nom"-->
+<!--                         bindValue="id"-->
+<!--                         placeholder="Choisir une catégorie">-->
+<!--              </ng-select>-->
+<!--            </div>-->
+<!--            <div class="col-md-6 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">Périodicité</label>-->
+<!--                <ng-select [items]="periodicities"-->
+<!--                           bindLabel="libelle"-->
+<!--                           bindValue="id"-->
+<!--                           placeholder="Périodicité">-->
+<!--                </ng-select>-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="row">
+              <div class="col-md-4 col-sm-12 mb-3">
+                  <label class="form-label">Axe strategique</label>
+                  <ng-select [items]="axes"  *ngIf="!readProject"
+                             bindLabel="libelle"
+                             bindValue="id"
+                             placeholder="Axe strategique"
+                             formControlName="axeId">
+                  </ng-select>
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.axe?.libelle}}</p>
+              </div>
+              <div class="col-md-8 mb-3">
+                <label class="form-label">Sous secteur</label>
+                <ng-select [items]="subSectors" [multiple]=true *ngIf="!readProject"
+                           [closeOnSelect]="false"
+                           bindLabel="libelle"
+                           bindValue="id"
+                           placeholder="Choisir"
+                           formControlName ="subSectorIds">
+                </ng-select>
+                <p *ngIf="readProject" class="fw-boldest">
+                  <span class="me-1" *ngFor="let item of projectToUpdate?.subSectors">
+                    <span class="badge bg-primary">
+                      {{item?.libelle}}
+                    </span>
+                  </span>
+                </p>
+              </div>
+<!--              <div class="col-md-4 col-sm-12 mb-3">-->
+<!--                <label class="form-label">Etat d'exécution</label>-->
+<!--                <ng-select [items]="statuts"-->
+<!--                           bindLabel="libelle"-->
+<!--                           bindValue="id"-->
+<!--                           placeholder="Statut">-->
+<!--                </ng-select>-->
+<!--              </div>-->
+<!--              <div class="col-md-4 col-sm-12 mb-3">-->
+<!--                  <label class="form-label">Secteur</label>-->
+<!--                  <ng-select [items]="secteurs"-->
+<!--                             bindLabel="libelle"-->
+<!--                             bindValue="id"-->
+<!--                             placeholder="Secteur"-->
+<!--                             (change)="getSubSectors($event)">-->
+<!--                  </ng-select>-->
+<!--              </div>-->
+<!--              <div class="col-md-4 col-sm-12 mb-3">-->
+<!--                  <label class="form-label">Sous secteur</label>-->
+<!--                  <ng-select [items]="subSectors"-->
+<!--                             bindLabel="libelle"-->
+<!--                             bindValue="id"-->
+<!--                             placeholder="Sous secteur"-->
+<!--                             formControlName="subSectorIds"-->
+<!--                             [multiple]=true>-->
+<!--                  </ng-select>-->
+<!--              </div>-->
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date de début prévue<small style="color: red;">*</small></label>
+                <input *ngIf="!readProject" type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="expectedStartDate">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.expectedStartDate | date:'dd-MM-yyyy'}}</p>
+
+              </div>
+              <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date de fin prévue<small style="color: red;">*</small></label>
+                <input *ngIf="!readProject" type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="expectedEndDate">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.expectedEndDate | date:'dd-MM-yyyy'}}</p>
+              </div>
+              <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date de début réel<small style="color: red;">*</small></label>
+                <input *ngIf="!readProject" type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="actualStartDate">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.actualStartDate | date:'dd-MM-yyyy'}}</p>
+              </div>
+              <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date de fin réel<small style="color: red;">*</small></label>
+                <input *ngIf="!readProject" type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="actualEndDate">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.actualEndDate | date:'dd-MM-yyyy'}}</p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 mb-3">
+                <label class="form-label">Formule</label>
+                <ng-select [items]="formules" *ngIf="!readProject"
+                           bindLabel="description"
+                           bindValue="name"
+                           placeholder="Formule de calcul"
+                           formControlName="formula">
+                </ng-select>
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.formula?.description}}</p>
+              </div>
+              <div class="col-6 mb-3">
+                <label class="form-label">Poids</label>
+                <input *ngIf="!readProject" type="number" class="form-control form-control-lg" placeholder="Poids" formControlName="poids">
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.poids}}</p>
+              </div>
+            </div>
+            <!-- <div class="col-md-12 col-sm-12">
+              <div class="mb-3">
+                <label class="form-label">Tags</label>
+                <ng-select [items]="tags" [multiple]=true *ngIf="!readProject"
+                           [closeOnSelect]="false"
+                           bindLabel="libelle"
+                           bindValue="libelle" placeholder="Choisir tag"
+                           formControlName ="tag">
+                </ng-select>
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.tag}}</p>
+              </div>
+
+            </div> -->
+<!--            <div class="col-md-2 col-sm-6">-->
+<!--              <div class="mt-2">-->
+<!--                <div class="form-check form-switch d-inline-block d-inline-block-right-space me-2">-->
+<!--                  <label for="copile" class="form-label">Copil</label>-->
+<!--                  <input type="checkbox" class="form-check-input" id="copile" formControlName="copile">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-10 col-sm-12" *ngIf="detailsForm.value.copile">-->
+<!--              <div class="row">-->
+<!--                <div class="col-md-6 col-sm-12">-->
+<!--                  <div class="mb-3">-->
+<!--                    <label class="form-label">Frequence</label>-->
+<!--                    <ng-select [items]="periodicities"-->
+<!--                               bindLabel="libelle"-->
+<!--                               bindValue="id"-->
+<!--                               placeholder="Frequence"-->
+<!--                               formControlName="meetingFrequencyId">-->
+<!--                      [typeahead]="statusAutocomplete"-->
+<!--                    </ng-select>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6 col-sm-12">-->
+<!--                  <div class="">-->
+<!--                    <label class="form-label">Date derniere reunion</label>-->
+<!--                    <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="lastMeetingDate">-->
+<!--                    &lt;!&ndash; <div class="input-group wd-200" style="width: 100%;">-->
+<!--                        <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d3.toggle()">-->
+<!--                          <i data-feather="calendar" appFeatherIcon></i>-->
+<!--                        </button>-->
+<!--                        <input class="form-control " placeholder="yyyy-mm-dd"-->
+<!--                            name="dp" ngbDatepicker #d3="ngbDatepicker" formControlName="lastMeetingDate">-->
+<!--                    </div> &ndash;&gt;-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--            </div>-->
+<!--            <div class="col-md-2 col-sm-6">-->
+<!--              <div class="mt-2">-->
+<!--                <div class="form-check form-switch d-inline-block">-->
+<!--                  <label for="ugp" class="form-label">UGP</label>-->
+<!--                  <input type="checkbox" class="form-check-input" id="sms" formControlName="ugp">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+
+          </div>
+          <div class="modal-footer mt-2 d-flex justify-content-end">
+            <button matStepperNext type="button" class="btn btn-secondary">Suivant</button>
+            <button *ngIf="!readProject" (click)="saveProject()" type="button" class="btn btn-primary">{{label}}</button>
+<!--            <button [disabled]="disableButton()" (click)="saveProject()" type="button" class="btn btn-primary">{{label}}</button>-->
+          </div>
+        </fieldset>
+    </mat-step>
+    <mat-step [stepControl]="descriptionForm">
+      <ng-template matStepLabel>Description du projet</ng-template>
+        <fieldset>
+          <div class="row mt-2">
+<!--            <div class="col-md-12 col-sm-12">-->
+<!--              <div class="form-group">-->
+<!--                <label for="budget" class="form-label">Impact attendu</label>-->
+<!--                &lt;!&ndash; <textarea class="col-12" placeholder="Impact attendu" rows="5"></textarea> &ndash;&gt;-->
+<!--                <textarea class="col-12 form-control" [rows]="5" [cols]="30" formControlName="impactAttendu"></textarea>-->
+<!--              </div>-->
+<!--            </div>-->
+            <div class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Bénéficiaire</label>
+                <ng-select [items]="beneficiaires" [multiple]=true *ngIf="!readProject"
+                           [closeOnSelect]="false"
+                           bindLabel="libelle"
+                           bindValue="id"
+                           placeholder="Choisir"
+                           formControlName ="beneficiarieIds">
+                </ng-select>
+              <p *ngIf="readProject" class="fw-boldest">
+                <span class="me-1" *ngFor="let item of projectToUpdate?.beneficiaries">
+                  <span class="badge bg-primary">
+                    {{item.libelle}}
+                  </span>
+                </span>
+              </p>
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Zone d'exécution</label>
+                <ng-select [items]="zoneExecutions" [multiple]=true *ngIf="!readProject"
+                           [closeOnSelect]="false"
+                           bindLabel="libelle"
+                           bindValue="id"
+                           placeholder="Choisir"
+                           formControlName ="executionZoneIds">
+                </ng-select>
+              <p *ngIf="readProject" class="fw-boldest">
+                <span class="me-1" *ngFor="let item of projectToUpdate?.executionZones">
+                  <span class="badge bg-primary">
+                    {{item.libelle}}
+                  </span>
+                </span>
+              </p>
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3">
+              <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea *ngIf="!readProject" class="col-12 form-control" [rows]="5" [cols]="30"  formControlName="description"></textarea>
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.description}}</p>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3">
+              <div class="form-group">
+                <label class="form-label">Objectif global</label>
+                <textarea *ngIf="!readProject" class="col-12 form-control" [rows]="5" [cols]="30" formControlName="overallObjective"></textarea>
+                <p *ngIf="readProject" class="fw-boldest">{{projectToUpdate?.overallObjective}}</p>
+              </div>
+            </div>
+<!--            <div class="col-md-12 col-sm-12">-->
+<!--              <div class="form-group">-->
+<!--                <label for="beneficiaires" class="form-label">Objectifs spécifiques</label>-->
+<!--                &lt;!&ndash; <textarea class="col-12 form-control" placeholder="Objectifs spécifiques" rows="5"></textarea> &ndash;&gt;-->
+<!--                <textarea class="col-12 form-control" [rows]="5" [cols]="30" pInputTextarea formControlName="objectifsSpecifiques"></textarea>-->
+<!--              </div>-->
+<!--            </div>-->
+          </div>
+          <div class="modal-footer d-flex justify-content-end mt-2">
+            <div class=" row">
+              <div class="col-md-6"><button matStepperPrevious type="button" class="btn btn-secondary">Précédent</button></div>
+<!--              <div class="col-md-6"><button matStepperNext type="button" class="btn btn-secondary">Suivant</button></div>-->
+            </div>
+            <button *ngIf="!readProject" (click)="saveProject()" type="button" class="btn btn-primary">{{label}}</button>
+          </div>
+        </fieldset>
+
+    </mat-step>
+    </form>
+<!--    <mat-step [stepControl]="fundingForm">-->
+<!--      <ng-template matStepLabel>Classement/Financement</ng-template>-->
+<!--      <form [formGroup]="fundingForm">-->
+<!--        <fieldset>-->
+<!--          <div class="row mt-2">-->
+<!--            <div class="col-md-4 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">Axe strategique</label>-->
+<!--                <ng-select [items]="axesPse"-->
+<!--                           bindLabel="libelle"-->
+<!--                           bindValue="id"-->
+<!--                           placeholder="Axe strategique"-->
+<!--                           formControlName="axePSEId">-->
+<!--                </ng-select>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-4 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">Secteur</label>-->
+<!--                <ng-select [items]="secteurs"-->
+<!--                           bindLabel="libelle"-->
+<!--                           bindValue="id"-->
+<!--                           placeholder="Secteur"-->
+<!--                           formControlName="sectorId"-->
+<!--                           (change)="getSubSectors($event)">-->
+<!--                </ng-select>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-4 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">Sous secteur</label>-->
+<!--                <ng-select [items]="subSectors"-->
+<!--                           bindLabel="libelle"-->
+<!--                           bindValue="id"-->
+<!--                           placeholder="Sous secteur"-->
+<!--                           formControlName="subSectorId">-->
+<!--                </ng-select>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-4 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="budget" class="form-label">Budget<small style="color: red;">*</small></label>-->
+<!--                <input type="number" class="form-control form-control-lg" id="budget" placeholder="Budget" formControlName="budget" (keyup)="setEquivalence()">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-2 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="monnaie" class="form-label">Monnaie<small style="color: red;">*</small></label>-->
+<!--                <input type="text" class="form-control form-control-lg" id="monnaie" placeholder="Monnaie" formControlName="monnaie">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-2 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="taux" class="form-label">Taux de change / FCFA<small style="color: red;">*</small></label>-->
+<!--                <input type="number" class="form-control form-control-lg" id="taux" placeholder="Taux" formControlName="taux" (keyup)="setEquivalence()">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-4 col-sm-12">-->
+<!--              <div class="mb-3">-->
+<!--                <label for="equivalence" class="form-label">Equiv.FCFA<small style="color: red;">*</small></label>-->
+<!--                <input type="number" class="form-control form-control-lg" id="equivalence" placeholder="Montant approuvé en F CFA" formControlName="equivalence">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="modal-footer d-flex justify-content-end mt-2">-->
+<!--            <button matStepperPrevious type="button" class="btn btn-secondary">Précédent</button>-->
+<!--            <button [disabled]="disableButton()" (click)="saveProject()" type="button" class="btn btn-primary">{{label}}</button>-->
+<!--          </div>-->
+<!--        </fieldset>-->
+<!--      </form>-->
+<!--    </mat-step>-->
+
+  </mat-stepper>
+</section>
+
+<section *ngIf="isSearch">
+  <!-- <div ngbDropdown style="float: right;">
+    <button ngbTooltip="Personnaliser la recherche" ngbDropdownToggle
+            class="btn p-0 no-dropdown-toggle-icon" type="button" id="dropdownMenuButton3">
+      <i class="icon-lg text-muted pb-3px" data-feather="settings" appFeatherIcon></i>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="dropdownMenuButton3">
+      <div class="content p-2">
+        <a *ngFor="let field of fieldsToSearch" class="d-flex align-items-center text-muted">
+          <input type="checkbox" class="form-check-input me-2" [checked]="isChecked(field)"
+                 (change)="changeField($event, field)">
+          <span class="">{{field?.label}}</span>
+        </a>
+      </div>
+    </div>
+  </div> -->
+
+  <form [formGroup]="searchForm" #formDetail>
+    <fieldset>
+      <div class="row mt-2">
+<!--        <div class="col-md-3 col-sm-12" *ngIf="activeFiled('Type')">-->
+<!--          <div class="mb-3">-->
+<!--            <label class="form-label">Type</label>-->
+<!--            <ng-select [items]="types"-->
+<!--                       bindLabel="label"-->
+<!--                       bindValue="label"-->
+<!--                       placeholder="Type"-->
+<!--                       formControlName="type">-->
+<!--            </ng-select>-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="col-md-4 col-sm-12">
+          <div class="mb-3">
+            <label for="sigle" class="form-label">Code</label>
+            <input type="text" class="form-control form-control-lg" id="sigleS" placeholder="Code" formControlName="code">
+          </div>
+        </div>
+        <div class="col-md-8 col-sm-12">
+          <div class="mb-3">
+            <label for="libelle" class="form-label">Nom</label>
+            <input type="text" class="form-control form-control-lg" id="libelleS" placeholder="Libelle" formControlName="name">
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Structure de tutelle</label>
+            <ng-select [items]="structuresExecution"
+                       bindLabel="nom"
+                       bindValue="id"
+                       placeholder="Structure de tutelle"
+                       formControlName="structureId">
+            </ng-select>
+          </div>
+        </div>
+        <!-- <div  class="col-6 mb-3">
+          <label class="form-label">Catégorie</label>
+          <ng-select [multiple]="true"
+                     [items]="categories"
+                     bindLabel="nom"
+                     bindValue="id"
+                     placeholder="Choisir une catégorie"
+                     formControlName="structureId">
+          </ng-select>
+        </div> -->
+        <!-- <div class="col-md-3 col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Etat d'exécution</label>
+            <ng-select [items]="statuts"
+                       bindLabel="libelle"
+                       bindValue="id"
+                       placeholder="Statut"
+                       formControlName="statusId">
+              [typeahead]="statusAutocomplete"
+            </ng-select>
+          </div>
+        </div> -->
+        <div class="col-md-4 col-sm-12">
+          <div class="mb-3 d-flex flex-column justify-content-start">
+            <label for="dateDebut" class="form-label">Date début</label>
+            <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <input class="form-control "type="date" placeholder="jj/mm/aaaa" id="dateDebut"name="dp" formControlName="dateDebut">
+            </div>
+            <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+                <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d1.toggle()">
+                  <i data-feather="calendar" appFeatherIcon></i>
+                </button>
+                <input class="form-control " placeholder="yyyy-mm-dd"
+                    name="dp" ngbDatepicker #d1="ngbDatepicker" formControlName="dateDebut">
+            </div> -->
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="mb-3">
+            <label for="dateFin" class="form-label">Date Fin</label>
+            <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <input class="form-control "type="date" placeholder="jj/mm/aaaa" id="dateFin"name="dp" formControlName="dateFin">
+            </div>
+            <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+                <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d2.toggle()">
+                  <i data-feather="calendar" appFeatherIcon></i>
+                </button>
+                <input class="form-control " placeholder="yyyy-mm-dd"
+                    name="dp" ngbDatepicker #d2="ngbDatepicker" formControlName="dateFin">
+            </div> -->
+          </div>
+        </div>
+        <!-- <div class="col-md-3 col-sm-12" *ngIf="activeFiled('Tags')"> -->
+          <!-- <div class="mb-3">
+              <label for="libelle" class="form-label">Tags</label>
+              <input type="text" class="form-control form-control-lg" id="tag" placeholder="Tags" formControlName="tag">
+
+          </div> -->
+          <!-- <div class="mb-3">
+            <label class="form-label">tags</label>
+            <ng-select [items]="tags" [multiple]=true
+                       [closeOnSelect]="false"
+                       bindLabel="libelle"
+                       bindValue="libelle" placeholder="Choisir tag"
+                       formControlName ="tag">
+            </ng-select>
+          </div> -->
+        </div>
+        <div class="col-md-3 col-sm-12" *ngIf="activeFiled('Axe Strategique')">
+          <div class="mb-3">
+            <label class="form-label">Axe Strategique</label>
+            <ng-select [items]="axes"
+                       bindLabel="libelle"
+                       bindValue="id"
+                       placeholder="Axe Strategique"
+                       formControlName="axePSEId">
+            </ng-select>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-3 col-sm-12" *ngIf="activeFiled('Sous secteur')">
+          <div class="mb-3">
+            <label class="form-label">Sous secteur</label>
+            <ng-select [items]="subSectors"
+                       bindLabel="libelle"
+                       bindValue="id"
+                       placeholder="Sous secteur"
+                       formControlName="subSectorId">
+            </ng-select>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-3 col-sm-12" *ngIf="activeFiled('Montant en FCFA')">
+          <div class="mb-3">
+            <label for="equivalence" class="form-label">Montant en FCFA</label>
+            <input type="number" class="form-control form-control-lg" id="equivalence" placeholder="Montant approuvé en F CFA" formControlName="equivalence">
+          </div>
+        </div> -->
+<!--      </div>-->
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-primary btn-xs" #searchButton (click)="doSearch()">rechercher</button>
+      </div>
+    </fieldset>
+  </form>
+</section>

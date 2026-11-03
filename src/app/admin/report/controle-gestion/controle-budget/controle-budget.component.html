@@ -1,0 +1,180 @@
+<div class="financial-report">
+  <!-- Indicateur de chargement -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner">
+      <i class="feather icon-refresh-cw spinning"></i>
+      <span>Chargement des données en cours...</span>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="feather icon-alert-triangle me-2"></i>
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+  </div>
+
+  <!-- En-tête avec informations et filtres -->
+  <div class="report-header-section">
+    <div class="filters-actions-row">
+      <!-- Filtres centrés -->
+      <div class="filters-group">
+        <!-- Filtre Année -->
+        <div class="custom-select-wrapper">
+          <label>Année</label>
+          <select [(ngModel)]="selectedYear" (change)="onYearChange()" class="custom-select">
+            <option *ngFor="let annee of annees" [value]="annee">{{ annee }}</option>
+          </select>
+        </div>
+
+        <!-- Filtre Type de Période -->
+        <div class="custom-select-wrapper">
+          <label>Période</label>
+          <select [(ngModel)]="selectedPeriodType" (change)="onPeriodTypeChange()" class="custom-select">
+            <option *ngFor="let periode of periodes" [value]="periode.value">{{ periode.label }}</option>
+          </select>
+        </div>
+
+        <!-- Filtre Trimestre (visible seulement pour trimestriel) -->
+        <div class="custom-select-wrapper" *ngIf="selectedPeriodType === 'trimestriel'">
+          <label>Trimestre</label>
+          <select [(ngModel)]="selectedTrimestre" (change)="onTrimestreChange()" class="custom-select">
+            <option *ngFor="let trimestre of trimestres" [value]="trimestre.value">{{ trimestre.label }}</option>
+          </select>
+        </div>
+
+        <!-- Filtre Mois (visible seulement pour mensuel) -->
+        <div class="custom-select-wrapper" *ngIf="selectedPeriodType === 'mensuel'">
+          <label>Mois</label>
+          <select [(ngModel)]="selectedMois" (change)="onMoisChange()" class="custom-select">
+            <option *ngFor="let mois of mois" [value]="mois.value">{{ mois.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Actions à droite -->
+      <div class="action-buttons">
+        <button class="custom-btn btn-export" (click)="exportToExcel()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Exporter</span>
+        </button>
+
+        <button class="custom-btn btn-print" (click)="printReport()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          <span>Imprimer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicateur de période active -->
+  <div class="period-indicator-section" *ngIf="!isLoading">
+    <div class="current-period">
+      <i class="feather icon-calendar me-2"></i>
+      Période active : <strong>{{ getPeriodLabel() }}</strong>
+    </div>
+  </div>
+
+  <!-- Onglets personnalisés -->
+  <div class="custom-tabs">
+    <div class="tabs-header">
+      <button
+        *ngFor="let tab of [
+          { index: 0, label: 'Recouvrement des Recettes', icon: '📊' },
+          { index: 1, label: 'Dépenses Fonctionnement', icon: '💰' }
+        ]"
+        class="tab-button"
+        [class.active]="selectedTabIndex === tab.index"
+        (click)="selectedTabIndex = tab.index">
+        <span class="tab-icon">{{ tab.icon }}</span>
+        <span class="tab-label">{{ tab.label }}</span>
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <!-- ONGLET 1: RECOUVREMENT DES RECETTES -->
+      <div class="tab-pane" *ngIf="selectedTabIndex === 0">
+        <div class="report-title-section">
+          <h3 class="main-title">SITUATION RECOUVREMENT DES RECETTES PAR TRIMESTRE</h3>
+          <p class="period-indicator">Données en temps réel • Dernière mise à jour: {{ getDatePeriode() }}</p>
+        </div>
+
+        <div class="excel-table-container">
+          <div class="table-title">SUIVI DU RECOUVREMENT DES RECETTES</div>
+
+          <div class="table-wrapper">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-row green-header">
+                  <th *ngFor="let col of recettesColumns" 
+                      [style.width]="col.width" 
+                      [class.text-left]="col.key === 'libelle'"
+                      [class.text-center]="col.key !== 'libelle'">
+                    {{ col.label }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of recettesData" [ngClass]="getRecettesRowClass(row)">
+                  <td *ngFor="let col of recettesColumns"
+                      [class.text-left]="col.key === 'libelle' || col.key === 'observations'"
+                      [class.text-center]="col.type === 'text' && col.key !== 'libelle' && col.key !== 'observations'"
+                      [class.number-cell]="col.type === 'number'"
+                      [class.percent-cell]="col.type === 'percent'">
+                    {{ formatValue(getCellValue(row, col.key), col.type) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ONGLET 2: DÉPENSES FONCTIONNEMENT -->
+      <div class="tab-pane" *ngIf="selectedTabIndex === 1">
+        <div class="report-title-section">
+          <h3 class="main-title">SITUATION DES DÉPENSES DE FONCTIONNEMENT</h3>
+          <p class="period-indicator">Données en temps réel</p>
+        </div>
+
+        <div class="excel-table-container">
+          <div class="table-title black-title">ANALYSE DES DÉPENSES DE FONCTIONNEMENT</div>
+
+          <div class="table-wrapper">
+            <table class="excel-table">
+              <thead>
+                <tr class="header-row green-header">
+                  <th *ngFor="let col of depensesFonctionnementColumns" 
+                      [style.width]="col.width"
+                      [class.text-left]="col.key === 'libelle'"
+                      [class.text-center]="col.key !== 'libelle'">
+                    {{ col.label }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of depensesFonctionnementData" [ngClass]="getDepensesRowClass(row)">
+                  <td *ngFor="let col of depensesFonctionnementColumns"
+                      [class.text-left]="col.key === 'libelle'"
+                      [class.text-center]="col.type === 'text' && col.key !== 'libelle'"
+                      [class.number-cell]="col.type === 'number'"
+                      [class.percent-cell]="col.type === 'percent'">
+                    {{ formatValue(getCellValue(row, col.key), col.type) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

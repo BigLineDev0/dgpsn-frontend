@@ -1,0 +1,226 @@
+<div class="main-dashboard-container">
+  <!-- Header simple comme dans list-demande -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <!-- <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active"><a>Tableau de Bord</a></li>
+        <li class="breadcrumb-item text-primary" aria-current="page">Congés & Absences</li>
+      </ol>
+    </nav> -->
+    <!-- <div class="mt-2">
+      <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openFilterModal()">
+        <i class="feather icon-filter"></i>
+      </button>
+      <button type="button" class="btn btn-primary btn-icon-text" (click)="exportDashboard()">
+        <i class="feather icon-download"></i> Exporter
+      </button>
+    </div> -->
+  </div>
+
+  <!-- Cartes de statistiques -->
+<div class="row mb-4 g-3">
+  <!-- Total Demandes Congés -->
+  <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+    <div class="card border-0 shadow-sm hover-lift">
+      <div class="card-body text-center p-3">
+        <div class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+          <i class="bi bi-calendar-check fs-4 text-info"></i>
+        </div>
+        <h3 class="fw-bold mb-1">{{ dashboardStats.totalDemandes }}</h3>
+        <p class="text-muted mb-0 small">Demandes Congés</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Congés Acceptés -->
+  <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+    <div class="card border-0 shadow-sm hover-lift">
+      <div class="card-body text-center p-3">
+        <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+          <i class="bi bi-check-circle fs-4 text-success"></i>
+        </div>
+        <h3 class="fw-bold mb-1">{{ dashboardStats.congesApprouves }}</h3>
+        <p class="text-muted mb-0 small">Congés Acceptés</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Congés En Cours -->
+  <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+    <div class="card border-0 shadow-sm hover-lift">
+      <div class="card-body text-center p-3">
+        <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+          <i class="bi bi-hourglass-split fs-4 text-warning"></i>
+        </div>
+        <h3 class="fw-bold mb-1">{{ dashboardStats.congesEnCours }}</h3>
+        <p class="text-muted mb-0 small">Congés En Cours</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Congés Rejetés -->
+  <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+    <div class="card border-0 shadow-sm hover-lift">
+      <div class="card-body text-center p-3">
+        <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+          <i class="bi bi-x-circle fs-4 text-danger"></i>
+        </div>
+        <h3 class="fw-bold mb-1">{{ dashboardStats.congesRefuses }}</h3>
+        <p class="text-muted mb-0 small">Congés Rejetés</p>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Graphiques Principaux -->
+<div class="row mb-4 g-3">
+  <!-- Graphique de répartition des types de congé -->
+  <div class="col-xl-6 col-lg-12">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-2">
+            <i class="bi bi-pie-chart-fill text-primary"></i>
+          </div>
+          <h6 class="card-title mb-0 fw-semibold">Répartition des Types de Congé</h6>
+        </div>
+        <div class="chart-container" style="height: 280px;">
+          <canvas #typeCongeChartCanvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphique des statuts des demandes -->
+  <div class="col-xl-6 col-lg-12">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-success bg-opacity-10 p-2 me-2">
+            <i class="bi bi-bar-chart-fill text-success"></i>
+          </div>
+          <h6 class="card-title mb-0 fw-semibold">Statut des Demandes</h6>
+        </div>
+        <div class="chart-container" style="height: 280px;">
+          <canvas #statutChartCanvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Graphiques Secondaires -->
+<div class="row mb-4 g-3">
+  <!-- Taux d'approbation par type -->
+  <div class="col-xl-6 col-lg-12">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-info bg-opacity-10 p-2 me-2">
+            <i class="bi bi-graph-up text-info"></i>
+          </div>
+          <h6 class="card-title mb-0 fw-semibold">Taux d'Approbation par Type</h6>
+        </div>
+        <div class="chart-container" style="height: 280px;">
+          <canvas #approvalRateChartCanvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition par durée de congé -->
+  <div class="col-xl-6 col-lg-12">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-2">
+            <i class="bi bi-clock-history text-warning"></i>
+          </div>
+          <h6 class="card-title mb-0 fw-semibold">Répartition par Durée de Congé</h6>
+        </div>
+        <div class="chart-container" style="height: 280px;">
+          <canvas #dureeChartCanvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Graphiques Avancés -->
+<div class="row mb-4 g-3">
+  <!-- Top 5 des agents avec le plus de congés -->
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-danger bg-opacity-10 p-2 me-2">
+            <i class="bi bi-trophy-fill text-danger"></i>
+          </div>
+          <h6 class="card-title mb-0 fw-semibold">Top 5 - Agents avec le Plus de Congés</h6>
+        </div>
+        <div class="chart-container" style="height: 320px;">
+          <canvas #topAgentsChartCanvas></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de filtre -->
+<ng-template #filterModal let-modal>
+  <div class="modal-header border-0 pb-0">
+    <h5 class="modal-title fw-semibold">
+      <i class="bi bi-funnel me-2 text-primary"></i>Filtrer les demandes
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="bi bi-tag me-1"></i>Statut
+        </label>
+        <select class="form-select form-select-sm shadow-sm border-0" [(ngModel)]="filters.statut">
+          <option value="">Tous les statuts</option>
+          <option value="ACCEPTER">✓ Accepté</option>
+          <option value="TRAITEMENT_ENCOUR">⏳ En cours</option>
+          <option value="REFUSER">✗ Refusé</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="bi bi-calendar-event me-1"></i>Type de congé
+        </label>
+        <select class="form-select form-select-sm shadow-sm border-0" [(ngModel)]="filters.typeConge">
+          <option value="">Tous les types</option>
+          <option value="ANNUEL">Annuel</option>
+          <option value="MATERNITE">Maternité</option>
+          <option value="MALADIE">Maladie</option>
+          <option value="AUTRES">Autres</option>
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mt-1">
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="bi bi-calendar-check me-1"></i>Date de début
+        </label>
+        <input type="date" class="form-control form-control-sm shadow-sm border-0" [(ngModel)]="filters.dateDebut">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="bi bi-calendar-x me-1"></i>Date de fin
+        </label>
+        <input type="date" class="form-control form-control-sm shadow-sm border-0" [(ngModel)]="filters.dateFin">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer border-0 pt-0">
+    <button type="button" class="btn btn-light btn-sm px-4" (click)="clearFilters()">
+      <i class="bi bi-arrow-counterclockwise me-1"></i>Effacer
+    </button>
+    <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" (click)="applyFilters()">
+      <i class="bi bi-check-lg me-1"></i>Appliquer
+    </button>
+  </div>
+</ng-template>
+

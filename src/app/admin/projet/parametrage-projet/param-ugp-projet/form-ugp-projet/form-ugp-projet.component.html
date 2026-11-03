@@ -1,0 +1,77 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3" *ngIf="!toUpadte">
+      <label class="form-label">Postes clés <small style="color: red;">*</small></label>
+      <ng-select [items]="ugpRoles"
+                 bindLabel="libelle"
+                 bindValue="id"
+                 placeholder="Postes clés"
+                 formControlName="ugpRoleId">
+      </ng-select>
+    </div>
+    <div class="mb-3" *ngIf="toUpadte">
+      <label class="form-label">Postes clés <small style="color: red;">*</small></label>
+      <input type="text" readonly class="form-control" formControlName="posteCle">
+    </div>
+
+    <div>
+      <label class="form-label">Statut </label>
+      <ng-select [items]="status"
+                 bindLabel="libelle"
+                 bindValue="libelle"
+                 placeholder="status"
+                 formControlName="status">
+      </ng-select>
+    </div>
+    <div class="form-check form-switch d-inline-block mt-3 me-3 ">
+      <label for="existed" class="form-label">Existe ?</label>
+      <input type="checkbox" class="form-check-input" id="existed" formControlName="existed">
+    </div>
+    <div class="form-check form-switch d-inline-block">
+      <label for="occupied" class="form-label">Occupé ?</label>
+      <input type="checkbox" class="form-check-input" id="occupied" formControlName="occupied">
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6 col-sm-12">
+        <label class="form-label">Postes clés</label>
+        <ng-select [items]="ugpRoles"
+                   bindLabel="libelle"
+                   bindValue="id"
+                   placeholder="Postes clés"
+                   formControlName="ugpRoleId">
+        </ng-select>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Statut</label>
+        <ng-select [items]="status"
+                   bindLabel="libelle"
+                   bindValue="libelle"
+                   placeholder="status"
+                   formControlName="status">
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="form-check form-switch d-inline-block me-3">
+      <label for="existedS" class="form-label">Existe ?</label>
+      <input type="checkbox" class="form-check-input" id="existedS" formControlName="existed">
+    </div>
+    <div class="form-check form-switch d-inline-block">
+      <label for="occupied" class="form-label">Occupé ?</label>
+      <input type="checkbox" class="form-check-input" id="occupiedS" formControlName="occupied">
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+    </div>
+  </form>
+</section>

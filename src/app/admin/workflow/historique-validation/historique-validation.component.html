@@ -1,0 +1,43 @@
+<!-- 
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link pointer" [class.active]="activeTab === 'liste'" (click)="setActiveTab('liste')">
+        Liste des validations
+      </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link pointer" [class.active]="activeTab === 'form'" (click)="setActiveTab('form')">
+          Formulaire de validation
+        </a>
+      </li>
+  </ul> -->
+<div class="table-responsive" *ngIf="activeTab === 'liste'">
+  <table class="table table-bordered" style="table-layout: fixed; min-width: 750px;">
+      <thead style="background-color: #031729;">
+          <tr>
+              <th class="text-white bg-primary" style="width: 100px; overflow: hidden; white-space: wrap;">Utilisateur</th>
+              <th class="text-white  bg-primary" style="width: 100px; overflow: hidden; white-space: wrap;">Profil</th>
+              <th class="text-white  bg-primary" style="width: 100px; overflow: hidden; white-space: wrap;">Étape</th>
+              <th class="text-white  bg-primary" style="width: 80px; overflow: hidden; white-space: wrap;">Validation</th>
+              <th class="text-white  bg-primary" style="width: 100px; overflow: hidden; white-space: wrap;">Date</th>
+              <th class="text-white  bg-primary" style="width: 200px; overflow: hidden; white-space: wrap;">Commentaire</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let historique of historiques">
+              <!-- <th style="width: 100px; overflow: hidden; white-space: wrap;">{{historique?.users?.prenom}} {{historique?.users?.nom}}</th> -->
+              <td style="width: 100px; overflow: hidden; white-space: wrap;">
+                {{ historique?.user?.prenom }} {{ historique?.user?.nom }}
+              </td>
+              <td style="width: 100px; overflow: hidden; white-space: wrap;">{{historique?.user?.profil}}</td>
+              <td style="width: 100px; overflow: hidden; white-space: wrap;">{{historique?.etape?.libelle}}</td>
+              <td style="width: 50px; overflow: hidden; white-space: wrap;">{{historique?.validation ? 'OUI' : 'NON'}}</td>
+              <td style="width: 100px; overflow: hidden; white-space: wrap;">{{historique?.date | date: 'dd/MM/yyyy HH:mm': "GMT"}}</td>
+              <td style="width: 200px; overflow: hidden; white-space: wrap;">{{historique?.commentaire}}</td>
+          </tr>
+      </tbody>
+  </table>
+</div>
+<!-- <div *ngIf="activeTab === 'form'">
+    <app-form-validation></app-form-validation>
+  </div> -->

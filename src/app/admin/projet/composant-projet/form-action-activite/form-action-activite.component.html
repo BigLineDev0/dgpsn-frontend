@@ -1,0 +1,177 @@
+<section *ngIf="!isSearch && !view">
+    <form [formGroup]="form">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Code <small style="color: red;">*</small></label>
+                <input type="text" class="form-control" formControlName="code"
+                       [placeholder]="type === 'ACTION' ? 'Ex: Action 1.1' : 'Ex: Activité 1.1.1'">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Libellé <small style="color: red;">*</small></label>
+                <input type="text" class="form-control" formControlName="libelle"
+                       [placeholder]="type === 'ACTION' ? 'Ex: Animer les instances...' : 'Ex: Tenir des réunions...'">
+            </div>
+        </div>
+
+        <!-- Champs spécifiques pour ACTIVITY -->
+        <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Structures Responsables</label>
+                <ng-select [items]="structures"
+                           [multiple]="true"
+                           [closeOnSelect]="false"
+                           bindLabel="nom"
+                           bindValue="id"
+                           placeholder="Sélectionner les structures responsables"
+                           formControlName="structuresResponsables"
+                           [loading]="loadingStructures">
+                </ng-select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Acteurs Impliqués (Structures)</label>
+                <ng-select [items]="structures"
+                           [multiple]="true"
+                           [closeOnSelect]="false"
+                           bindLabel="nom"
+                           bindValue="id"
+                           placeholder="Sélectionner les acteurs impliqués"
+                           formControlName="actorsInvolved"
+                           [loading]="loadingStructures">
+                </ng-select>
+            </div>
+        </div>
+
+        <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+            <div class="col-md-12">
+                <label class="form-label">Année</label>
+                <input type="number" class="form-control" formControlName="annee"
+                       placeholder="2025" value="2025">
+            </div>
+        </div>
+
+        <!-- Champs communs -->
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" formControlName="description" rows="3"
+                          placeholder="Description détaillée..."></textarea>
+            </div>
+        </div>
+
+        <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+            <div class="col-md-12">
+                <label class="form-label">Observations</label>
+                <textarea class="form-control" formControlName="observations" rows="2"
+                          placeholder="Remarques ou observations..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid || loadingStructures">
+            Enregistrer
+        </button>
+    </div>
+</section>
+
+<!-- Mode Visualisation -->
+<section *ngIf="view">
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Code:</strong>
+                    <p>{{ item?.code }}</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Libellé:</strong>
+                    <p>{{ item?.libelle }}</p>
+                </div>
+            </div>
+
+            <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Structures Responsables:</strong>
+                    <p *ngIf="item?.structuresResponsables && item?.structuresResponsables.length > 0">
+                        <span *ngFor="let structure of item.structuresResponsables; let last = last">
+                            {{ structure.libelle }}<span *ngIf="!last">, </span>
+                        </span>
+                    </p>
+                    <p *ngIf="!item?.structuresResponsables || item?.structuresResponsables.length === 0">-</p>
+                </div>
+                <div class="col-md-6">
+                    <strong>Acteurs Impliqués:</strong>
+                    <p *ngIf="item?.actorsInvolved && item?.actorsInvolved.length > 0">
+                        <span *ngFor="let actor of item.actorsInvolved; let last = last">
+                            {{ actor.libelle }}<span *ngIf="!last">, </span>
+                        </span>
+                    </p>
+                    <p *ngIf="!item?.actorsInvolved || item?.actorsInvolved.length === 0">-</p>
+                </div>
+            </div>
+
+            <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+                <div class="col-md-12">
+                    <strong>Année:</strong>
+                    <p>{{ item?.annee || 2025 }}</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-12">
+                    <strong>Description:</strong>
+                    <p>{{ item?.description || '-' }}</p>
+                </div>
+            </div>
+
+            <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+                <div class="col-12">
+                    <strong>Observations:</strong>
+                    <p>{{ item?.observations || '-' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    </div>
+</section>
+
+<!-- Mode Recherche -->
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Code</label>
+                <input type="text" class="form-control" formControlName="code">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Libellé</label>
+                <input type="text" class="form-control" formControlName="libelle">
+            </div>
+        </div>
+
+        <div *ngIf="type === 'ACTIVITY'" class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Structure</label>
+                <ng-select [items]="structures"
+                           bindLabel="libelle"
+                           bindValue="id"
+                           placeholder="Filtrer par structure"
+                           formControlName="structuresResponsables"
+                           [loading]="loadingStructures">
+                </ng-select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Année</label>
+                <input type="number" class="form-control" formControlName="annee">
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section>

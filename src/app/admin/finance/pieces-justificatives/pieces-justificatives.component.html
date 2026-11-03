@@ -1,0 +1,127 @@
+<mat-card class="pieces-card">
+  <mat-card-header *ngIf="isReadOnly && depenseStatut === 'Validé'">
+    <mat-card-title>
+      <mat-icon>attach_file</mat-icon>
+      Documents Justificatifs
+    </mat-card-title>
+    <mat-card-subtitle>Documents associés à cette dépense</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-header *ngIf="!(isReadOnly && depenseStatut === 'Validé')">
+    <mat-card-title>
+      <mat-icon>attach_file</mat-icon>
+      Pièces Justificatives
+    </mat-card-title>
+    <mat-card-subtitle>Ajoutez les documents justificatifs de la dépense</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Zone de drag & drop - Masquée en mode détails validé -->
+    <div class="upload-zone"
+         *ngIf="!(isReadOnly && depenseStatut === 'Validé')"
+         [class.drag-over]="dragOver && canDropFiles"
+         [class.disabled]="!canDropFiles"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)">
+
+      <div class="upload-content">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        <h3>Glissez et déposez vos fichiers ici</h3>
+        <p>Ou cliquez pour sélectionner des fichiers</p>
+        <p class="upload-hint">
+          Formats acceptés : JPEG, PNG, GIF, PDF<br>
+          Taille maximale : 10 MB par fichier
+        </p>
+
+        <input type="file"
+               #fileInput
+               multiple
+               accept=".jpg,.jpeg,.png,.gif,.pdf"
+               (change)="onFileSelected($event)"
+               class="file-input">
+        <button mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>folder_open</mat-icon>
+          Choisir des fichiers
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste des fichiers uploadés -->
+    <div class="files-list" *ngIf="uploadedFiles.length > 0; else noFiles">
+      <h4 *ngIf="isReadOnly && depenseStatut === 'Validé'">
+        {{ uploadedFiles.length }} document(s) associé(s)
+      </h4>
+      <h4 *ngIf="!(isReadOnly && depenseStatut === 'Validé')">
+        {{ uploadedFiles.length }} fichier(s) ajouté(s)
+      </h4>
+
+      <mat-list>
+        <mat-list-item *ngFor="let file of uploadedFiles" class="file-item">
+          <div class="file-info">
+            <!-- Prévisualisation -->
+            <div class="file-preview">
+              <img *ngIf="file.isImage" [src]="file.url" [alt]="file.name" class="preview-image">
+              <mat-icon *ngIf="!file.isImage" class="preview-icon">{{ getFileIcon(file) }}</mat-icon>
+            </div>
+
+            <!-- Informations du fichier -->
+            <div class="file-details">
+              <div class="file-name">{{ file.name }}</div>
+              <div class="file-meta">
+                {{ getFileSize(file) }} •
+                <span *ngIf="file.isUploading">En cours d'upload...</span>
+                <span *ngIf="!file.isUploading">Uploadé</span>
+              </div>
+
+              <!-- Barre de progression -->
+              <mat-progress-bar *ngIf="file.isUploading"
+                                mode="determinate"
+                                [value]="file.uploadProgress"
+                                class="upload-progress">
+              </mat-progress-bar>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="file-actions" *ngIf="!isReadOnly">
+            <button mat-icon-button
+                    color="primary"
+                    (click)="downloadFile(file)"
+                    matTooltip="Télécharger">
+              <mat-icon>download</mat-icon>
+            </button>
+            <button mat-icon-button
+                    color="warn"
+                    (click)="removeFile(file.id)"
+                    matTooltip="Supprimer">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+
+    <!-- Message si aucun fichier -->
+    <ng-template #noFiles>
+      <div class="no-files-message" *ngIf="isReadOnly && depenseStatut === 'Validé'">
+        <mat-icon>info</mat-icon>
+        <p>Aucun document justificatif associé à cette dépense validée.</p>
+      </div>
+      <div class="no-files-message" *ngIf="!(isReadOnly && depenseStatut === 'Validé')">
+        <mat-icon>info</mat-icon>
+        <p>Aucun fichier ajouté. Veuillez ajouter au moins une pièce justificative.</p>
+      </div>
+    </ng-template>
+
+    <!-- Validation - Masquée en mode détails validé -->
+    <div class="validation-section" *ngIf="!isFormValid() && !(isReadOnly && depenseStatut === 'Validé')">
+      <mat-card class="validation-card warning">
+        <mat-card-content>
+          <mat-icon>warning</mat-icon>
+          <span>Vous devez ajouter au moins {{ minFilesRequired }} pièce(s) justificative(s) pour valider la dépense.</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

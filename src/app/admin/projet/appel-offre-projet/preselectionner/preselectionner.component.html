@@ -1,0 +1,256 @@
+<!--<app-routing-appel-offre-projet  [addButtontitle]="'Nouvelle réception de dossier'" [pageTitle]="'Réception de dossier'"></app-routing-appel-offre-projet>-->
+<app-routing-appel-offre-suite-lancement [addButtontitle]="'Présélectionné des dossiers'"
+  [pageTitle]="'Dossiers présélectionné'"></app-routing-appel-offre-suite-lancement>
+
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div class="row">
+    <div class="mb-3 card p-0">
+      <div class="card-body p-2">
+        <h5 class="badge text-secondary me-1 cursor-pointer" ngbTooltip="{{libelle}}">{{libelle}}</h5>
+        <i class="icon-lg text-secondary" data-feather="chevron-right" appFeatherIcon></i>
+        <h3 class="badge text-secondary cursor-pointer" ngbTooltip="{{lancement?.libelle}}">{{lancement?.libelle}}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Présélectionné des dossiers
+    </button>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+        <!-- <ng-container matColumnDef="ref">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;"> Réf </th>
+          <td mat-cell *matCellDef="let dossier">
+            {{dossier?.ref}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Numéro</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.code}} </td>
+        </ng-container>
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Nom du soumissionnaire
+          </th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.nom}} </td>
+        </ng-container>
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Statut de la réception
+          </th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.statut}} </td>
+        </ng-container>
+        <ng-container matColumnDef="etat">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">État</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.etat}} </td>
+        </ng-container>
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Date de réception</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.time}} </td>
+        </ng-container>
+        <ng-container matColumnDef="eval">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Note d'évaluation</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.eval}}/20 </td>
+        </ng-container>
+        <ng-container matColumnDef="comments">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Commentaire</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.comments}} </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="ref">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Numéro du dossier</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.fileNumber}} </td>
+        </ng-container>
+        <ng-container matColumnDef="bidder">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Nom du soumissionnaire
+          </th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.bidderName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Statut de la réception
+          </th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.receptionStatus.libelle}} </td>
+        </ng-container>
+        <ng-container matColumnDef="etat">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">État</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.etat}} </td>
+        </ng-container>
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Date de réception</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.dateReceptFile | date: 'dd-MM-yyyy'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="eval">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Note d'évaluation</th>
+          <td mat-cell *matCellDef="let dossier">{{dossier?.marketFileEntity.noteFinal}} /20</td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Actions
+          </th>
+          <td mat-cell *matCellDef="let dossier" class="text-center">
+            <div class="text-center d-inline-block">
+              <!--              <a class="me-2" role="button" ngbTooltip="Attribuer" placement="left" (click)="openBasicModal(evaluationModal)">-->
+              <!--                <i class="icon-lg pb-3px text-success" data-feather="star" appFeatherIcon></i>-->
+              <!--              </a>-->
+              <!-- <a class="me-2" role="button" ngbTooltip="attribution" placement="left">
+                <mat-icon class="icon-lg pb-3px"> publish</mat-icon>
+              </a> -->
+              <a class="me-2" role="button" ngbTooltip="Piece" placement="left"
+                (click)="openBasicModal(docModal, dossier)">
+                <!-- <i class="icon-lg pb-3px" data-feather="file" appFeatherIcon></i> -->
+                <mat-icon class="icon-lg pb-3px" style="padding-top: 5px;"> attach_file</mat-icon>
+              </a>
+              <!-- color: green; -->
+              <a class="me-2" role="button" ngbTooltip="Attribuer le marché" placement="left">
+                <mat-icon class="icon-lg text-green pb-3px" style=" padding-top: 5px;" (click)="attribuer(dossier)"
+                  [ngClass]="{
+                  'text-success': dossier?.winner === winner,
+                  'text-danger': dossier?.winner === lost
+                  }">
+                  check_circle_outline</mat-icon>
+
+              </a>
+
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <mat-icon class="icon-lg text-muted">more_vert</mat-icon>
+              </span>
+
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                  (click)="openBasicModal(modalUpdate, dossier)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                  (click)="deleteFolderPreselected(dossier.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+          [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+          [ellipses]="true" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Présélectionnés des dossier</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-preselectionne [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId"
+      [isSearch]="false"></app-form-preselectionne>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher un dossiers présélectionnés</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-preselectionne (search)="doSearch($event)" [projetId]="projetId"
+      [isSearch]="true"></app-form-preselectionne>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification des dossiers présélectionnés</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-preselectionne [label]="'Modifier'" (submit)="close($event)" [projetId]="projetId"
+      [dossierPreselectionToUpdate]="preselectionToUpdate" [isSearch]="false"></app-form-preselectionne>
+  </div>
+</ng-template>
+
+<ng-template #docModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Document: Reception de dossier</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-document-reception-dossier (submit)="close($event)"></app-document-reception-dossier>
+  </div>
+</ng-template>
+
+<ng-template #evaluationModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Evaluation du dossier</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!--    <app-evaluation-dossier [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId" [isSearch]="true"></app-evaluation-dossier>-->
+  </div>
+</ng-template>
+
+
+
+
+
+<!-- <ng-container matColumnDef="denomination_sociale">
+  <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:350px;">Dénomination sociale</th>
+  <td mat-cell *matCellDef="let entr" class="text-left">
+    <i popoverTitle="Évaluation : {{entr?.denomination_sociale}}" [ngbPopover]="popTemplate"
+       class="feather icon-alert-circle cursor-pointer"
+       [ngClass]="{
+          'text-danger': entr?.colorStatus === 'danger',
+          'text-success': entr?.colorStatus === 'success',
+          'text-info': entr?.colorStatus === 'info',
+          'text-warning': entr?.colorStatus === 'warning',
+          'text-light': entr?.colorStatus === 'light'}">
+    </i>&nbsp;&nbsp;&nbsp; {{entr?.denomination_sociale}}
+
+    <ng-template #popTemplate>
+      <div class="row">
+        <div class="col-8"><strong>Periodes</strong> : 01/01/2023 - 31/12/2023</div>
+        <div class="col-4 d-flex justify-content-end" >
+          <strong>Statut</strong> :<span [ngClass]="iconClass(entr?.colorStatus)" class="ms-3 mt-2 iconcircle top-0 start-100 translate-middle border border-light rounded-circle">
+    <span class="visually-hidden"></span>
+    </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">Notation Financière : 35 %</div>
+        <div class="col-6">Notation Performance : 48 %</div>
+      </div><br>
+      <ul>
+        <li>Résultat net : 125 920 000 000 FCFA <i class="feather icon-trending-down text-danger"></i></li>
+        <li>Marge brute d'exploitation : 36 000 000 FCFA <i class="feather icon-trending-down text-danger"></i></li>
+        <li>Capacité d'autofinancement : 120 000 000 FCFA <i class="feather icon-trending-up text-success"></i></li>
+        <li>Fonds de roulement net global : 32 000 000 000 FCFA <i class="feather icon-trending-down text-danger"></i></li>
+        <li>Ratio de liquidité générale : 12 % <i class="feather icon-trending-down text-danger"></i></li>
+        <li>Gearing : 41.38 % <i class="feather icon-trending-down text-danger"></i></li>
+      </ul>
+    </ng-template>
+
+  </td>
+</ng-container> -->

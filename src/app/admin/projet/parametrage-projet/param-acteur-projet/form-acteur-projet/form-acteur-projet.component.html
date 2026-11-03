@@ -1,0 +1,53 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Acteur <small style="color: red;">*</small></label>
+      <ng-select [items]="actors"
+                 bindLabel="fullName"
+                 bindValue="id"
+                 placeholder="Actor"
+                 formControlName="agentId">
+      </ng-select>
+    </div>
+    <div>
+      <label for="montant" class="form-label">Rôle <small style="color: red;">*</small></label>
+      <ng-select [items]="roles"
+                 bindLabel="libelle"
+                 bindValue="id"
+                 placeholder="Role"
+                 formControlName="roleId">
+      </ng-select>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Acteur</label>
+      <ng-select [items]="actors"
+                 bindLabel="fullName"
+                 bindValue="id"
+                 placeholder="Actor"
+                 formControlName="agentId">
+      </ng-select>
+    </div>
+    <div>
+      <label for="montant" class="form-label">Rôle</label>
+      <ng-select [items]="roles"
+                 bindLabel="libelle"
+                 bindValue="id"
+                 placeholder="Role"
+                 formControlName="roleId">
+      </ng-select>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+    </div>
+  </form>
+</section>

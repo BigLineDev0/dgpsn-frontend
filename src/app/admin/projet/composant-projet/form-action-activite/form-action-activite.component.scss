@@ -1,0 +1,82 @@
+.card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 0;
+
+  .card-body {
+    padding: 20px;
+
+    strong {
+      color: #3b5943;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 0;
+    }
+
+    ul {
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 5px;
+        color: #555;
+      }
+    }
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+
+  small {
+    color: red;
+    font-weight: normal;
+  }
+}
+
+.form-control, .form-select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+
+  &:focus {
+    border-color: #3b5943;
+    box-shadow: 0 0 0 0.2rem rgba(59, 89, 67, 0.25);
+  }
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 15px 20px;
+
+  .btn {
+    padding: 8px 20px;
+    font-weight: 500;
+  }
+}
+
+// Sources de financement
+.row:has(.col-md-3:first-child) {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px 10px;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #f8f9fa;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .col-md-6, .col-md-3 {
+    margin-bottom: 15px;
+  }
+}

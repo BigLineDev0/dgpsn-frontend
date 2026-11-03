@@ -1,0 +1,92 @@
+<Section *ngIf="!isSearch">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- <div class="mb-3">
+            <label class="form-label">Mission</label>
+            <ng-select [items]="problemes" bindLabel="libelle" bindValue="id" placeholder="probème"
+              formControlName="assignmentId">
+            </ng-select>
+          </div> -->
+        </div><!-- Col -->
+      </div><!-- Row -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Recommandation</label>
+            <textarea class="col-12" [rows]="5" [cols]="10" pInputTextarea placeholder="Récommandation"
+              formControlName="libelle"></textarea>
+          </div>
+        </div><!-- Col -->
+      </div><!-- Row -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Responsable</label>
+            <input type="text" class="form-control" placeholder="responsable" formControlName="responsable">
+          </div>
+        </div><!-- Col -->
+      </div><!-- row -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Date échéance</label>
+            <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="deadline">
+          </div>
+        </div><!-- Col -->
+      </div><!-- Row -->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Statut</label>
+            <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut" formControlName="statusId">
+            </ng-select>
+          </div>
+        </div><!-- Col -->
+    
+      </div><!-- Row -->
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+    </div>
+  </Section>
+  
+  <section *ngIf="isSearch">
+    <form [formGroup]="form">   
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="mb-3">
+                  <label class="form-label">Responsable</label>
+                  <input type="text" class="form-control" placeholder="responsable" formControlName="responsable">
+              </div>
+          </div><!-- Col -->
+          <div class="col-sm-6">
+            <div class="mb-3">
+              <label class="form-label">Date échéance</label>
+              <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+                  <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd" name="dp" type="date" formControlName="deadline">
+                </div>
+            </div>
+          </div><!-- Col -->
+      </div><!-- row -->
+      
+      <div class="row">
+          <div class="col-sm-12">
+            <div class="mb-3">
+              <label class="form-label">Statut</label>
+              <ng-select [items]="statuts"
+                bindLabel="libelle"
+                bindValue="id"
+                placeholder="statut"
+                formControlName="statusId">
+              </ng-select>
+            </div>
+          </div><!-- Col -->
+          
+        </div><!-- Row -->
+    </form>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+    </div>
+  </section>

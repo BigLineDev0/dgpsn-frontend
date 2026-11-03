@@ -1,0 +1,251 @@
+<!-- list-operations/list-operations.component.html -->
+<div class="container-fluid">
+  <!-- En-tête -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+    <nav class="page-breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a>Finance</a></li>
+        <li class="breadcrumb-item"><a (click)="retourComptes()" class="cursor-pointer">Trésorerie</a></li>
+        <li class="breadcrumb-item active">Opérations</li>
+      </ol>
+    </nav>
+
+    <div class="d-flex gap-2">
+      <button [matMenuTriggerFor]="exportMenu" type="button" class="btn btn-icon" 
+              style="background-color: #d0a217;" ngbTooltip="Export">
+        <i class="feather icon-download"></i>
+      </button>
+      <mat-menu #exportMenu="matMenu" yPosition="above">
+        <button mat-menu-item (click)="exportOperations('excel')">Excel</button>
+        <button mat-menu-item (click)="exportOperations('pdf')">PDF</button>
+      </mat-menu>
+
+      <!-- Bouton Imprimer avec options -->
+      <button type="button" class="btn btn-primary btn-icon-text" [matMenuTriggerFor]="printMenu">
+        <i class="feather icon-printer"></i>&nbsp; Imprimer
+      </button>
+      <mat-menu #printMenu="matMenu" yPosition="below">
+        <button mat-menu-item (click)="imprimerListe()">
+          <mat-icon>print</mat-icon>
+          <span>Imprimer la liste</span>
+        </button>
+        <button mat-menu-item (click)="imprimerSelection()">
+          <mat-icon>task_alt</mat-icon>
+          <span>Imprimer la sélection</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="apercuAvantImpression()">
+          <mat-icon>visibility</mat-icon>
+          <span>Aperçu avant impression</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Compte sélectionné -->
+  <div class="alert alert-info mb-3" *ngIf="selectedCompte">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <strong>Compte :</strong> {{selectedCompte.numeroCompte}} - {{selectedCompte.libelleCompte}}
+        <span class="mx-2">|</span>
+        <strong>Solde actuel :</strong> 
+        <span [ngClass]="selectedCompte.soldeActuel >= 0 ? 'text-success' : 'text-danger'">
+          {{selectedCompte.soldeActuel | number:'1.0-0'}} {{selectedCompte.devise}}
+        </span>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" (click)="retourComptes()">
+        <i class="feather icon-arrow-left"></i> Tous les comptes
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtres -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row align-items-end">
+        <div class="col-md-3">
+          <label class="form-label small">Date Début</label>
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="filterDateDebut">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label small">Date Fin</label>
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="filterDateFin">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Sens</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filterSensOperation">
+            <option value="">Tous</option>
+            <option value="CREDIT">Crédit</option>
+            <option value="DEBIT">Débit</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label small">Statut</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filterStatut">
+            <option value="">Tous</option>
+            <option value="BROUILLON">Brouillon</option>
+            <option value="EN_ATTENTE">En attente</option>
+            <option value="VALIDE">Validé</option>
+            <option value="REJETE">Rejeté</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary btn-sm w-100 mb-1" (click)="applyFilters()">
+            <i class="feather icon-filter"></i> Filtrer
+          </button>
+          <button class="btn btn-secondary btn-sm w-100" (click)="resetFilters()">
+            <i class="feather icon-x"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tableau des opérations -->
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource?.payload" matSort class="w-100">
+          
+          <!-- Date Opération -->
+          <ng-container matColumnDef="dateOperation">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="min-width:110px;">
+              Date
+            </th>
+            <td mat-cell *matCellDef="let oper">
+              <div>{{oper.dateOperation | date:'dd/MM/yyyy'}}</div>
+              <small class="text-muted">{{oper.dateValeur | date:'dd/MM/yyyy'}}</small>
+            </td>
+          </ng-container>
+
+          <!-- Compte (si pas de filtre compte) -->
+          <ng-container matColumnDef="compte">
+            <th mat-header-cell *matHeaderCellDef style="min-width:180px;">Compte</th>
+            <td mat-cell *matCellDef="let oper">
+              <div class="fw-bold">{{oper.compteBancaire?.numeroCompte}}</div>
+              <small class="text-muted">{{oper.compteBancaire?.libelleCompte}}</small>
+            </td>
+          </ng-container>
+
+          <!-- Libellé -->
+          <ng-container matColumnDef="libelle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="min-width:200px;">
+              Libellé
+            </th>
+            <td mat-cell *matCellDef="let oper">
+              <div>{{oper.libelle}}</div>
+              <small class="text-muted" *ngIf="oper.numeroReference">
+                Réf: {{oper.numeroReference}}
+              </small>
+            </td>
+          </ng-container>
+
+          <!-- Type Opération -->
+          <ng-container matColumnDef="typeOperation">
+            <th mat-header-cell *matHeaderCellDef style="min-width:120px;">Type</th>
+            <td mat-cell *matCellDef="let oper">{{oper.typeOperation?.description}}</td>
+          </ng-container>
+
+          <!-- Sens Opération -->
+          <ng-container matColumnDef="sensOperation">
+            <th mat-header-cell *matHeaderCellDef class="text-center" style="min-width:100px;">
+              Sens
+            </th>
+            <td mat-cell *matCellDef="let oper" class="text-center">
+              <span [ngClass]="getSensOperationBadge(oper.sensOperation)">
+                {{oper.sensOperation}}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Montant -->
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-end" style="min-width:130px;">
+              Montant
+            </th>
+            <td mat-cell *matCellDef="let oper" class="text-end">
+              <strong [ngClass]="oper.sensOperation === 'CREDIT' ? 'text-success' : 'text-danger'">
+                {{oper.sensOperation === 'DEBIT' ? '-' : '+'}}{{oper.montant | number:'1.0-0'}}
+              </strong>
+            </td>
+          </ng-container>
+
+          <!-- Bénéficiaire -->
+          <ng-container matColumnDef="beneficiaire">
+            <th mat-header-cell *matHeaderCellDef style="min-width:150px;">Bénéficiaire</th>
+            <td mat-cell *matCellDef="let oper">{{oper.beneficiaire || '-'}}</td>
+          </ng-container>
+
+          <!-- Statut -->
+          <ng-container matColumnDef="statut">
+            <th mat-header-cell *matHeaderCellDef class="text-center" style="min-width:110px;">
+              Statut
+            </th>
+            <td mat-cell *matCellDef="let oper" class="text-center">
+              <span [ngClass]="getStatutBadge(oper.statut)">
+                {{oper.statut?.description}}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef style="min-width:100px;">Actions</th>
+            <td mat-cell *matCellDef="let oper" class="bg-white">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="validerOperation(oper)" 
+                        [disabled]="oper.statut?.name === 'VALIDE'">
+                  <mat-icon class="text-success">check_circle</mat-icon>
+                  <span>Valider</span>
+                </button>
+                <button mat-menu-item [disabled]="oper.statut?.name === 'VALIDE'">
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <button mat-menu-item (click)="deleteOperation(oper.id)" 
+                        class="text-danger"
+                        [disabled]="oper.statut?.name === 'VALIDE'">
+                  <mat-icon class="text-danger">delete</mat-icon>
+                  <span>Supprimer</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div *ngIf="dataSource?.payload?.length === 0" class="text-center text-muted p-5">
+          <i class="feather icon-inbox" style="font-size: 3rem;"></i>
+          <p class="mt-2">Aucune opération trouvée</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-wrapper d-flex justify-content-center mt-4 mb-3">
+          <div class="d-flex align-items-center gap-3 p-2 rounded border bg-light">
+            <ngb-pagination 
+              [collectionSize]="dataSource?.metadata?.totalElements"
+              [page]="pageOptions.page + 1"
+              [pageSize]="pageOptions.size"
+              [maxSize]="5"
+              (pageChange)="paginate($event)"
+              size="sm">
+            </ngb-pagination>
+
+            <select class="form-select form-select-sm" style="width: auto"
+                    [(ngModel)]="pageOptions.size"
+                    (change)="onPageSizeChange()">
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

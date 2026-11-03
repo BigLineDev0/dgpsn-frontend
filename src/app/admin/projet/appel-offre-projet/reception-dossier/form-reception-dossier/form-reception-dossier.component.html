@@ -1,0 +1,121 @@
+<section *ngIf="!isSearch && !isSearchAttri">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-3 mb-3">
+        <label class="form-label">Numéro de dossier</label>
+        <input type="text" class="form-control" placeholder="Numéro" formControlName="fileNumber">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Nom du soumissionnaire<small style="color: red;">*</small></label>
+        <input type="text" class="form-control" placeholder="Nom et prenom" formControlName="bidderName">
+      </div>
+      <div class="col-3 mb-3">
+        <label class="form-label">Représentant légal<small style="color: red;">*</small></label>
+        <input type="text" class="form-control" placeholder="Nom" formControlName="legalRepresentative">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Numeros de téléphone</label>
+        <input type="text" class="form-control" placeholder="Téléphone" formControlName="phoneNumber">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Email</label>
+        <input type="text" class="form-control" placeholder="Email" formControlName="email">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4 mb-3">
+        <label class="form-label">Date et heure de réception du dossier</label>
+        <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateReceptFile">
+      </div>
+      <div class="col-2">
+       <label class="form-label">Heure de réception </label>
+        <!-- <ngb-timepicker size="small" formControlName="timeReceptFile"></ngb-timepicker> -->
+        <input type="time" class="form-control" formControlName="timeReceptFile">
+
+      </div>
+
+      <div class="col-2 mb-3">
+        <label class="form-label">Statut de la réception</label>
+        <ng-select [items]="statutReception" bindLabel="libelle" bindValue="id" placeholder="Selectionner" formControlName="receptionStatusId"></ng-select>
+      </div>
+      <div class="col-4 mb-3">
+        <label class="form-label">Responsable de la réception</label>
+        <input type="text" class="form-control" placeholder="Responsable"formControlName="receptionManager">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <label class="form-label">Commentaires/Observations</label>
+        <textarea class="form-control" [rows]="5" formControlName="description"></textarea>
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch && !isSearchAttri">
+  <form [formGroup]="form">
+    <div class="row">
+     
+      <div class="col-3 mb-3">
+        <label class="form-label">Numéro de dossier</label>
+        <input type="text" class="form-control" placeholder="Numéro">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Nom du soumissionnaire <small style="color: red;">*</small></label>
+        <input type="text" class="form-control" placeholder="Nom">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4 mb-3">
+        <label class="form-label">Date et heure de réception du dossier</label>
+        <input type="date" class="form-control" placeholder="dd-mm-yyyy">
+      </div>
+      <div class="col-2">
+        <!--        <label class="form-label">Heure de réception du dossier</label>-->
+        <ngb-timepicker size="small"></ngb-timepicker>
+      </div>
+      <!-- <div class="col-3 mb-3">
+        <label class="form-label">État du dossier</label>
+        <ng-select [items]="etats" bindLabel="libelle" bindValue="id" placeholder="Selectionner"></ng-select>
+      </div> -->
+      <!-- <div class="col-3 mb-3">
+        <label class="form-label">Statut de la réception</label>
+        <ng-select [items]="statut" bindLabel="libelle" bindValue="id" placeholder="Selectionner"></ng-select>
+      </div> -->
+    </div>
+  </form>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+  </div>
+</section>
+
+
+<section *ngIf="isSearchAttri">
+  <form [formGroup]="form">
+    <div class="row">
+    
+      <div class="col-6 mb-3">
+        <label class="form-label">Numéro de dossier</label>
+        <input type="text" class="form-control" placeholder="Numéro">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Nom du titulaire du marché</label>
+        <input type="text" class="form-control" placeholder="Nom">
+      </div>
+      <div class="col-6 mb-3">
+        <label class="form-label">Date d'attribution</label>
+        <input type="date" class="form-control" placeholder="dd-mm-yyyy">
+      </div>
+    </div>
+  </form>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+  </div>
+</section>
+

@@ -1,0 +1,42 @@
+.alert-details {
+  .badge {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    
+    &.bg-light {
+      border: 1px solid #dee2e6;
+    }
+  }
+
+  h4 {
+    color: #2c2e3a;
+    font-weight: 600;
+  }
+
+  .text-danger {
+    color: #e74c3c !important;
+  }
+  
+  .text-warning {
+    color: #f39c12 !important;
+  }
+  
+  .text-success {
+    color: #27ae60 !important;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 1rem;
+  }
+}

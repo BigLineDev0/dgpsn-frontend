@@ -1,0 +1,21 @@
+<div class="email-list">       
+    <!-- email list item -->
+    <div *ngFor="let alerte of alertes" [ngClass]="{'email-list-item': true, 'email-list-item--unread': alerte.read == false}">
+      <div class="email-list-actions">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input">
+        </div>
+        <!-- <a class="favorite" href="" (click)="false"><span><i class="feather icon-star"></i></span></a> -->
+      </div>
+      <a (click)="viewDetails($event, alerte)" class="email-list-detail">
+        <div class="content" #div>
+          <!-- <span class="from">{{alerte.template.libelle}}</span> -->
+          <p class="msg"> {{alerte.message | alerteFormatter}}</p>
+        </div>
+        <span class="date">
+          <!-- 08 Jan -->
+          {{alerte.date | date:'dd-MM-yyyy'}}
+        </span>
+      </a>
+    </div>
+</div>

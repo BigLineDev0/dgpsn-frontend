@@ -1,0 +1,210 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="Formation">
+      {{ formation?.titreFormation }}
+    </h6>
+  </div>
+  <div>
+    <button
+            type="button"
+            class="btn btn-secondary btn-icon me-2"
+            (click)="openBasicModal(searchModal)"
+            ngbTooltip="Rechercher"
+    >
+      <i data-feather="search"></i>
+    </button>
+    <button *afHasAnyAuthority="[add]"
+            type="button"
+            class="btn btn-primary btn-icon-text"
+            (click)="openBasicModal(basicModal)"
+            ngbTooltip="Ajouter un participant"
+    >
+      <i data-feather="plus-circle"></i> Nouveau participant
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner
+            *ngIf="loadingIndicator"
+            [displayedColumns]="displayedColumns"
+    ></app-spinner>
+
+    <table mat-table [dataSource]="datasource?.payload" *ngIf="!loadingIndicator">
+      <!-- EMPLOYÉ -->
+      <ng-container matColumnDef="agent">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">
+          Employé
+        </th>
+        <td mat-cell *matCellDef="let participant">
+          <span *ngIf="participant?.agent">
+            {{ participant.agent.prenom }} {{ participant.agent.nom }}
+          </span>
+          <span *ngIf="!participant?.agent">
+            {{ participant?.nomComplet || '-' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- DATE INSCRIPTION -->
+      <ng-container matColumnDef="dateInscription">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">
+          Date Inscription
+        </th>
+        <td mat-cell *matCellDef="let participant" class="text-center">
+          <span *ngIf="participant?.dateInscription && participant.dateInscription.length === 3">
+            {{ participant.dateInscription[2] }}-{{ participant.dateInscription[1] }}-{{ participant.dateInscription[0] }}
+          </span>
+          <span *ngIf="!participant?.dateInscription || participant.dateInscription.length !== 3">
+            {{ participant?.dateInscription | date: 'dd-MM-yyyy' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- STATUT -->
+      <ng-container matColumnDef="statut">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">
+          Statut
+        </th>
+        <td mat-cell *matCellDef="let participant" class="text-center">
+          {{ participant?.statut?.name || participant?.statut || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- NOTE -->
+      <ng-container matColumnDef="noteEvaluation">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+          Note
+        </th>
+        <td mat-cell *matCellDef="let participant" class="text-center">
+          {{ participant?.noteEvaluation || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- CERTIFICAT -->
+      <ng-container matColumnDef="certificatObtenu">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+          Certificat
+        </th>
+        <td mat-cell *matCellDef="let participant" class="text-center">
+          <span *ngIf="participant?.certificatObtenu !== null && participant?.certificatObtenu !== undefined">
+            {{ participant?.certificatObtenu ? 'Oui' : 'Non' }}
+          </span>
+          <span *ngIf="participant?.certificatObtenu === null || participant?.certificatObtenu === undefined">
+            -
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- COMMENTAIRES -->
+      <ng-container matColumnDef="commentaires">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">
+          Commentaires
+        </th>
+        <td mat-cell *matCellDef="let participant">
+          {{ participant?.commentaires || '-' }}
+        </td>
+      </ng-container>
+
+      <!-- ACTIONS -->
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">
+          Actions
+        </th>
+        <td mat-cell *matCellDef="let participant" class="text-center bg-white">
+          <div class="text-center d-inline-block bg-white">
+            <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+              <mat-icon class="text-muted align-middle">more_vert</mat-icon>
+            </span>
+            <mat-menu #menu="matMenu">
+              <a *afHasAnyAuthority="[update]" ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                 (click)="openBasicModal(modalUpdate, participant)">
+                <span class="me-2">Modifier</span>
+                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+              </a>
+              <a *afHasAnyAuthority="[delete]" ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                 (click)="deleteParticipant(participant.id)">
+                <span class="me-2">Supprimer</span>
+                <mat-icon class="text-danger icon-lg">delete</mat-icon>
+              </a>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- PAGINATION -->
+    <div class="paginate" *ngIf="datasource?.totalElements > 0">
+      <ngb-pagination
+              [collectionSize]="datasource?.totalElements"
+              [page]="pageOptions.page + 1"
+              [pageSize]="pageOptions.size"
+              [maxSize]="5"
+              (pageChange)="paginate($event)"
+              size="sm"
+              [rotate]="true"
+              [ellipses]="true"
+              [boundaryLinks]="true"
+      >
+      </ngb-pagination>
+    </div>
+  </section>
+</div>
+
+<!-- MODALES -->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Participant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-participant
+            [label]="'Enregistrer'"
+            (submit)="close($event)"
+            [formationId]="formationId"
+            [isSearch]="false"
+            [modal]="modalRef"
+    >
+    </app-form-participant>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification Participant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-participant
+            [label]="'Modifier'"
+            (submit)="close($event)"
+            [participantToUpdate]="participantToUpdate"
+            [isSearch]="false"
+            [modal]="modalRef"
+            [formationId]="formationId"
+    >
+    </app-form-participant>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher Participant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-participant
+            [label]="'Rechercher'"
+            (search)="doSearch($event)"
+            [formationId]="formationId"
+            [isSearch]="true"
+            [modal]="modalRef"
+    >
+    </app-form-participant>
+  </div>
+</ng-template>

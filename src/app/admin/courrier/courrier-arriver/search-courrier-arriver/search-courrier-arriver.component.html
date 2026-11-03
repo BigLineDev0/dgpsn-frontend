@@ -1,0 +1,201 @@
+<section class="search-courrier-arriver">
+  <form [formGroup]="searchForm">
+    
+    <!-- En-tête de recherche -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="text-primary mb-0">
+            <i class="feather icon-search me-2"></i>Recherche Avancée - Courriers Arrivés
+          </h5>
+          <div>
+            <button type="button" class="btn btn-outline-secondary btn-sm me-2" (click)="remplirExemple()">
+              <i class="feather icon-file-text me-1"></i>Exemple
+            </button>
+            <button type="button" class="btn btn-outline-danger btn-sm" (click)="onReset()">
+              <i class="feather icon-refresh-cw me-1"></i>Réinitialiser
+            </button>
+          </div>
+        </div>
+        <hr class="mt-2">
+      </div>
+    </div>
+
+    <!-- Critères de base -->
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Référence</label>
+        <input type="text" class="form-control" placeholder="Référence ou partie de référence" 
+               formControlName="reference" />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Expéditeur</label>
+        <input type="text" class="form-control" placeholder="Nom de l'expéditeur" 
+               formControlName="expediteur" />
+      </div>
+
+      <div class="col-md-12 col-sm-12 mb-3">
+        <label class="form-label">Objet</label>
+        <input type="text" class="form-control" placeholder="Objet du courrier" 
+               formControlName="objet" />
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Type de Courrier</label>
+        <ng-select [items]="typeCourriers" bindLabel="description" bindValue="name" 
+                  placeholder="Tous les types" formControlName="typeCourrier">
+        </ng-select>
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Niveau d'urgence</label>
+        <ng-select [items]="niveauxUrgence" bindLabel="description" bindValue="name" 
+                  placeholder="Tous les niveaux" formControlName="urgence">
+        </ng-select>
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Statut</label>
+        <ng-select [items]="statutsCourrier" bindLabel="description" bindValue="name" 
+                  placeholder="Tous les statuts" formControlName="statut">
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- Dates d'arrivée -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="text-info mb-3">
+          <i class="feather icon-calendar me-2"></i>Dates d'Arrivée
+        </h6>
+      </div>
+      
+      <div class="col-md-3 col-sm-12 mb-3">
+        <label class="form-label">Opérateur</label>
+        <ng-select [items]="operateursDate" bindLabel="description" bindValue="name" 
+                  formControlName="operateurDateArrivee">
+        </ng-select>
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3">
+        <label class="form-label">Date début</label>
+        <input type="date" class="form-control" formControlName="dateArriveeDebut" />
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3" *ngIf="showDateArriveeFin()">
+        <label class="form-label">Date fin</label>
+        <input type="date" class="form-control" formControlName="dateArriveeFin" />
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3" *ngIf="!showDateArriveeFin()">
+        <label class="form-label">&nbsp;</label>
+        <div class="form-control bg-light text-muted" style="border: none;">
+          <small>Une seule date requise</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dates de réception -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="text-info mb-3">
+          <i class="feather icon-calendar me-2"></i>Dates de Réception
+        </h6>
+      </div>
+      
+      <div class="col-md-3 col-sm-12 mb-3">
+        <label class="form-label">Opérateur</label>
+        <ng-select [items]="operateursDate" bindLabel="description" bindValue="name" 
+                  formControlName="operateurDateReception">
+        </ng-select>
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3">
+        <label class="form-label">Date début</label>
+        <input type="date" class="form-control" formControlName="dateReceptionDebut" />
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3" *ngIf="showDateReceptionFin()">
+        <label class="form-label">Date fin</label>
+        <input type="date" class="form-control" formControlName="dateReceptionFin" />
+      </div>
+
+      <div class="col-md-3 col-sm-12 mb-3" *ngIf="!showDateReceptionFin()">
+        <label class="form-label">&nbsp;</label>
+        <div class="form-control bg-light text-muted" style="border: none;">
+          <small>Une seule date requise</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Critères avancés -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="text-warning mb-3">
+          <i class="feather icon-zap me-2"></i>Critères Avancés
+        </h6>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Numéro d'enregistrement</label>
+        <input type="text" class="form-control" placeholder="Numéro d'enregistrement" 
+               formControlName="numeroEnregistrement" />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Service destinataire</label>
+        <input type="text" class="form-control" placeholder="Service destinataire" 
+               formControlName="serviceDestinataire" />
+      </div>
+
+      <div class="col-md-12 col-sm-12 mb-3">
+        <label class="form-label">Description / Contenu</label>
+        <textarea class="form-control" rows="2" placeholder="Mots-clés dans la description..." 
+                  formControlName="description"></textarea>
+      </div>
+    </div>
+
+    <!-- Options de recherche -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h6 class="text-secondary mb-3">
+          <i class="feather icon-settings me-2"></i>Options de Recherche
+        </h6>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" formControlName="rechercheExacte" id="rechercheExacte">
+          <label class="form-check-label" for="rechercheExacte">
+            Recherche exacte (respecter la casse)
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" formControlName="inclureArchives" id="inclureArchives">
+          <label class="form-check-label" for="inclureArchives">
+            Inclure les courriers archivés
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-end border-top pt-3">
+          <button type="button" class="btn btn-secondary me-3" (click)="onCancel()">
+            <i class="feather icon-x me-1"></i>Annuler
+          </button>
+          <button type="button" class="btn btn-primary" (click)="onSearch()">
+            <i class="feather icon-search me-1"></i>Rechercher
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</section>

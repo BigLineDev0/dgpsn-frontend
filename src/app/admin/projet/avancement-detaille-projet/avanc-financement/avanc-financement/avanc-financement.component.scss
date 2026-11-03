@@ -1,0 +1,73 @@
+.tres-bon {
+  color: #198754;  // Bootstrap success green
+  font-weight: bold;
+}
+
+.bon {
+  color: #01c870;  // Bootstrap primary blue
+  font-weight: bold;
+}
+
+.moyen {
+  color: #fd7e14;  // Bootstrap orange
+  font-weight: bold;
+}
+
+.faible {
+  color: #dc3545;  // Bootstrap danger red
+  font-weight: bold;
+}
+
+.table {
+  font-size: 0.9rem;
+
+  th, td {
+    vertical-align: middle;
+  }
+}
+
+.accordion-button {
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+}
+
+.accordion-body {
+  padding: 1rem;
+}
+
+// Pour les tableaux imbriqués
+.table-responsive {
+  margin-bottom: 0;
+}
+
+// Assurer que les noms des éléments s'affichent correctement
+td:first-child, th:first-child {
+  min-width: 200px;
+}
+
+// Style pour les montants et les pourcentages
+.text-end {
+  font-family: 'Courier New', monospace;
+}
+
+// Style pour le résumé du projet
+.alert-secondary {
+  border-left: 5px solid #3B5943;
+}
+
+// Style pour les en-têtes d'accordéon avec état d'exécution
+.accordion-button {
+  .tres-bon, .bon, .moyen, .faible {
+    margin-left: 5px;
+  }
+}
+
+// Animation pour les changements d'état
+.accordion-collapse {
+  transition: all 0.3s ease-in-out;
+}
+
+// Amélioration visuelle pour les lignes du tableau
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}

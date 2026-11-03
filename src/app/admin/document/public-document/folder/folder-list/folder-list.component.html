@@ -1,0 +1,108 @@
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="card-tree">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      <div class="cursor-pointer" ngbTooltip="Cliquer pour voir les documents" (click)="getClickedFolder(node?.data?.id)">
+        <i class="feather icon-folder icon-md text-primary mr-1"></i>
+        {{node.name}}
+      </div>
+
+      <ul class="navbar-nav" style="position: relative; left: 20px; top: 2px;" ngbTooltip="Actions">
+        <li class="nav-item nav-profile" ngbDropdown>
+          <a class="nav-link" ngbDropdownToggle id="profileDropdown">
+            <i class="feather icon-more-horizontal icon-md text-primary"></i>
+          </a>
+          <div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+            <ul class="list-unstyled p-1">
+              <li class="dropdown-item py-2">
+                <a (click)="openNewFolder(folderModal)" class="d-flex text-body ms-0">
+                  <i class="feather icon-folder-plus me-2 icon-md"></i>
+                  <span>Nouveau dossier</span>
+                </a>
+              </li>
+              <li class="dropdown-item py-2">
+                <a (click)="openForUpdate(updateFolderModal, node?.data)" class="d-flex text-body ms-0">
+                  <i class="feather icon-edit me-2 icon-md"></i>
+                  <span>Renommer dossier</span>
+                </a>
+              </li>
+              <li class="dropdown-item py-2">
+                <a class="d-flex text-body ms-0" (click)="deleteFolder(node?.data?.id)">
+                  <i class="feather icon-trash me-2 icon-md"></i>
+                  <span>Supprimer dossier</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <div class="cursor-pointer" ngbTooltip="Cliquer pour voir les documents" (click)="getClickedFolder(node?.data?.id)">
+        <i class="feather icon-folder icon-md text-primary mr-1"></i>
+        {{node.name}}
+      </div>
+
+      <ul class="navbar-nav" style="position: relative; left: 20px; top: 2px;" ngbTooltip="Actions">
+        <li class="nav-item nav-profile" ngbDropdown>
+          <a class="nav-link" ngbDropdownToggle id="profileDropdown">
+            <i class="feather icon-more-horizontal icon-md text-primary"></i>
+          </a>
+          <div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+            <ul class="list-unstyled p-1">
+              <li class="dropdown-item py-2">
+                <a (click)="openNewFolder(folderModal)" class="d-flex text-body ms-0">
+                  <i class="feather icon-folder-plus me-2 icon-md"></i>
+                  <span>Nouveau dossier</span>
+                </a>
+              </li>
+              <li class="dropdown-item py-2">
+                <a (click)="openForUpdate(updateFolderModal, node?.data)" class="d-flex text-body ms-0">
+                  <i class="feather icon-edit me-2 icon-md"></i>
+                  <span>Renommer dossier</span>
+                </a>
+              </li>
+              <li class="dropdown-item py-2">
+                <a class="d-flex text-body ms-0" (click)="deleteFolder(node?.data?.id)">
+                  <i class="feather icon-trash me-2 icon-md"></i>
+                  <span>Supprimer dossier</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </mat-tree-node>
+</mat-tree>
+
+<!--Add sub folder-->
+<ng-template #folderModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Nouveau dossier</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-folder-form (submit)="close($event)"></app-folder-form>
+    </div>
+</ng-template>
+<!-- end add sub folder-->
+
+<!--Update folder-->
+<ng-template #updateFolderModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modification dossier</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-folder-form (submit)="close($event)" [folder]="updateFolder"></app-folder-form>
+  </div>
+</ng-template>
+<!-- end update folder-->

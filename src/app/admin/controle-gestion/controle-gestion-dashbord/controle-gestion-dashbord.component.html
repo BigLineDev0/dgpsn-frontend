@@ -1,0 +1,211 @@
+<div class="dashboard-container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-4">
+        <h3 class="page-title ">Tableau de Bord du Contrôle de Gestion DGPSN</h3>
+        <button type="button" class="btn btn-primary btn-animated" (click)="exportDashboardData()">
+            <i class="feather icon-download me-2"></i> Exporter Rapports
+        </button>
+    </div> 
+
+    <!-- Cartes Statistiques KPI (3 Cartes restantes) -->
+<div class="row mb-4">
+    <div class="col-xl-4 col-md-6 mb-4 ju" *ngFor="let card of statCards">
+        <div class="stat-card shadow-sm">
+            <div class="stat-card-content text-center ms-3">
+                <div [class]="'stat-icon ' + card.iconClass">
+                    <i [class]="'feather ' + card.icon"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-value">{{ card.value }}</p>
+                    <p class="stat-label">{{ card.label }}</p>
+                    <p [class]="'stat-trend ' + card.trendClass">
+                        <i [class]="'feather ' + card.trendIcon"></i> {{ card.trend }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- SECTION 1: SYNTHÈSE BUDGÉTAIRE ET DÉPENSES -->
+    <div class="row">
+        
+        <!-- Graphique : Répartition des Recettes (Taux de recouvrement) -->
+        <div class="col-lg-5 mb-4">
+            <div class="dashboard-card h-100">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Répartition des Recettes Réalisées (T2)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas #recetteChartCanvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphique : Évolution des Dépenses de Fonctionnement (Suivi T1, T2, T3) -->
+        <div class="col-lg-7 mb-4">
+            <div class="dashboard-card h-100">
+                <div class="card-header text-center">
+                    <h5 class="card-title">Situation des Dépenses de Fonctionnement 2025</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas #depenseChartCanvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tableau: Situation Recouvrement des Recettes par trimestre [1] -->
+    <div class="row mt-4">
+        <div class="col-12 mb-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h5 class="card-title">Situation du Recouvrement des Recettes (au 30/06/2025)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table dashboard-table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="table-head-text">Libellés</th>
+                                    <th class="table-head-text text-end">Services Votés 2025</th>
+                                    <th class="table-head-text text-end">Réalisations au 30/03/2025</th>
+                                    <th class="table-head-text text-end">Réalisations au 30/06/2025</th>
+                                    <th class="table-head-text text-center">Taux de Réalisation</th>
+                                    <th class="table-head-text">Observations</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let recette of recettesData">
+                                    <td class="projet-name">{{ recette.libelle }}</td>
+                                    <td class="text-end text-primary fw-bold">{{ formatMontant(recette.servicesVotes2025) }}</td>
+                                    <td class="text-end">{{ recette.realisations30032025 ? formatMontant(recette.realisations30032025) : 'N/A' }}</td>
+                                    <td class="text-end">{{ formatMontant(recette.realisations30062025) }}</td>
+                                    <td class="text-center">
+                                        <span class="badge" [class.bg-success]="recette.tauxRealisation === '100%'" [class.bg-warning]="recette.tauxRealisation !== '0%' && recette.tauxRealisation !== '100%'" [class.bg-danger]="recette.tauxRealisation === '0%'">
+                                            {{ recette.tauxRealisation }}
+                                        </span>
+                                    </td>
+                                    <td>{{ recette.observations }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tableau: Situation des Dépenses de Fonctionnement [2] -->
+    <div class="row mt-4">
+        <div class="col-12 mb-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h5 class="card-title">Situation Détaillée des Dépenses de Fonctionnement (Budget 2025)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table dashboard-table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="table-head-text">DEPENSES DE FONCTIONNEMENT</th>
+                                    <th class="table-head-text text-end">BUDGET 2025</th>
+                                    <th class="table-head-text text-end">RÉALISATIONS AU 30-03-2025 (T1)</th>
+                                    <th class="table-head-text text-center">TR</th>
+                                    <th class="table-head-text text-end">RÉALISATIONS AU 30-06-2025 (T2)</th>
+                                    <th class="table-head-text text-center">TR</th>
+                                    <th class="table-head-text text-end">RÉALISATIONS AU 01-09-2025 (T3)</th>
+                                    <th class="table-head-text text-center">TR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let depense of depensesData">
+                                    <td class="projet-name fw-bold">{{ depense.libelle }}</td>
+                                    <td class="text-end text-primary fw-bold">{{ formatMontant(depense.budget2025) }}</td>
+                                    <td class="text-end">{{ formatMontant(depense.realisationsT1) }}</td>
+                                    <td class="text-center"><span class="badge bg-secondary">{{ depense.tr1 }}</span></td>
+                                    <td class="text-end">{{ formatMontant(depense.realisationsT2) }}</td>
+                                    <td class="text-center"><span class="badge bg-secondary">{{ depense.tr2 }}</span></td>
+                                    <td class="text-end">{{ formatMontant(depense.realisationsT3) }}</td>
+                                    <td class="text-center"><span class="badge bg-secondary">{{ depense.tr3 }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2: SUIVI DES MARCHÉS ET DOSSIERS ENGAGÉS -->
+    <div class="row mt-4">
+        <div class="col-lg-6 mb-4">
+            <div class="dashboard-card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Synthèse des Dossiers et Marchés (Engagés/Rejets/Exécutés)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table dashboard-table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="table-head-text">Dossier</th>
+                                    <th class="table-head-text text-center">Statut</th>
+                                    <th class="table-head-text">A Faire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let marche of marchesData">
+                                    <tr [class.text-muted]="marche.type === 'A_LANCER'">
+                                        <td class="projet-name">{{ marche.dossier }}</td>
+                                        <td class="text-center">
+                                            <span class="badge" [ngClass]="getMarcheStatusClass(marche.type)">
+                                                {{ marche.situation }}
+                                            </span>
+                                        </td>
+                                        <td>{{ marche.aFaire }}</td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Graphique : Statut des Marchés -->
+        <div class="col-lg-6 mb-4">
+            <div class="dashboard-card h-100">
+                <div class="card-header">
+                    <h5 class="card-title">Répartition des Procédures de Marchés</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas #marcheStatusChartCanvas></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    
+    <!-- NOTE DE SYNTHÈSE et RECOMMANDATIONS -->
+    <!-- <div class="row mt-4">
+        <div class="col-12">
+            <div class="dashboard-card alert-info alert-item">
+                 <div class="alert-title mb-2"><i class="feather icon-info me-2"></i> RECOMMANDATIONS CLÉS DU CONTRÔLEUR DE GESTION</div>
+                 <p class="text-muted">
+                    Le contrôle de gestion a pour rôle de s’assurer que les ressources sont utilisées efficacement [9].
+                 </p>
+                 <ul>
+                     <li>La DSP devra fournir un rapport semestriel pour que l’on soit fixé sur l’évolution des activités [10].</li>
+                     <li>La DAF devra finaliser les dossiers des dettes et créances (Bien que les créances ne soient pas affichées ici, la recommandation de finalisation est maintenue) [10].</li>
+                     <li>La CPM devra faire parvenir les instances (lettre invitation) pour pouvoir lancer les marchés et rester dans les délais d’exécution [10].</li>
+                 </ul>
+            </div>
+        </div>
+    </div> -->
+</div>

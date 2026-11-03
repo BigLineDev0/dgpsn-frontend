@@ -1,0 +1,108 @@
+  <section *ngIf="!isSearch">   
+    <form [formGroup]="form">
+      <div class="mb-3">
+        <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+        <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+        <small *ngIf="code.invalid && (code.dirty || code.touched)" class="block p-error">
+          <div *ngIf="code.errors?.['required']">Code is required</div>
+          <div *ngIf="code.errors?.['code']">Code should be valid</div>
+        </small>
+        <div *ngIf="form.get('code')?.invalid && (form.get('code')?.dirty || form.get('code')?.touched)" class="text-danger">
+          <div *ngIf="form.get('code')?.hasError('required')">Le code est obligatoire.</div>
+          <div *ngIf="form.get('code')?.hasError('minlength')">Le code doit avoir au moins 3 caractères.</div>
+          <div *ngIf="form.get('code')?.hasError('maxlength')">Le code ne peut pas dépasser 10 caractères.</div>
+          <div *ngIf="form.get('code')?.hasError('pattern')">Le code ne peut contenir que des lettres et des chiffres.</div>
+        </div>
+      </div>
+      <div>
+        <label for="libelle" class="form-label">Libellé<small style="color: red;">*</small></label>
+        <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+        <small *ngIf="libelle.invalid && (libelle.dirty || libelle.touched)" class="block p-error">
+          <div *ngIf="libelle.errors?.['required']">Code is required</div>
+          <div *ngIf="libelle.errors?.['libelle']">Code should be valid</div>
+        </small>
+        <div *ngIf="form.get('libelle')?.invalid && (form.get('libelle')?.dirty || form.get('libelle')?.touched)" class="text-danger">
+          <div *ngIf="form.get('libelle')?.hasError('required')">Le Libellé est obligatoire.</div>
+          <div *ngIf="form.get('libelle')?.hasError('minlength')">Le Libellé doit avoir au moins 3 caractères.</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="unitId1" class="form-label">Unité<small style="color: red;">*</small></label>
+            <ng-select 
+                       bindLabel="libelle"
+                       placeholder="Unité"
+                       formControlName="unitId"
+                    >
+                    <ng-option *ngFor="let option of unites" [value]="option.id">{{ option?.libelle }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+  
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="indicatorTypeId1" class="form-label">Type d'indicateur<small style="color: red;">*</small></label>
+            <ng-select bindLabel="libelle"
+                       placeholder="Type d'indicateur"
+                       formControlName="indicatorTypeId"
+                       >
+                       <ng-option *ngFor="let option of indicatorTypes" [value]="option.id">{{ option?.libelle }}</ng-option>
+                      
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+    </div>
+  
+  </section>
+
+  <section *ngIf="isSearch">   
+    <form [formGroup]="form">
+      <div class="mb-3">
+        <label for="code" class="form-label">Code</label>
+        <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+     
+      </div>
+      <div>
+        <label for="libelle" class="form-label">Libellé</label>
+        <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+        
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="unitId1" class="form-label">Unité</label>
+            <ng-select 
+                       bindLabel="libelle"
+                       placeholder="Unité"
+                       formControlName="unitId"
+                    >
+                    <ng-option *ngFor="let option of unites" [value]="option.id">{{ option?.libelle }}</ng-option>
+            </ng-select>
+          </div>
+      </div>
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label for="indicatorTypeId1" class="form-label">Type d'indicateur</label>
+            <ng-select
+                       bindLabel="libelle"
+                       placeholder="Type d'indicateur"
+                       formControlName="indicatorTypeId"
+                       >
+                       <ng-option *ngFor="let option of indicatorTypes" [value]="option.id">{{ option?.libelle }}</ng-option>
+                      
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+  </section>
+  

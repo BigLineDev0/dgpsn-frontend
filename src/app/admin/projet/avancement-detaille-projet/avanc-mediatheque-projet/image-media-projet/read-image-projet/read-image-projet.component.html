@@ -1,0 +1,13 @@
+<ngb-carousel [showNavigationArrows]="false" [showNavigationIndicators]="true" *ngIf="!imageUrl">
+  <ng-template ngbSlide>
+    <div class="picsum-img-wrapper">
+      <!-- <img [attr.src]="dataLocalUrl | safeUrl" class="w-100" alt="Random slide"> -->
+    </div>
+  </ng-template>
+</ngb-carousel>
+
+<ng-template *ngIf="imageUrl">
+  <div class="picsum-img-wrapper">
+    <!-- <img [attr.src]="imageUrl | safeUrl" class="w-100" alt="Random slide"> -->
+  </div>
+</ng-template>

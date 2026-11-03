@@ -1,0 +1,169 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mb-3">
+          <label for="libelle" class="form-label">Libelle (Rubrique classe 7)<small style="color: red">*</small></label>
+          <select
+            class="form-control form-control-lg"
+            id="libelle"
+            formControlName="libelle"
+          >
+            <option value="">Sélectionnez une rubrique</option>
+            <option *ngFor="let r of rubriquesItems()" [value]="r.code">
+              {{ r.code }} - {{ r.libelle }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label for="montant" class="form-label">Montant<small style="color: red">*</small></label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="montant"
+            placeholder="montant"
+            formControlName="montant"
+          />
+          <div
+            *ngIf="
+              form.get('montant')?.invalid &&
+              (form.get('montant')?.dirty || form.get('montant')?.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="form.get('montant')?.hasError('required')">
+              Ce champs est obligatoire.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="mb-3">
+          <label for="commentaire" class="form-label">Commentaire</label>
+          <textarea
+            id="commentaire"
+            class="form-control form-control-lg"
+            rows="3"
+            placeholder="Ajouter un commentaire optionnel"
+            formControlName="commentaire"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Fermer
+    </button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">
+      Enregistrer
+    </button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="montant" class="form-label">montant</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="montant"
+            placeholder="montant "
+            formControlName="montant"
+          />
+        </div>
+      </div>
+      <!-- <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="date" class="form-label">date</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="date"
+            placeholder="date"
+            formControlName="date"
+          />
+        </div>
+      </div> -->
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="classe" class="form-label">classe</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="matricule"
+            placeholder="classe"
+            formControlName="classe"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="classe" class="form-label">Classe</label>
+          <select
+            class="form-control form-control-lg"
+            id="classe"
+            formControlName="classe"
+          >
+            <option value="">Sélectionnez une classe</option>
+            <option value="1">1 - Comptes de capitaux</option>
+            <option value="2">2 - Comptes d'immobilisations</option>
+            <option value="3">3 - Comptes de stocks</option>
+            <option value="4">4 - Comptes de tiers</option>
+            <option value="5">5 - Comptes financiers</option>
+            <option value="6">6 - Comptes de charges</option>
+            <option value="7">7 - Comptes de produits</option>
+            <option value="8">8 - Comptes spéciaux</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="compte" class="form-label">Compte</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="compte"
+            placeholder="Compte"
+            formControlName="compte"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="fonction" class="form-label">Fonction</label>
+          <ng-select
+            bindLabel="libelle"
+            placeholder="Fonction"
+            formControlName="fonctionId"
+          >
+            <ng-option *ngFor="let option of fonctions" [value]="option.id">{{
+              option?.libelle
+            }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">
+      Rechercher
+    </button>
+  </div>
+</section>

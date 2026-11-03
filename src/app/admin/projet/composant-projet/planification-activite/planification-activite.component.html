@@ -1,0 +1,171 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <div></div>
+    <div>
+        <h6 class="text-center text-primary" ngbTooltip="Activité">{{activite?.libelle}}</h6>
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openModal(searchModal)">
+            <i class="feather icon-search"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon-text" (click)="openModal(basicModal)">
+            <i class="feather icon-plus-circle"></i> Nouvelle Tâche
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+
+            <ng-container matColumnDef="trimestre">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Trimestre</th>
+                <td mat-cell *matCellDef="let planning">
+          <span class="badge" [ngClass]="{
+            'bg-primary': planning?.trimestre === 1,
+            'bg-success': planning?.trimestre === 2,
+            'bg-warning': planning?.trimestre === 3,
+            'bg-danger': planning?.trimestre === 4
+          }">
+            Trimestre {{planning?.trimestre}}
+          </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mois">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Mois</th>
+                <td mat-cell *matCellDef="let planning">
+                    <span class="badge bg-info">{{getMoisLabel(planning?.mois)}}</span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="semaines">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Semaines</th>
+                <td mat-cell *matCellDef="let planning" class="text-center">
+          <span *ngIf="planning?.semaines && planning?.semaines.length > 0">
+            <span class="badge bg-secondary me-1" *ngFor="let semaine of planning?.semaines">S{{semaine}}</span>
+          </span>
+                    <span *ngIf="!planning?.semaines || planning?.semaines.length === 0" class="text-muted">
+            Tout le mois
+          </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateDebut">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Date Début</th>
+                <td mat-cell *matCellDef="let planning" class="text-center">
+                    {{planning?.dateDebut | date: 'dd/MM/yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dateFin">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Date Fin</th>
+                <td mat-cell *matCellDef="let planning" class="text-center">
+                    {{planning?.dateFin | date: 'dd/MM/yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="statut">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Statut</th>
+                <td mat-cell *matCellDef="let planning" class="text-center">
+          <span class="badge" [ngClass]="{
+            'bg-success': planning?.statut === 'TERMINE',
+            'bg-warning': planning?.statut === 'EN_COURS',
+            'bg-secondary': planning?.statut === 'PLANIFIE'
+          }">
+            {{getStatutLabel(planning?.statut)}}
+          </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="commentaire">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:250px;">Commentaire</th>
+                <td mat-cell *matCellDef="let planning">{{planning?.commentaire}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Actions</th>
+                <td mat-cell *matCellDef="let planning" class="text-center">
+                    <div class="text-center d-inline-block">
+                        <a role="button" ngbTooltip="Modifier" placement="top" (click)="openModal(modalUpdate, planning)">
+                            <i class="icon-md text-primary me-2 cursor-pointer" data-feather="edit" appFeatherIcon></i>
+                        </a>
+                        <a role="button" ngbTooltip="Supprimer" placement="top" (click)="deletePlanning(planning.id)">
+                            <i class="icon-md text-danger cursor-pointer" data-feather="trash-2" appFeatherIcon></i>
+                        </a>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <div class="paginate" *ngIf="datasource?.totalElements > 0">
+            <ngb-pagination
+                    [collectionSize]="datasource?.totalElements"
+                    [page]="pageOptions.page + 1"
+                    [pageSize]="pageOptions.size"
+                    [maxSize]="5"
+                    (pageChange)="paginate($event)"
+                    size="sm"
+                    [rotate]="true"
+                    [ellipses]="true"
+                    [boundaryLinks]="true">
+            </ngb-pagination>
+        </div>
+    </section>
+</div>
+
+<!-- Modal Ajout -->
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout Tache</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-planification
+                [label]="'Enregistrer'"
+                (submit)="close($event)"
+                [activityId]="activity"
+                [isSearch]="false"
+                [modal]="modalRef">
+        </app-form-planification>
+    </div>
+</ng-template>
+
+<!-- Modal Modification -->
+<ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modification Tâche</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-planification
+                [label]="'Modifier'"
+                (submit)="close($event)"
+                [planningToUpdate]="planningToUpdate"
+                [activityId]="activity"
+                [isSearch]="false"
+                [modal]="modalRef">
+        </app-form-planification>
+    </div>
+</ng-template>
+
+<!-- Modal Recherche -->
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Rechercher Tâche</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-planification
+                [label]="'Rechercher'"
+                (search)="doSearch($event)"
+                [isSearch]="true"
+                [modal]="modalRef">
+        </app-form-planification>
+    </div>
+</ng-template>

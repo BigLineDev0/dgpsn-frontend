@@ -1,0 +1,58 @@
+<form [formGroup]="form">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label>Prénom</label>
+      <input type="text" formControlName="prenom" class="form-control" placeholder="Prénom">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label>Nom</label>
+      <input type="text" formControlName="nom" class="form-control" placeholder="Nom">
+    </div>
+    <div class="col-md-12 mb-3">
+      <label>Adresse</label>
+      <input type="text" formControlName="adresse" class="form-control" placeholder="Adresse">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label>Salaire souhaité</label>
+      <input type="number" formControlName="salaireSouhaite" class="form-control" placeholder="Salaire">
+    </div>
+    <div class="col-md-6 mb-3">
+      <label>Niveau d'étude</label>
+      <select formControlName="niveauEtude" class="form-select">
+        <option *ngFor="let niveau of niveaux" [value]="niveau">{{ mapperNiveau(niveau) }}</option>
+      </select>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label>Expérience professionnelle</label>
+      <select formControlName="experienceProfessionnelle" class="form-select">
+        <option *ngFor="let exp of experiences" [value]="exp">{{ mapperExperience(exp) }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <label>Poste postulé</label>
+      <input type="text" formControlName="postePostule" class="form-control" placeholder="Poste" readonly>
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <label>Compétences</label>
+      <div formArrayName="competences">
+        <div *ngFor="let comp of competences.controls; let i = index" class="d-flex mb-2">
+          <input type="text" [formControlName]="i" class="form-control me-2" placeholder="Compétence">
+          <button type="button" class="btn btn-danger btn-sm" (click)="removeCompetence(i)">Supprimer</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addCompetence()">Ajouter compétence</button>
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <label>CV (optionnel)</label>
+      <input type="file" formControlName="cv" class="form-control">
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">Enregistrer</button>
+  </div>
+</form>

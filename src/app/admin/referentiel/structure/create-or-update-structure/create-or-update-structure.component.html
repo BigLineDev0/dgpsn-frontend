@@ -1,0 +1,186 @@
+<section *ngIf="!isSearch">   
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+            <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+            <div *ngIf="form.get('code')?.invalid && (form.get('code')?.dirty || form.get('code')?.touched)" class="text-danger">
+              <div *ngIf="form.get('code')?.hasError('required')">Le code est obligatoire.</div>
+              <div *ngIf="form.get('code')?.hasError('minlength')">Le code doit avoir au moins 3 caractères.</div>
+              <div *ngIf="form.get('code')?.hasError('maxlength')">Le code ne peut pas dépasser 10 caractères.</div>
+              <div *ngIf="form.get('code')?.hasError('pattern')">Le code ne peut contenir que des lettres et des chiffres.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="nom" class="form-label">Nom<small style="color: red;">*</small></label>
+            <input type="text" class="form-control form-control-lg" id="nom" placeholder="Nom" formControlName="nom">
+            <div *ngIf="form.get('nom')?.invalid && (form.get('nom')?.dirty || form.get('nom')?.touched)" class="text-danger">
+              <div *ngIf="form.get('nom')?.hasError('required')">Le nom est obligatoire.</div>
+              <div *ngIf="form.get('nom')?.hasError('minlength')">Le nom doit avoir au moins 2 caractères.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">  
+          <div class="mb-3">
+            <label for="typeStructure" class="form-label">Type structure<small style="color: red;">*</small></label>
+            <ng-select 
+                       bindLabel="typeStructure"
+                       placeholder="typeStructure"
+                       formControlName="typeStructure"
+                    >
+                    <ng-option *ngFor="let option of typeStructure" [value]="option.name">{{ option?.name }}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="telephone" class="form-label">Telephone</label>
+            <input type="text" class="form-control form-control-lg" id="telephone" placeholder="Telephone" formControlName="telephone">
+            <div *ngIf="form.get('telephone')?.invalid && (form.get('telephone')?.dirty || form.get('telephone')?.touched)" class="text-danger">
+              <div *ngIf="form.get('telephone')?.hasError('required')">Le telephone est obligatoire.</div>
+              <div *ngIf="form.get('telephone')?.hasError('pattern') || form.get('telephone')?.hasError('minlength')">Le téléphone ne peut contenir que des chiffres et doit avoir au moins 7 caractères.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="fax" class="form-label">Fax</label>
+            <input type="text" class="form-control form-control-lg" id="fax" placeholder="Fax" formControlName="fax">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control form-control-lg" id="fax" placeholder="Email" formControlName="email">
+            <div *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)" class="text-danger">
+              <div *ngIf="form.get('email')?.hasError('required')">L'email est obligatoire.</div>
+              <div *ngIf="form.get('email')?.hasError('email')">L'email n'est pas valide.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="country" class="form-label">Pays</label>
+            <ng-select 
+                       bindLabel="libelle"
+                       placeholder="Pays"
+                       formControlName="countryId"
+                    >
+                    <ng-option *ngFor="let option of countries" [value]="option.id">{{ option?.libelle }}</ng-option>
+            </ng-select>
+            <div *ngIf="form.get('countryId')?.invalid && (form.get('countryId')?.dirty || form.get('countryId')?.touched)" class="text-danger">
+              <div *ngIf="form.get('countryId')?.hasError('required')">Le pays est obligatoire.</div>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="city" class="form-label">Ville</label>
+            <input type="text" class="form-control form-control-lg" id="city" placeholder="City" formControlName="city">
+            <div *ngIf="form.get('city')?.invalid && (form.get('city')?.dirty || form.get('city')?.touched)" class="text-danger">
+              <div *ngIf="form.get('city')?.hasError('required')">La ville est obligatoire.</div>
+              <div *ngIf="form.get('city')?.hasError('minlength')">La ville doit avoir au moins 2 caractères.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="fax" class="form-label">Addresse</label>
+            <input type="text" class="form-control form-control-lg" id="fax" placeholder="Addresse" formControlName="address">
+            <div *ngIf="form.get('address')?.invalid && (form.get('address')?.dirty || form.get('address')?.touched)" class="text-danger">
+              <div *ngIf="form.get('address')?.hasError('required')">L'addresse est obligatoire.</div>
+              <div *ngIf="form.get('address')?.hasError('minlength')">L'addresse doit avoir au moins 2 caractères.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row"> 
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="WebSite" class="form-label">Site Web</label>
+            <input type="text" class="form-control form-control-lg" id="webSite" placeholder="Site Web" formControlName="webSite">
+            <div *ngIf="form.get('webSite')?.invalid && (form.get('webSite')?.dirty || form.get('webSite')?.touched)" class="text-danger">
+              <div *ngIf="form.get('webSite')?.hasError('required')">Le site web est obligatoire.</div>
+              <div *ngIf="form.get('webSite')?.hasError('pattern')">Le site web n'est pas valide.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="responsable" class="form-label">Responsable</label>
+            <input type="text" class="form-control form-control-lg" id="responsable" placeholder="Responsable" formControlName="responsable">
+            <div *ngIf="form.get('responsable')?.invalid && (form.get('responsable')?.dirty || form.get('responsable')?.touched)" class="text-danger">
+              <div *ngIf="form.get('responsable')?.hasError('required')">Le responsable est obligatoire.</div>
+              <div *ngIf="form.get('responsable')?.hasError('minlength')">Le responsable doit avoir au moins 2 caractères.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label for="sartDateCooperation" class="form-label">Date début cooperation</label>
+            <input type="date" class="form-control form-control-lg" id="sartDateCooperation" placeholder="sartDateCooperation" formControlName="sartDateCooperation">
+            <div *ngIf="form.get('sartDateCooperation')?.invalid && (form.get('sartDateCooperation')?.dirty || form.get('sartDateCooperation')?.touched)" class="text-danger">
+              <div *ngIf="form.get('sartDateCooperation')?.hasError('required')">La date de debut cooperation est obligatoire.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-121">
+          <div class="mb-3">
+            <label for="mechanismOfIntervention" class="form-label">Mecanisme d'intervention</label>
+            <input type="text" class="form-control form-control-lg" id="mechanismOfIntervention" placeholder="Mecanisme d intervention" formControlName="mechanismOfIntervention">
+            <div *ngIf="form.get('mechanismOfIntervention')?.invalid && (form.get('mechanismOfIntervention')?.dirty || form.get('mechanismOfIntervention')?.touched)" class="text-danger">
+              <div *ngIf="form.get('mechanismOfIntervention')?.hasError('required')">Le mecanisme d'intervention est obligatoire.</div>
+              <div *ngIf="form.get('mechanismOfIntervention')?.hasError('minlength')">Le mecanisme d'intervention doit avoir au moins 2 caractères.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+    </div>
+</section>
+<section *ngIf="isSearch">   
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="mb-3">
+          <label for="code" class="form-label">Code</label>
+          <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom</label>
+          <input type="text" class="form-control form-control-lg" id="nom" placeholder="Nom" formControlName="nom">  
+        </div>
+      </div>
+      <div class="col-sm-4">  
+        <div class="mb-3">
+          <label for="typeStructure" class="form-label">Type structure</label>
+          <ng-select 
+                     bindLabel="typeStructure"
+                     placeholder="typeStructure"
+                     formControlName="typeStructure"
+                  >
+                  <ng-option *ngFor="let option of typeStructure" [value]="option.name">{{ option?.name }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>
+  

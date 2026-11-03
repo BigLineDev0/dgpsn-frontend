@@ -1,0 +1,172 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb ">
+      <li class="breadcrumb-item active"><a>Dépense</a></li>
+      <li class="breadcrumb-item text-primary" aria-current="page">Liste des Dépenses</li>
+    </ol>
+  </nav>
+  <div class="d-flex justify-content-end align-items-baseline mt-3 mb-3">
+    <button type="button" class="btn btn-secondary me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button (click)="openBasicModal(basicModal)" type="button" class="btn btn-primary">Nouveau Type Dépense</button>
+  </div>
+</div>
+<div class="row mt-3 mb-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body m-0 p-0">
+        <ngb-accordion [closeOthers]="true">
+          <ngb-panel id="static-1" title="Recherche">
+            <ng-template ngbPanelContent>
+              <app-create-or-update-depense></app-create-or-update-depense>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0" style="background-color: #f9fafb;">
+      <!-- is only used before getting data to the api-->
+      <app-spinner *ngIf="loading" [displayedColumns]="displayedColumns"></app-spinner>
+      <!-- is only used before getting data to the api-->
+
+      <table mat-table [dataSource]="datasource?.content" *ngIf="!loading">
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Code</th>
+          <td mat-cell *matCellDef="let depense"> {{ depense?.code }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Libelle</th>
+          <td mat-cell *matCellDef="let depense" class=""><span>{{ depense.libelle }} </span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="categorieDepense">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> categories depense
+          </th>
+          <td mat-cell *matCellDef="let depense" class=""><span>{{ depense.categorieDepense?.libelle }} </span></td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="typedepense">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Type d'depense </th>
+          <td mat-cell *matCellDef="let depense" class=""> <span>{{depense.indicatorType.libelle}} </span></td>
+        </ng-container> -->
+
+
+        <!-- <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+            Actions </th>
+          <td mat-cell *matCellDef="let depense" class="text-center">
+            <div class="text-center d-inline-block">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+              </span>
+
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex align-items-center"
+                  (click)="false">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a  ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="false">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+          [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+          [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div> -->
+
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="width:80px;"> Actions</th>
+          <td mat-cell *matCellDef="let label" class="text-center">
+            <div class="text-center d-flex justify-content-between">
+              <a ngbDropdownItem ngbTooltip="modifier" (click)="openDialog(updateLabelModal, 'lg', label)" class="">
+                <i class="text-primary feather icon-edit"></i>
+              </a>
+              <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                 (click)="deleteSubsector(label?.id)">
+                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                        [pageSize]="pageOptions.size"
+                        [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true" [ellipses]="true"
+                        [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--update label-->
+<ng-template #updateLabelModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modification {{ referentielType?.sector }}</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-create-or-update-depense [referentielType]="referentielType" [typeDepenseToUpdate]="depenseToUpdate"
+                                  (submit)="close()"></app-create-or-update-depense>
+  </div>
+</ng-template>
+<!--End update label-->
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter Depense</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-create-or-update-depense [referentielType]="referentielType" (submit)="close()"></app-create-or-update-depense>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher un Dépense</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Fermer"></button>
+  </div>
+  <div class="modal-body">
+    <app-create-or-update-depense [referentielType]="referentielType" (search)="doSearch($event)" (submit)="close()"
+                                  [isSearch]="true"></app-create-or-update-depense>
+  </div>
+</ng-template>

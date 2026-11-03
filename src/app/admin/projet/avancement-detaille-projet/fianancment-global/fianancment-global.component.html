@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a>Financement</a></li>
+            <li class="breadcrumb-item active"><a routerLink="/projet">Rapport</a></li>
+        </ol>
+    </nav>
+
+    <!-- <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <button type="button" class="btn btn-primary" (click)="openAddComposant(modalAdd, 'xl')">Nouveau composant</button>
+    </div> -->
+</div>
+
+
+<div class="card m-0">
+    <div class="card-body m-0 p-0">
+        <div class="table-container">
+            <table>
+              <thead style="background-color: #3B5943;">
+                <tr>
+                  <th style="width: 10%;">Type</th>
+                  <th class="column-size">Nom</th>
+                  <th style="width: 15%;">Taux d'exécution (%)</th>
+                  <th>Budget</th>
+                  <th>Dépense</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let projet of projets">
+                  <!-- Appel récursif pour chaque projet -->
+                  <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: projet, level: 0 }"></ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+          
+            <!-- Template récursif -->
+            <ng-template #renderNode let-node let-level="level">
+              <tr>
+                <td>{{ getType(node.type.name) }}</td>
+                <td class="column-size" [style.padding-left.px]="level * 20" [matTooltip]="node.name">
+                  {{ node.name }}
+                </td>
+                <td>
+                    <ngb-progressbar
+                        class="mb-3"
+                        [type]="getProgressbarColor(node.tauxExecution)"
+                        [value]="node.tauxExcution"
+                        [max]="maxValue"
+                        [showValue]="false"
+                        [striped]="node.tauxExecution > 0">
+                        {{ getPercentage(node.tauxExecution) }}%
+                    </ngb-progressbar>
+                </td> 
+                <td class="text-end">{{ node.budget | number:'1.0-0' }}</td>
+                <td class="text-end">{{ node.depense | number:'1.0-0' }}</td>
+              </tr>
+          
+              <!-- Affichage des enfants si présents -->
+              <ng-container *ngFor="let child of node.children">
+                <ng-container *ngTemplateOutlet="renderNode; context: { $implicit: child, level: level + 1 }"></ng-container>
+              </ng-container>
+            </ng-template>
+        </div>
+    </div>
+</div>
+  

@@ -1,0 +1,84 @@
+<!-- <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" routerLink="/admin/acces/finance/budgets"><a>Budget</a></li>
+    <li class="breadcrumb-item active" style="color: #1d6705;"><a>Rubriques</a></li>
+  </ol>
+</nav> -->
+<!-- ÉTAT VIDE : AUCUNE CLASSE CONFIGURÉE -->
+<!-- <div *ngIf="!classes || classes.length === 0" class="text-center py-5 my-5">
+  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3 text-muted">
+    <circle cx="60" cy="60" r="50" stroke="currentColor" stroke-width="2" stroke-dasharray="8,8" opacity="0.3"/>
+    <path d="M40 60L55 75L80 45" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/>
+    <circle cx="60" cy="60" r="30" fill="currentColor" opacity="0.05"/>
+  </svg>
+  <h5 class="text-muted">Aucune classe comptable configurée</h5>
+  <p class="text-muted small">Veuillez configurer les classes dans le plan comptable.</p>
+</div> -->
+<!-- ONGLET NORMALE : SI DES CLASSES EXISTENT -->
+<!-- <div *ngIf="classes && classes.length > 0">
+  <ul ngbNav #fillJustifyNav="ngbNav" [(activeId)]="activeId" class="nav-tabs nav-fill">
+    <li *ngFor="let classe of classes; let i = index" [ngbNavItem]="i + 1">
+      <a ngbNavLink [id]="'classe-' + classe.code">
+        <mat-icon class="align-middle me-1">{{ classe.icon || 'trending_up' }}</mat-icon>
+        Lignes Budgétaires ({{ classe?.libelle }} - Classe {{ classe.code }})
+      </a>
+      <ng-template ngbNavContent>
+        <div>
+          <app-lignes-charges 
+            [typeLigneBugetaire]="typeLigneBugetaire(classe.code)"
+            [budgetCode]="budgetCode"
+            [selectedClasseId]="classe.id">
+          </app-lignes-charges>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
+</div> -->
+
+<nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" routerLink="/admin/acces/finance/budgets"><a>Budget</a></li>
+    <li class="breadcrumb-item active" style="color: #1d6705;"><a>Rubriques</a></li>
+  </ol>
+</nav>
+
+<!-- ÉTAT VIDE -->
+<div *ngIf="!classes || classes.length === 0" class="text-center py-5 my-5">
+  <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="mx-auto mb-3 text-muted">
+    <circle cx="60" cy="60" r="50" stroke="currentColor" stroke-width="2" stroke-dasharray="8,8" opacity="0.3"/>
+    <path d="M40 60L55 75L80 45" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/>
+    <circle cx="60" cy="60" r="30" fill="currentColor" opacity="0.05"/>
+  </svg>
+  <h5 class="text-muted">Aucune classe comptable configurée</h5>
+  <p class="text-muted small">Veuillez configurer les classes dans le plan comptable.</p>
+</div>
+
+<!-- ONGLET NORMAL -->
+<div *ngIf="classes && classes.length > 0" class="mat-tab-wrapper">
+  <button class="scroll-btn left" *ngIf="showLeftArrow" (click)="scrollTabs('left')">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <div #tabContainer class="tab-header-scroll">
+    <mat-tab-group [(selectedIndex)]="selectedIndex" class="custom-tab-group">
+      <mat-tab *ngFor="let classe of classes; let i = index">
+        <ng-template mat-tab-label>
+          <mat-icon class="align-middle me-1">{{ classe.icon || 'trending_up' }}</mat-icon>
+          Lignes Budgétaires ({{ classe?.libelle }} - Classe {{ classe.code }})
+        </ng-template>
+
+        <app-lignes-charges
+          [typeLigneBugetaire]="typeLigneBugetaire(classe.code)"
+          [budgetCode]="budgetCode"
+          [selectedClasseId]="classe.id">
+        </app-lignes-charges>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <button class="scroll-btn right" *ngIf="showRightArrow" (click)="scrollTabs('right')">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</div>

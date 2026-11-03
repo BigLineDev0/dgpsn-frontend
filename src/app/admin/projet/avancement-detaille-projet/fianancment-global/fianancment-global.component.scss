@@ -1,0 +1,30 @@
+.table-container {
+    // margin-top: 20px;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; 
+  }
+
+  thead {
+    background-color: #3B5943;
+    color: white; 
+  }
+  
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+
+  .column-size {
+    width: 50%; /* Réduction forcée de la taille */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  

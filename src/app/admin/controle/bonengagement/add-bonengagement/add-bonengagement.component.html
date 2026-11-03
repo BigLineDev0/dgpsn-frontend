@@ -1,0 +1,323 @@
+<!-- FORMULAIRE D'AJOUT/MODIFICATION -->
+<section *ngIf="!isSearch">   
+  <form [formGroup]="form">
+    
+    <!-- Ligne 1: Type et Ligne Budgétaire -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="type" class="form-label">Type<small style="color: red;">*</small></label>
+          <ng-select 
+            id="type"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Sélectionner le type"
+            formControlName="type"
+            [items]="typesOptions">
+          </ng-select>
+          <div *ngIf="form.get('type')?.invalid && (form.get('type')?.dirty || form.get('type')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('type')?.hasError('required')">Le type est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="ligneBudgetaireId" class="form-label">Ligne Budgétaire<small style="color: red;">*</small></label>
+          <ng-select 
+            id="ligneBudgetaireId"
+            bindLabel="libelle"
+            bindValue="id"
+            placeholder="Sélectionner une ligne budgétaire"
+            formControlName="ligneBudgetaireId"
+            [items]="lignesBudgetaires">
+            <ng-template ng-option-tmp let-item="item">
+              {{ getLigneBudgetaireLabel(item) }}
+            </ng-template>
+          </ng-select>
+          <div *ngIf="form.get('ligneBudgetaireId')?.invalid && (form.get('ligneBudgetaireId')?.dirty || form.get('ligneBudgetaireId')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('ligneBudgetaireId')?.hasError('required')">La ligne budgétaire est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 2: N° Bon et Date -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_bon" class="form-label">N° Bon<small style="color: red;">*</small></label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_bon" 
+            placeholder="Ex: 001151" 
+            formControlName="numero_bon">
+          <div *ngIf="form.get('numero_bon')?.invalid && (form.get('numero_bon')?.dirty || form.get('numero_bon')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('numero_bon')?.hasError('required')">Le numéro de bon est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="date" class="form-label">Date<small style="color: red;">*</small></label>
+          <input 
+            type="date" 
+            class="form-control form-control-lg" 
+            id="date" 
+            formControlName="date">
+          <div *ngIf="form.get('date')?.invalid && (form.get('date')?.dirty || form.get('date')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('date')?.hasError('required')">La date est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 3: N° BE et N° Mandat -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_BE" class="form-label">N° BE<small style="color: red;">*</small></label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_BE" 
+            placeholder="Ex: 001" 
+            formControlName="numero_BE">
+          <div *ngIf="form.get('numero_BE')?.invalid && (form.get('numero_BE')?.dirty || form.get('numero_BE')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('numero_BE')?.hasError('required')">Le numéro BE est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_mandat" class="form-label">N° Mandat<small style="color: red;">*</small></label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_mandat" 
+            placeholder="Ex: 001" 
+            formControlName="numero_mandat">
+          <div *ngIf="form.get('numero_mandat')?.invalid && (form.get('numero_mandat')?.dirty || form.get('numero_mandat')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('numero_mandat')?.hasError('required')">Le numéro de mandat est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 4: Montant et Statut -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="montant" class="form-label">Montant (FCFA)<small style="color: red;">*</small></label>
+          <input 
+            type="number" 
+            class="form-control form-control-lg" 
+            id="montant" 
+            placeholder="Ex: 15000000" 
+            formControlName="montant"
+            min="1"
+            step="1000">
+          <div *ngIf="form.get('montant')?.invalid && (form.get('montant')?.dirty || form.get('montant')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('montant')?.hasError('required')">Le montant est obligatoire.</small>
+            <small *ngIf="form.get('montant')?.hasError('min')">Le montant doit être supérieur à 0.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="statut" class="form-label">Statut<small style="color: red;">*</small></label>
+          <ng-select 
+            id="statut"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Sélectionner le statut"
+            formControlName="statut"
+            [items]="statutsOptions">
+          </ng-select>
+          <div *ngIf="form.get('statut')?.invalid && (form.get('statut')?.dirty || form.get('statut')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('statut')?.hasError('required')">Le statut est obligatoire.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 5: Description -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description<small style="color: red;">*</small></label>
+          <textarea 
+            class="form-control" 
+            id="description" 
+            rows="3"
+            placeholder="Ex: salaires personnel contractuel DGPSN"
+            formControlName="description"></textarea>
+          <div *ngIf="form.get('description')?.invalid && (form.get('description')?.dirty || form.get('description')?.touched)" 
+               class="text-danger mt-1">
+            <small *ngIf="form.get('description')?.hasError('required')">La description est obligatoire.</small>
+            <small *ngIf="form.get('description')?.hasError('minlength')">La description doit contenir au moins 10 caractères.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ligne 6: Factures/États -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label for="facturesEtats" class="form-label">Factures/États</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="facturesEtats" 
+            placeholder="Informations sur les factures ou états"
+            formControlName="facturesEtats">
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Footer avec boutons -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      <i class="feather icon-x me-1"></i>Fermer
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-primary" 
+      (click)="save()" 
+      [disabled]="!form.valid">
+      <i class="feather icon-save me-1"></i>{{ beToUpdate ? 'Modifier' : 'Enregistrer' }}
+    </button>
+  </div>
+</section>
+
+<!-- FORMULAIRE DE RECHERCHE -->
+<section *ngIf="isSearch">   
+  <form [formGroup]="form">
+    
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="type" class="form-label">Type</label>
+          <ng-select 
+            id="type"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Tous les types"
+            formControlName="type"
+            [items]="typesOptions"
+            [clearable]="true">
+          </ng-select>
+        </div>
+      </div>
+      
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="statut" class="form-label">Statut</label>
+          <ng-select 
+            id="statut"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Tous les statuts"
+            formControlName="statut"
+            [items]="statutsOptions"
+            [clearable]="true">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_bon" class="form-label">N° Bon</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_bon" 
+            placeholder="N° Bon" 
+            formControlName="numero_bon">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_BE" class="form-label">N° BE</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_BE" 
+            placeholder="N° BE" 
+            formControlName="numero_BE">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="numero_mandat" class="form-label">N° Mandat</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="numero_mandat" 
+            placeholder="N° Mandat" 
+            formControlName="numero_mandat">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="ligneBudgetaireId" class="form-label">Ligne Budgétaire</label>
+          <ng-select 
+            id="ligneBudgetaireId"
+            bindLabel="libelle"
+            bindValue="id"
+            placeholder="Toutes les lignes"
+            formControlName="ligneBudgetaireId"
+            [items]="lignesBudgetaires"
+            [clearable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ getLigneBudgetaireLabel(item) }}
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input 
+            type="text" 
+            class="form-control form-control-lg" 
+            id="description" 
+            placeholder="Rechercher dans la description"
+            formControlName="description">
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">
+      <i class="feather icon-search me-1"></i>Rechercher
+    </button>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+<div class="report-container">
+<!--    <div class="report-header">-->
+<!--        <div class="header-content">-->
+<!--            <img src="assets/images/dgpsn-logo.png" alt="DGPSN Logo" class="logo">-->
+<!--            <div class="header-text">-->
+<!--                <h1>Système de Reporting - DGPSN</h1>-->
+<!--                <p>Délégation Générale à la Protection Sociale et à la Solidarité Nationale</p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="header-actions">-->
+<!--            <button class="btn-export" title="Exporter">-->
+<!--                <mat-icon>download</mat-icon>-->
+<!--                Exporter-->
+<!--            </button>-->
+<!--            <button class="btn-print" title="Imprimer">-->
+<!--                <mat-icon>print</mat-icon>-->
+<!--                Imprimer-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <mat-tab-group
+            class="report-tabs"
+            [(selectedIndex)]="selectedTabIndex"
+            (selectedIndexChange)="onTabChange($event)"
+            animationDuration="300ms">
+
+        <mat-tab *ngFor="let tab of tabs" [label]="tab.label">
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">{{tab.icon}}</mat-icon>
+                <span class="tab-label">{{tab.label}}</span>
+            </ng-template>
+
+            <div class="tab-content">
+                <app-financial-report *ngIf="tab.component === 'financial'"></app-financial-report>
+                <app-administrative-report *ngIf="tab.component === 'administrative'"></app-administrative-report>
+                <app-planning-report *ngIf="tab.component === 'planning'"></app-planning-report>
+                <app-management-control-report *ngIf="tab.component === 'management'"></app-management-control-report>
+<!--                <app-dashboard-report *ngIf="tab.component === 'dashboard'"></app-dashboard-report>-->
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

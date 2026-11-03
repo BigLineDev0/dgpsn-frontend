@@ -1,0 +1,23 @@
+<section>
+    <form [formGroup]="form" >
+      <div class="row mt-2">
+        <div class="col-md-6 col-sm-12">
+      <div class="mb-3">
+        <label for="colFormCodeLg" class="form-label">Code</label>
+        <input type="text" class="form-control form-control-lg" id="colFormCodeLg" placeholder="Code" formControlName="code">
+      </div>
+        </div>
+          <div class="col-md-6 col-sm-12">
+          <div class="mb-3">
+        <label for="colFormLabelLg" class="form-label">Libellé</label>
+        <input type="text" class="form-control form-control-lg" id="colFormLabelLg" placeholder="Libellé" formControlName="libelle">
+      </div>
+          </div>
+
+        </div>
+
+      <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+      </div>
+    </form>
+</section>

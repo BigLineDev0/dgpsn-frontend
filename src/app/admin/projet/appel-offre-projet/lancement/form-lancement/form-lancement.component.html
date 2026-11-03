@@ -1,0 +1,174 @@
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-2 col-6">
+                <label for="colFormLabelLg" class="form-label">Choisir une passation</label>
+                <ng-select (change)="selectionChange($event)" [items]="dataPassation" bindLabel="libelle"
+                    placeholder="Choisir une passation">
+                </ng-select>
+            </div>
+            <div class="mb-2 col-6">
+                <label for="colFormCodeLg" class="form-label">Numéro Référence du lancement</label>
+                <input type="email" class="form-control form-control-lg" placeholder="Numéro Référence du lancement">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date debut Réception des offres</label>
+                <input type="date" class="form-control form-control-lg" placeholder="Date debut">
+            </div>
+            <div class="mb-2 col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date limite de réception des offres</label>
+                <input type="date" class="form-control form-control-lg"
+                    placeholder="Date limite de réception des offres">
+            </div>
+        </div>
+      <div class="row">
+        <div class="mb-3 col-md-6">
+          <label for="colFormLabelLg" class="form-label">Date debut Réception des offres</label>
+          <input type="date" class="form-control form-control-lg" placeholder="Date debut">
+        </div>
+        <div class="mb-2 col-md-6">
+          <label for="colFormLabelLg" class="form-label">Date limite de réception des offres</label>
+          <input type="date" class="form-control form-control-lg" placeholder="Date limite de réception des offres" >
+        </div>
+      </div>
+
+        <div class="modal-footer mt-3">
+            <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section>
+
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+
+
+            <div class="mb-2 col-md-6">
+                <label for="colFormCodeLg" class="form-label">Numéro Référence du marché</label>
+                <input type="text" class="form-control form-control-lg" id="colFormCodeLg"
+                    placeholder="Numéro Référence du marché" formControlName="reference">
+            </div>
+            <div class="mb-2 col-md-6">
+                <label for="colFormLabelLg" class="form-label" placeholder="Intitulé du marché">Intitulé du
+                    marché</label>
+                <input type="text" class="form-control-lg form-control" id="colFormCodeLg"
+                    placeholder="Intitulé du marché" formControlName="libelle">
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <div class="mb-2 col-md-12">
+                <label for="colFormCodeLg" class="form-label">Objet du marché</label>
+                <textarea type="text" [rows]="3" class="form-control form-control-lg" id="colFormCodeLg"
+                    placeholder="Objet du marché" formControlName="objectMarket"></textarea>
+            </div>
+        </div>
+
+        <div  class="row">
+            <div class="col-4 mb-3">
+                <label class="form-label">Type de marché <small style="color: red;">*</small></label>
+              <ng-select [items]="typeMarket" bindLabel="libelle" bindValue="id" placeholder="selectionner type de marché" formControlName="typeMarketId"></ng-select>
+            </div>
+            <div class="col-4 mb-3">
+                <label class="form-label">Mode de passation <small style="color: red;">*</small></label>
+              <ng-select [items]="typePassation" bindLabel="libelle" bindValue="id" placeholder="selectionner mode de passation" formControlName="typePassationId"></ng-select>
+            </div>
+            <div class="col-4 mb-3">
+                <label class="form-label">Cible <small style="color: red;">*</small></label>
+              <ng-select [items]="cible" bindLabel="libelle" bindValue="id" placeholder="selectionner cible" formControlName="cibleId"></ng-select>
+            </div>
+          </div>
+
+        <div class="row">
+
+            <div class="mb-2 col-md-6">
+                <label for="colFormCodeLg" class="form-label">Montant estimatif du marché</label>
+                <input type="text" class="form-control form-control-lg" id="colFormCodeLg"
+                    placeholder="Montant estimatif du marché" formControlName="estimatedAmount">
+            </div>
+            <div class="mb-2 col-md-6">
+                <label for="colFormCodeLg" class="form-label">Lieu de dépot des offres</label>
+                <input type="text" class="form-control form-control-lg" id="colFormCodeLg"
+                    placeholder="Lieu de dépot des offres" formControlName="depositLocation">
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date de lancement prévue du marché
+                </label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date début prévue de réception des offres" formControlName="plannedStartLaunch">
+            </div>
+
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date de lancement réelle du marché
+
+                </label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date début prévue de réception des offres" formControlName="plannedRealLaunch">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date début prévue de réception des offres</label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date début prévue de réception des offres" formControlName="startReceiptBids">
+            </div>
+
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date fin prévue de réception des offres</label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date fin prévue de réception des offres" formControlName="endReceiptBids">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date début réelle de réception des offres</label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date début prévue de réception des offres" formControlName="startReceiptBidsReal">
+            </div>
+
+            <div class="mb-3  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Date fin réelle de réception des offres</label>
+                <input type="date" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Date fin prévue de réception des offres" formControlName="endReceiptBidsReal">
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="mb-2  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Adresse email de reception</label>
+                <input type="email" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Adresse Email de reception" formControlName="emailRecept">
+            </div>
+
+            <div class="mb-2  col-md-6">
+                <label for="colFormLabelLg" class="form-label">Lien de consultation de L'offre</label>
+                <input type="text" class="form-control form-control-lg" id="colFormLabelLg"
+                    placeholder="Lien de consultation de L'offre" formControlName="consultationLink">
+            </div>
+
+        </div>
+        <div class="col-md-12 col-sm-12 mb-3">
+            <div class="form-group">
+                <label for="budget" class="form-label">Commentaire</label>
+                <textarea class="col-12 form-control" [rows]="5" [cols]="30" formControlName="description"></textarea>
+            </div>
+        </div>
+
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <!-- [disabled]="!form.valid" -->
+        <button type="button" class="btn btn-primary" (click)="save()" >Enregistrer</button>
+    </div>
+</section>

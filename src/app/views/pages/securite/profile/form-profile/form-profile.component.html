@@ -1,0 +1,47 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="mb-3">
+            <label for="code" class="form-label">Code <small style="color: red;">*</small></label>
+            <input type="text"  class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code" required="true">
+        </div>
+<!--        <div class="mb-3" *ngIf="toUpdate">-->
+<!--            <label for="code" class="form-label">Code <small style="color: red;">*</small></label>-->
+<!--            <input type="text"  class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code" readonly>-->
+<!--        </div>-->
+        <div>
+            <label for="libelle" class="form-label">Libellé <small style="color: red;">*</small></label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+                formControlName="libelle" required="true">
+        </div>
+        <div class="col-sm-12 col-md-12 mb-3">
+            <label for="code" class="form-label">Portée <small style="color: red;">*</small></label>
+            <ng-select [items]="protees"
+                bindLabel="description"
+                bindValue="name"
+                placeholder="portée"
+                formControlName="portee">
+            </ng-select>
+        </div>
+    </form>
+    <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="mb-3">
+            <label for="code" class="form-label">Code</label>
+            <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+        </div>
+        <div>
+            <label for="libelle" class="form-label">Libellé</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+                formControlName="libelle">
+        </div>
+    </form>
+    <div class="modal-footer mt-3">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+
+    </div>
+</section>

@@ -1,0 +1,206 @@
+<section *ngIf="isSearch && !isAnnee">
+
+    <form [formGroup]="form">
+        <div class="row">
+            <div *ngIf="!isCongeAgentRoute" class="col-md-4 col-sm-12 mb-3" style="position: relative;">
+                <label class="form-label">Matricule<small style="color: red;">*</small></label>
+                <input type="text" class="form-control" placeholder="Sélectionner un agent" formControlName="agentId"
+                    [value]="selectedAgentName" readonly (click)="openBasicModal(matriculeModal,'agentId')" />
+                <button type="button" class="btn btn-warning btn-icon mt-3" ngbTooltip="Rechercher Matricule"
+                    style="position: absolute; top: 47%; right: 5px; transform: translateY(-50%);"
+                    (click)="openBasicModal(matriculeModal,'agentId')">
+                    <i class="feather icon-search"></i>
+                </button>
+            </div>
+          
+            <div class="col-md-4" *ngIf="!isCongeAgentRoute">
+                <label class="form-label">Type Conge<small style="color: red;">*</small></label>
+                <ng-select [items]="typeConges" bindLabel="description" bindValue="name" placeholder="type conge"
+                    formControlName="typeConge">
+                </ng-select>
+            </div>
+
+            <div *ngIf="!isCongeAgentRoute" class="col-md-4 col-sm-12 mb-3">
+                <label class="form-label">Date de la Demande</label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateDemande" />
+            </div>
+            <div *ngIf="isCongeAgentRoute" class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Date de la Demande</label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateDemande"
+                    [disabled]="true" />
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date début souhaitée</label>
+                <!-- prévue -->
+                <input type="date" class="form-control form-control-lg" formControlName="dateDebut" />
+            </div>
+
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Durée (en jours)</label>
+                <input type="number" placeholder="Durée " class="form-control form-control-lg"
+                    formControlName="duree" />
+            </div>
+        </div>
+
+        <div class="modal-footer mt-3">
+            <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section>
+
+
+<section *ngIf="!isSearch && !isAnnee">
+    <form [formGroup]="form">
+        <div class="row">
+            <div *ngIf="!isCongeAgentRoute" class="col-md-4 col-sm-12 mb-3" style="position: relative;">
+                <label class="form-label">Matricule<small style="color: red;">*</small></label>
+                <input type="text" class="form-control" placeholder="Sélectionner un agent" formControlName="agentId"
+                    [value]="selectedAgentName" readonly (click)="openBasicModal(matriculeModal,'agentId')" />
+                <button type="button" class="btn btn-warning btn-icon mt-3" ngbTooltip="Rechercher Matricule"
+                    style="position: absolute; top: 47%; right: 5px; transform: translateY(-50%);"
+                    (click)="openBasicModal(matriculeModal,'agentId')">
+                    <i class="feather icon-search"></i>
+                </button>
+            </div>
+               <div *ngIf="!isCongeAgentRoute" class="col-4">
+            <label for="statutProfessionnel" class="form-label">Statut professionnel</label>
+            <select id="statutProfessionnel" formControlName="statutProfessionnel" class="form-select">
+                <option value="">-- Sélectionnez un statut --</option>
+                <option value="Contractuel">Contractuel</option>
+                <option value="Stagiaire">Stagiaire</option>
+                <option value="Fonctionnaire">Fonctionnaire</option>
+            </select>
+            </div>
+            <div *ngIf="!isCongeAgentRoute" class="col-md-4 col-sm-12 mb-3">
+                <label class="form-label">Date de la Demande</label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateDemande"
+                    [disabled]="true" />
+            </div>
+              <div *ngIf="isCongeAgentRoute" class="col-md-6">
+            <label for="statutProfessionnel" class="form-label">Statut professionnel</label>
+            <select id="statutProfessionnel" formControlName="statutProfessionnel" class="form-select">
+                <option value="">-- Sélectionnez un statut --</option>
+                <option value="Contractuel">Contractuel</option>
+                <option value="Stagiaire">Stagiaire</option>
+                <option value="Fonctionnaire">Fonctionnaire</option>
+            </select>
+            </div>
+              <div *ngIf="isCongeAgentRoute" class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date de la Demande</label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateDemande"
+                    [disabled]="true" />
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3" #content>
+                <!-- <small style="color: red;">*</small> -->
+                <label class="form-label">Objet demande</label>
+                <quill-editor formControlName="description" [styles]="{ height: '120px',
+                 'max-height': '300px', 'overflow-y': 'auto' }" placeholder="Rédigez votre demande">
+                    <div quill-editor-toolbar>
+                        <span class="ql-formats">
+                            <select class="ql-font"></select>
+                            <select class="ql-size"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-align" value="left"></button>
+                            <button class="ql-align" value="center"></button>
+                            <button class="ql-align" value="right"></button>
+                            <button class="ql-align" value="justify"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+                        </span>
+                    </div>
+                </quill-editor>
+            </div>
+            <div class="row">
+             <div class="col-md-8 col-sm-12 mb-3">
+                <label class="form-label">Adressé A <small style="color: red;">*</small></label>
+                <input type="text" class="form-control form-control-lg" formControlName="libelle" />
+            </div>
+               <div class="col-md-4 col-sm-12 mb-3">
+                <label class="form-label">Date début souhaitée<small style="color: red;">*</small></label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateDebut" />
+            </div>
+            </div>
+                <div class="col-md-{{ demandeToUpdate?.numeroDecision === null ? '6' : '4' }} col-sm-12 mb-3" *ngIf="typeConge==='AUTRES'">
+                    <label class="form-label">Nombre de jours  d'absence</label>
+                    <input type="number" placeholder="Nombre de jour" class="form-control form-control-lg"
+                        formControlName="duree" max="90" maxlength="2" (input)="onInputDuration()" />
+                    <div *ngIf="form.get('duree')?.hasError('max') && form.get('duree')?.touched" class="text-danger">
+                        La nombre de jours  d'absence ne peut pas dépasser 30 jours.
+                    </div>
+                </div>
+                  <div class="col-md-{{ demandeToUpdate?.numeroDecision === null ? '6' : '4' }} col-sm-12 mb-3" *ngIf="typeConge !=='AUTRES'">
+                    <label class="form-label">Durée (en jours)</label>
+                    <input type="number" placeholder="Durée" class="form-control form-control-lg"
+                        formControlName="duree" max="90" maxlength="2" (input)="onInputDuration()" />
+                    <div *ngIf="form.get('duree')?.hasError('max') && form.get('duree')?.touched" class="text-danger">
+                        La durée ne peut pas dépasser 90 jours.
+                    </div>
+                </div>
+                      
+                <div class="col-md-{{ demandeToUpdate?.numeroDecision === null ? '6' : '4' }} col-sm-12 mb-3">
+                    <label class="form-label">Date debut autorisation</label>
+                    <input type="date" class="form-control form-control-lg" formControlName="dateDepart"
+                        [disabled]="true" />
+                </div>
+                <div class="col-md-4 col-sm-12 mb-3" *ngIf="demandeToUpdate?.numeroDecision !== null && typeConge==='ADMINISTRATIF'">
+                    <label class="form-label">Numéro décision</label>
+                    <input type="text" placeholder="Numéro décision" class="form-control form-control-lg"
+                        formControlName="numeroDecision" />
+                </div>
+                  <div class="row">
+                
+                   </div>
+
+            <!-- <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date fin autorisation</label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateReprise" />
+            </div> -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+            <!--        <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">-->
+            <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">Enregistrer</button>
+        </div>
+    </form>
+</section>
+<ng-template #matriculeModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Selectionner Matricule</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-agent-matricule [modal]="modal"></app-agent-matricule>
+    
+    </div>
+</ng-template>
+
+
+<section *ngIf="isAnnee">
+    <form [formGroup]="formAnnee">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Annee Cloture<span class="text-danger ">*</span></label>
+                <ng-select [items]="anneeCessation" bindLabel="annee" bindValue="annee"
+                    placeholder="Selectionner annee cessation..." formControlName="annee">
+                </ng-select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+            <!-- <button type="button" class="btn btn-primary" [disabled]="!formAnnee.valid"
+                (click)="traiterSoldes()">Enregistrer</button> -->
+        </div>
+    </form>
+</section>

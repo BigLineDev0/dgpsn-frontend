@@ -1,0 +1,137 @@
+<app-routing-financement  [pageTitle]="'Budget'"></app-routing-financement>
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="{{projetLibelle}}">{{projetLibelle }}</h6>
+  </div>
+
+  <div>
+    <!-- <button type="button" ngbTooltip="Comparer avec la source principale" class="btn btn-secondary btn-icon me-2" (click)="chargerFichier()">
+      <i class="feather icon-refresh-cw"></i>
+    </button>
+    <button type="button" ngbTooltip="Source principale" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(sourceModal)">
+      <i class="feather icon-server"></i>
+    </button> -->
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouvelle Source
+    </button>
+  </div>
+
+  </div>
+
+<div class="row">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+        <!-- is only used before getting data to the api-->
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+        <!-- is only used before getting data to the api-->
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+            <ng-container matColumnDef="structure">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Bailleur</th>
+                <td mat-cell *matCellDef="let source"> {{source?.structure?.nom}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="budget">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Budget</th>
+                <td mat-cell *matCellDef="let source; let i = index"> {{source?.budget?.actualAmount}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorBudget">{{sourceComparaison[i].budget}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="montant">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:140px;"> Montant</th>
+                <td mat-cell *matCellDef="let source; let i = index" class="text-center">
+                    {{source?.montant}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorReel">{{sourceComparaison[i].montantReel}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="comment">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Commentaire
+                </th>
+                <td mat-cell *matCellDef="let source"> {{source.comment}} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+                    Actions </th>
+                <td mat-cell *matCellDef="let source" class="text-center">
+                    <div class="text-center d-inline-block">
+                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                            <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                        </span>
+                        <mat-menu #menu="matMenu">
+                            <a  ngbDropdownItem
+                                class="d-flex justify-content-between align-items-center"
+                                (click)="openBasicModal(modalUpdate, source)">
+                                <span class="me-2">Modifier</span>
+                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                            </a>
+                            <a ngbDropdownItem
+                                class="d-flex justify-content-between align-items-center"
+                                (click)="deleteSource(source.id)">
+                                <span class="me-2">Supprimer</span>
+                                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                            </a>
+                        </mat-menu>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+            <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+        <div class="paginate">
+            <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                [ellipses]="true" [boundaryLinks]="true">
+            </ngb-pagination>
+        </div>
+    </section>
+</div>
+
+<!--Add date importantes-->
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout Source Financement</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-source [label]="'Enregistrer'" (submit)="close($event)"
+            [isSearch]="false"></app-form-source>
+    </div>
+</ng-template>
+<!--End date importantes-->
+
+<!--Update date importantes-->
+<ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modification source</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-source [label]="'Modifier'" (submit)="close($event)" [sourceToUpdate]="sourceToUpdate"
+            [isSearch]="false"></app-form-source>
+    </div>
+</ng-template>
+<!--End date importantess-->
+
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Rechercher Source Financement</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-source [label]="'Enregistrer'" (submit)="close($event)" [managementUnitId]="managementUnitId" [isSearch]="true"></app-form-source>
+    </div>
+</ng-template>
+
+<ng-template #sourceModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Source de données</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-source-de-donnees (submit)="close($event)"></app-source-de-donnees>
+  </div>
+</ng-template>

@@ -1,0 +1,107 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-12">
+                <label class="form-label">Titre de la formation <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Titre de la formation" formControlName="titreFormation">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Organisme formateur <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Organisme formateur" formControlName="organismeFormateur">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Lieu de formation <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Lieu de formation" formControlName="lieu">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de début <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateDebut">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de fin <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateFin">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Durée (jours) <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" placeholder="Durée en jours" formControlName="dureeJours">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Coût total <span class="text-danger">*</span></label>
+                <input type="number" class="form-control form-control-lg" placeholder="Coût total" formControlName="coutTotal">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Devise <span class="text-danger">*</span></label>
+                <ng-select placeholder="Sélectionner une devise" formControlName="devise">
+                    <ng-option value="USD">USD</ng-option>
+                    <ng-option value="EUR">EUR</ng-option>
+                    <ng-option value="XAF">XAF</ng-option>
+                    <!-- Add more currencies as needed -->
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Nombre de participants <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" placeholder="Nombre de participants" formControlName="nombreParticipants">
+            </div>
+        </div>
+        <div class="mb-3">
+        <label class="form-label">Objectifs de la formation <span class="text-danger">*</span></label>
+        <textarea class="col-12" formControlName="objectifs" placeholder="objectifs ....." [rows]="5"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Statut <span class="text-danger">*</span></label>
+            <ng-select
+                    placeholder="Sélectionner un statut"
+                    formControlName="statut"
+                    [items]="statutformationexterieur"
+                    bindLabel="description"
+                    bindValue="name">
+            </ng-select>
+
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Titre de la formation</label>
+                <input type="text" class="form-control" placeholder="Titre de la formation" formControlName="titreFormation">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Organisme formateur</label>
+                <input type="text" class="form-control" placeholder="Organisme formateur" formControlName="organismeFormateur">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de début</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateDebut">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Statut</label>
+                <ng-select placeholder="Sélectionner un statut" formControlName="statut">
+                    <ng-option value="Planifiée">Planifiée</ng-option>
+                    <ng-option value="En cours">En cours</ng-option>
+                    <ng-option value="Terminée">Terminée</ng-option>
+                    <ng-option value="Annulée">Annulée</ng-option>
+                </ng-select>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

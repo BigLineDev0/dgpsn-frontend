@@ -1,0 +1,145 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a>Projets</a></li>
+            <li class="breadcrumb-item active"><a routerLink="/projet">Liste projets</a></li>
+            <li class="breadcrumb-item text-primary" aria-current="page">Composant</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <button type="button" class="btn btn-primary" (click)="openAddComposant(modalAdd, 'xl')">Nouveau composant</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-4 mb-4" style="position: relative;">
+        <div class="card" style="height: 58px; background-color: #3b5943; color: #fff">
+            <div class="card-body p-2" style="position: relative;">
+                <h2 class="card-title">Composants</h2>
+                <button style="position: absolute; top: 10px; right: 2px" (click)="openAddComposant(modalAdd, 'xl')"
+                        mat-icon-button aria-label="nouveau composant" matTooltip="nouveau composant" matTooltipClass="custom-tooltip">
+                    <mat-icon>assignment_add</mat-icon>
+                </button>
+            </div>
+        </div>
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="card-tree">
+            <!-- Leaf Node (Produit or Component with no children) -->
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                <button mat-icon-button></button>
+                <div class="cursor-pointer folder-item" (click)="loadActivites(node)" [matTooltip]="node.data.libelle" matTooltipClass="custom-tooltip">
+                    <i [ngClass]="{'feather': true, 'icon-file-text': node.level === 2, 'icon-folder': node.level <= 1}"
+                       class="icon-md text-primary mr-1"></i>
+                    {{ node.data.libelle }}
+                </div>
+                <div class="box-projet-actions">
+                    <app-projet-actions [node]="node" (actionEvent)="refresh($event)"></app-projet-actions>
+                </div>
+            </mat-tree-node>
+            <!-- Expandable Node (Composant or Résultat) -->
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                <button mat-icon-button matTreeNodeToggle>
+                    <mat-icon>{{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                </button>
+                <div class="cursor-pointer folder-item" (click)="false" [matTooltip]="node.data.libelle" matTooltipClass="custom-tooltip">
+                    <i class="feather icon-folder icon-md text-primary mr-1"></i>
+                    {{ node.data.libelle }}
+                </div>
+                <div class="box-projet-actions">
+                    <app-projet-actions [node]="node" (actionEvent)="refresh($event)"></app-projet-actions>
+                </div>
+            </mat-tree-node>
+        </mat-tree>
+    </div>
+    <div class="col-sm-12 col-md-8">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section class="table-container mat-elevation-z8" tabindex="0">
+                        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+                        <table mat-table [dataSource]="activites" *ngIf="!loadingIndicator">
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Code</th>
+                                <td mat-cell *matCellDef="let activite" class="text-left">{{activite?.code}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="libelle">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Libellé</th>
+                                <td mat-cell *matCellDef="let activite" class="text-left">{{activite?.name}}</td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="dateDebut">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Annee début</th>
+                                <td mat-cell *matCellDef="let activite" class="text-left">{{activite?.anneeDebut}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="dateFin">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Annee fin</th>
+                                <td mat-cell *matCellDef="let activite" class="text-left">{{activite?.anneeFin}}</td>
+                            </ng-container> -->
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:150px;">Actions</th>
+                                <td mat-cell *matCellDef="let activite" class="text-center">
+                                    <!-- Icône pour Budget -->
+                                    <a class="me-2" role="button" ngbTooltip="Configuration Budget" placement="left"
+                                    (click)="openAddComposant(modalBudjet, 'xl',activite)">
+                                    <i class="icon-md pb-3px text-success" data-feather="dollar-sign" appFeatherIcon></i>
+                                    </a>
+                                    <!-- Icône pour Dépense -->
+                                    <a class="me-2" role="button" ngbTooltip="Configuration Dépense" placement="left"
+                                    (click)="openAddComposant(modalDepense, 'xl',activite)">
+                                    <i class="icon-md pb-3px text-danger" data-feather="credit-card" appFeatherIcon></i>
+                                    </a>
+                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu actions">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <mat-divider></mat-divider>
+                                        <button mat-menu-item (click)="false">
+                                            <mat-icon>edit_square</mat-icon>
+                                            <span>Modifier</span>
+                                        </button>
+                                        <button mat-menu-item (click)="false">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Supprimer</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalAdd let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout d'un composant</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-composant (submit)="close($event)" [projetId]="projetId" [isSearch]="false"></app-form-composant>
+    </div>
+</ng-template>
+
+<ng-template #modalBudjet let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Liste Budget</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-liste-budget [activity]="activity"></app-liste-budget>
+  </div>
+</ng-template>
+
+<ng-template #modalDepense let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Liste Depense</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-liste-depense [activity]="activity"></app-liste-depense>
+  </div>
+</ng-template>
+

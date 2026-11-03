@@ -1,0 +1,155 @@
+<nav class="navbar">
+  <div class="navbar-content">
+    <h5 class="title">DGPSN : Délégation générale à la protection sociale et à la solidarité nationale</h5>
+
+    <!-- <div class="logo-mini-wrapper">
+      <img src="images/logo-mini-light.png" class="logo-mini logo-mini-light" alt="logo">
+      <img src="images/logo-mini-dark.png" class="logo-mini logo-mini-dark" alt="logo">
+    </div> -->
+
+    <!-- <form class="search-form">
+      <div class="input-group">
+        <div class="input-group-text">
+          <i class="feather icon-search"></i>
+        </div>
+        <input type="text" class="form-control" id="navbarForm" placeholder="Search here...">
+      </div>
+    </form> -->
+
+   <ul class="navbar-nav">
+<!--        <li class="nav-item nav-notifications" ngbDropdown>-->
+<!--          <a class="nav-link position-relative" ngbDropdownToggle id="notificationDropdown">-->
+<!--            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">-->
+<!--              4-->
+<!--              &lt;!&ndash; <span class="visually-hidden">unread messages</span> &ndash;&gt;-->
+<!--            </span>-->
+<!--            <i class="link-icon feather icon-bell"></i>-->
+<!--            <div class="indicator" *ngIf="newAlerte">-->
+<!--              <div class="circle"></div>-->
+<!--            </div>-->
+<!--          </a>-->
+<!--          <div ngbDropdownMenu class="px-0" aria-labelledby="notificationDropdown">-->
+<!--&lt;!&ndash;            <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">&ndash;&gt;-->
+<!--&lt;!&ndash;              <p><span>nouvelle notification pour vous</span> <br><span>nouvelle notification pour vous</span> <br><span>nouvelle notification pour vous</span> <br></p>&ndash;&gt;-->
+<!--&lt;!&ndash;              &ndash;&gt;-->
+<!--&lt;!&ndash;              <a href="" (click)="false" class="text-muted"></a>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            <div style="max-height: 300px; overflow-y: auto;">-->
+<!--              <a *ngFor="let alerte of listAlertes" (click)="viewAlerte(basicModal, alerte)"  class="dropdown-item d-flex align-items-center py-2">-->
+<!--                <div class="wd-30 ht-30 d-flex align-items-center justify-content-center rounded-circle me-3" [ngClass]="{'bg-primary': !alerte?.read, 'bg-secondary': alerte?.read}">-->
+<!--                  <i class="feather icon-sm text-white"-->
+<!--                    [ngClass]="{'icon-mail': !alerte?.read, 'icon-check': alerte?.read}"></i>-->
+<!--                </div>-->
+<!--                <div class="flex-grow-1 me-2">-->
+<!--                  <p [ngClass]="{'text-muted': alerte?.read}" innerHTML="{{getMessage(alerte.message)}}"></p>-->
+<!--                  <p class="tx-12 text-muted">{{alerte?.date | date:'dd/MM/yyyy HH:mm:ss'}}</p>-->
+<!--                </div>-->
+<!--              </a>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </li>-->
+         <li class="nav-item nav-notifications" ngbDropdown>
+          <a class="nav-link position-relative" ngbDropdownToggle id="notificationDropdown">
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ listAlertes?.length }}
+              <!-- <span class="visually-hidden">unread messages</span> -->
+            </span>
+            <i class="link-icon feather icon-bell text-white"></i>
+            <div class="indicator" *ngIf="newAlerte">
+              <div class="circle"></div>
+            </div>
+          </a>
+          <div ngbDropdownMenu class="px-0" aria-labelledby="notificationDropdown">
+            <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
+              <p>{{ title || 'Aucune nouvelle notification pour vous' }}</p>
+              <a href="" (click)="false" class="text-muted"></a>
+            </div>
+            <div style="max-height: 300px; overflow-y: auto;">
+              <a *ngFor="let alerte of listAlertes" (click)="viewAlerte(basicModal, alerte)"
+                 class="dropdown-item d-flex align-items-center py-2">
+                <div class="wd-30 ht-30 d-flex align-items-center justify-content-center rounded-circle me-3"
+                     [ngClass]="{'bg-primary': !alerte?.read, 'bg-secondary': alerte?.read}">
+                  <i class="feather icon-sm text-white"
+                     [ngClass]="{'icon-mail': !alerte?.read, 'icon-check': alerte?.read}"></i>
+                </div>
+                <div class="flex-grow-1 me-2">
+                  <p [ngClass]="{'text-muted': alerte?.read}" innerHTML="{{getMessage(alerte.message)}}"></p>
+                  <p class="tx-12 text-muted">{{ alerte?.date | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+                </div>
+              </a>
+            </div>
+            <a href="" (click)="viewAllAlerte($event, listAlertes)"
+               class="border-top dropdown-item d-flex align-items-center px-3 py-2 text-center">
+              <div class="flex-grow-1 me-2">
+                <p>Toutes les alertes</p>
+              </div>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item nav-profile" ngbDropdown>
+          <a class="nav-link" ngbDropdownToggle id="profileDropdown">
+            <!-- <img class="wd-30 ht-30 rounded-circle" src="https://via.placeholder.com/30x30" alt="profile"> -->
+            <i class="feather icon-lg icon-user text-white"></i>
+          </a>
+          <div ngbDropdownMenu class="px-0" aria-labelledby="profileDropdown">
+            <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
+              <div class="mb-3">
+                <!-- <img class="wd-80 ht-80 rounded-circle" src="https://via.placeholder.com/80x80" alt=""> -->
+                <i class="wd-80 ht-80 rounded-circle feather icon-lg icon-user"></i>
+              </div>
+              <div class="text-center">
+                <p class="tx-16 fw-bolder">{{ nameUser }}</p>
+                <p class="tx-12 fw-boldest">{{ fonctionUser }}</p>
+                <p class="tx-12 text-muted">Profil : {{ profileLibelle }}</p>
+              </div>
+            </div>
+            <ul class="list-unstyled p-1">
+              <!-- <li class="dropdown-item py-2">
+                <a routerLink="/general/profile" class="d-flex text-body ms-0">
+                  <i class="feather icon-user me-2 icon-md"></i>
+                  <span>Profile</span>
+                </a>
+              </li> -->
+              <li class="dropdown-item py-2">
+                <a (click)="openBasicModal(modalUpdatePassword,null)" class="d-flex text-body ms-0">
+                  <i class="feather icon-edit me-2 icon-md"></i>
+                  <span>Modifier mot de passe</span>
+                </a>
+              </li>
+              <li class="dropdown-item py-2">
+                <a (click)="onLogout()" class="d-flex text-body ms-0">
+                  <i class="feather icon-log-out me-2 icon-md"></i>
+                  <span>Deconnexion</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+
+    <a href="" class="sidebar-toggler" (click)="toggleSidebar($event)">
+      <i class="feather icon-menu"></i>
+    </a>
+    
+  </div>
+</nav>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Détails</h5>
+      <button type="button" class="btn-close" (click)="fermer()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+     <app-details-alerte [alerte]="this.alerte"></app-details-alerte>
+  </div>
+</ng-template>
+<ng-template #modalUpdatePassword let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification mot de passe</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-form-update-password  (updatePassword)="closeuPdate($event)"
+      [user]="userToUpdate"></app-form-update-password> -->
+  </div>
+</ng-template>

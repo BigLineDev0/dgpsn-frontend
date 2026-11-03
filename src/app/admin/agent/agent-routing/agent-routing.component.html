@@ -1,0 +1,31 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a>Agents</a></li>
+            <li class="breadcrumb-item active">Navigation</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+         <!-- Route Congé -->
+
+        <a class="me-4 d-block" ngbTooltip="Congés" (click)="navigateTo('admin/acces/agent/conge')" #tooltip2="ngbTooltip">
+            <i class="feather icon-sun icon-md" [ngClass]="activeUrl('agent/conge', tooltip2)"></i>
+        </a>
+
+        <!-- Route Contrat -->
+        <a class="me-4 d-block" ngbTooltip="Gestion des contrats" (click)="navigateTo('admin/acces/agent/contrat')" #tooltip1="ngbTooltip">
+            <i class="feather icon-file-text icon-md" [ngClass]="activeUrl('agent/contrat', tooltip1)"></i>
+        </a>
+       
+        <!-- Route Mission -->
+        <a class="me-4 d-block" ngbTooltip="Missions" (click)="navigateTo('admin/acces/agent/mission')" #tooltip3="ngbTooltip">
+            <i class="feather icon-briefcase icon-md" [ngClass]="activeUrl('agent/mission', tooltip3)"></i>
+        </a>
+
+        <!-- Route Formation -->
+        <a class="me-4 d-block" ngbTooltip="Formations" (click)="navigateTo('admin/acces/agent/formation')" #tooltip4="ngbTooltip">
+            <i class="feather icon-book-open icon-md" [ngClass]="activeUrl('agent/formation', tooltip4)"></i>
+        </a>
+    </div>
+</div>

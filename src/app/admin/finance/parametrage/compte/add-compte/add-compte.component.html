@@ -1,0 +1,93 @@
+<form [formGroup]="form" class="p-3">
+  <div class="row g-3">
+    <!-- Code Compte -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">
+        Code Compte <span class="text-danger">*</span>
+      </label>
+      <input
+        type="text"
+        class="form-control form-control-lg"
+        formControlName="code"
+        placeholder="Ex: 70"
+        [class.is-invalid]="form.get('code')?.invalid && form.get('code')?.touched"
+      />
+      <div *ngIf="form.get('code')?.invalid && form.get('code')?.touched" class="invalid-feedback">
+        <small *ngIf="form.get('code')?.errors?.['required']">
+          Le code est obligatoire
+        </small>
+        <small *ngIf="form.get('code')?.errors?.['maxlength']">
+          Le code ne doit pas dépasser 100 caractères
+        </small>
+      </div>
+    </div>
+
+    <!-- Libellé -->
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">
+        Libellé <span class="text-danger">*</span>
+      </label>
+      <input
+        type="text"
+        class="form-control form-control-lg"
+        formControlName="libelle"
+        placeholder="Ex: Fonds propres"
+        [class.is-invalid]="form.get('libelle')?.invalid && form.get('libelle')?.touched"
+      />
+      <div *ngIf="form.get('libelle')?.invalid && form.get('libelle')?.touched" class="invalid-feedback">
+        <small *ngIf="form.get('libelle')?.errors?.['required']">
+          Le libellé est obligatoire
+        </small>
+        <small *ngIf="form.get('libelle')?.errors?.['maxlength']">
+          Le libellé ne doit pas dépasser 150 caractères
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commentaire -->
+  <div class="mt-3">
+    <label class="form-label fw-semibold">Commentaire</label>
+    <textarea
+      class="form-control form-control-lg"
+      formControlName="commentaire"
+      placeholder="Ex: Compte des fonds propres et subventions"
+      rows="3"
+      [class.is-invalid]="form.get('commentaire')?.invalid && form.get('commentaire')?.touched"
+    ></textarea>
+    <div *ngIf="form.get('commentaire')?.invalid && form.get('commentaire')?.touched" class="invalid-feedback">
+      <small *ngIf="form.get('commentaire')?.errors?.['maxlength']">
+        Le commentaire ne doit pas dépasser 255 caractères
+      </small>
+    </div>
+  </div>
+
+  <!-- Informations supplémentaires -->
+  <div class="mt-3 p-2 bg-light rounded">
+    <small class="text-muted">
+      <i class="feather icon-info me-1"></i>
+      Ce compte sera automatiquement lié à la classe parent (ID: {{ classId }})
+    </small>
+  </div>
+</form>
+
+<!-- Footer -->
+<div class="modal-footer mt-4 border-top pt-3">
+  <button 
+    type="button" 
+    class="btn btn-secondary" 
+    (click)="close()"
+  >
+    <i class="feather icon-x me-1"></i>
+    Annuler
+  </button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="save()"
+    [disabled]="form.invalid"
+  >
+    <i class="feather icon-save me-1"></i>
+    {{ compteToUpdate ? 'Modifier' : 'Enregistrer' }}
+  </button>
+</div>

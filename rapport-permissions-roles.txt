@@ -1,0 +1,478 @@
+================================================================================
+         RAPPORT : SYSTEME DE PERMISSIONS ET ROLES - PROJET DGPSN
+         Pour migration vers un projet NestJS
+================================================================================
+
+Date : 13/04/2026
+Source : dgpsn-frontend (Angular)
+
+================================================================================
+1. ARCHITECTURE GLOBALE
+================================================================================
+
+Le systeme repose sur un modele RBAC (Role-Based Access Control) avec :
+- Des PERMISSIONS granulaires (400+) definies comme constantes statiques
+- Des ROLES qui regroupent des permissions (geres cote backend via API REST)
+- Un JWT qui transporte les permissions de l'utilisateur dans le claim "auth"
+- Une verification cote frontend via directive Angular et guards
+
+FLUX D'AUTHENTIFICATION :
+  1. POST /api/auth/signIn avec {login, password}
+  2. Le backend retourne un JWT contenant :
+     - sub : username
+     - auth : permissions separees par des virgules (ex: "READ_AGENT,ADD_AGENT")
+     - exp : timestamp d'expiration
+     - IdUser : identifiant utilisateur
+  3. Le token est stocke en sessionStorage
+  4. Les permissions sont decodees et stockees en sessionStorage
+
+================================================================================
+2. DEFINITION DES PERMISSIONS (Authority.ts)
+================================================================================
+
+Les permissions sont des constantes de type string, organisees par module.
+Convention de nommage : ACTION_ENTITE ou ACTION_SOUS_ENTITE
+
+ACTIONS POSSIBLES :
+  - READ_    : Lecture/consultation
+  - ADD_     : Creation
+  - EDIT_    : Modification
+  - DELETE_  : Suppression
+  - EXPORT_  : Export de donnees
+  - IMPORT_  : Import de donnees
+  - GENERATE_: Generation de documents
+  - VALIDATION_ : Validation/approbation
+  - ARCHIVER_   : Archivage
+  - CHANGER_STATUT_ : Changement de statut
+
+PERMISSIONS SPECIALES :
+  - ALL_ACCESS  : Acces total (super admin) - bypass toutes les verifications
+  - ROOT_ADMIN  : Administrateur racine
+
+LISTE DES MODULES ET PERMISSIONS :
+
+--- TABLEAU DE BORD ---
+  READ_TDB_RESUME
+  READ_TDB_BUDGET
+  READ_TDB_PROJETS
+  READ_TDB_AGENT
+  READ_TDB_COURRIER
+
+--- RAPPORTS ---
+  READ_RAPPORT
+  GENERATE_RAPPORT
+  EXPORT_RAPPORT
+
+--- AGENTS (Ressources Humaines) ---
+  READ_AGENT
+  ADD_AGENT
+  EDIT_AGENT
+  DELETE_AGENT
+  IMPORT_AGENT
+  EXPORT_AGENT
+  CONFIG_AGENT
+
+--- CONGES ---
+  READ_CONGE
+  ADD_CONGE
+  EDIT_CONGE
+  DELETE_CONGE
+  VALIDATION_CONGE
+  GENERATE_FICHE_CONGE
+
+--- RECRUTEMENT ---
+  READ_RECRUTEMENT
+  ADD_RECRUTEMENT
+  EDIT_RECRUTEMENT
+  DELETE_RECRUTEMENT
+  UPDATE_STATUT_RECRUTEMENT
+
+--- CANDIDATS ---
+  READ_CANDIDAT
+  ADD_CANDIDAT
+  EDIT_CANDIDAT
+  DELETE_CANDIDAT
+
+--- PROJETS ---
+  READ_PROJECT
+  ADD_PROJECT
+  EDIT_PROJECT
+  DELETE_PROJECT
+  READ_PROJECT_PROGRESS_TRACKING
+  VALIDER_PROGRESS_TRACKING_INDICATOR
+
+--- JALONS (Milestones) ---
+  READ_MILESTONE
+  ADD_MILESTONE
+  EDIT_MILESTONE
+  DELETE_MILESTONE
+
+--- BUDGET / FINANCE ---
+  READ_BUDGET
+  ADD_BUDGET
+  EDIT_BUDGET
+  DELETE_BUDGET
+  READ_FINANCEMENT_BUDGET
+  READ_PTBA
+
+--- COURRIER ---
+  READ_COURRIER
+  ADD_COURRIER
+  EDIT_COURRIER
+  DELETE_COURRIER
+  ARCHIVER_COURRIER
+  CHANGER_STATUT_COURRIER
+
+--- DOCUMENTS / GED ---
+  READ_DOCUMENT
+  ADD_DOCUMENT
+  EDIT_DOCUMENT
+  DELETE_DOCUMENT
+  READ_FOLDER
+  ADD_FOLDER
+  EDIT_FOLDER
+  DELETE_FOLDER
+
+--- ORGANIGRAMME ---
+  READ_ORGANIGRAMME
+  ADD_ORGANIGRAMME
+  EDIT_ORGANIGRAMME
+  DELETE_ORGANIGRAMME
+
+--- ORDRE DE MISSION ---
+  READ_ORDRE_MISSION_AGENT
+  ADD_ORDRE_MISSION_AGENT
+  EDIT_ORDRE_MISSION_AGENT
+  DELETE_ORDRE_MISSION_AGENT
+
+--- FORMATION EXTERIEUR / ATELIERS ---
+  READ_FORMATION_EXTERIEUR
+  ADD_FORMATION_EXTERIEUR
+  READ_ATELIER
+  ADD_ATELIER
+
+--- SECURITE / ADMINISTRATION ---
+  READ_USER
+  ADD_USER
+  EDIT_USER
+  DELETE_USER
+  READ_PROFILE
+  ADD_PROFILE
+  EDIT_PROFILE
+  DELETE_PROFILE
+  READ_ROLE
+  ADD_ROLE
+  EDIT_ROLE
+  DELETE_ROLE
+  READ_LOG
+  READ_ALERTE
+  ADD_ALERTE
+
+REGROUPEMENTS PAR MODULE (utilises pour le menu et la navigation) :
+
+  Authority.MODULE.DASHBOARD.DASHBOARD = [
+    READ_TDB_RESUME, READ_TDB_BUDGET, READ_TDB_PROJETS, READ_TDB_AGENT, ...
+  ]
+  Authority.MODULE.DASHBOARD.RAPPORTS = [
+    READ_RAPPORT, GENERATE_RAPPORT, EXPORT_RAPPORT, ...
+  ]
+  Authority.MODULE.ACTES_GESTION.AGENT = [
+    READ_AGENT, ADD_AGENT, EDIT_AGENT, DELETE_AGENT, ...
+  ]
+  Authority.MODULE.ACTES_GESTION.DEMANDE_CONGE = [
+    READ_CONGE, ADD_CONGE, VALIDATION_CONGE, ...
+  ]
+  Authority.MODULE.ACTES_GESTION.RECRUTEMENTS = [
+    READ_RECRUTEMENT, ADD_RECRUTEMENT, ...
+  ]
+  Authority.MODULE.PROJECT_LIST.PROJECT_LIST = [
+    READ_PROJECT, ADD_PROJECT, EDIT_PROJECT, ...
+  ]
+
+================================================================================
+3. STRUCTURE DU JWT (Token)
+================================================================================
+
+Payload du JWT decode :
+{
+  "sub": "admin@dgpsn.sn",        // Username
+  "auth": "READ_AGENT,ADD_AGENT,ALL_ACCESS,...",  // Permissions (virgule-separees)
+  "exp": 1713052800,               // Expiration (timestamp Unix en secondes)
+  "IdUser": 1                      // ID utilisateur
+}
+
+Verification expiration :
+  token.exp > Math.floor(Date.now() / 1000)
+
+================================================================================
+4. API BACKEND ATTENDUES (endpoints utilises par le frontend)
+================================================================================
+
+--- Authentification ---
+  POST   /api/auth/signIn          Body: {login, password} -> JWT
+
+--- Roles ---
+  GET    /api/roles                ?page=X&size=Y&libelle=&code=&ugp=&sortBy=&ascending=
+  GET    /api/roles/{id}
+  POST   /api/roles                Body: role object
+  PUT    /api/roles/{roleId}       Body: role object
+  DELETE /api/roles/{roleId}
+  GET    /api/roles/roleBy         ?projectId=X
+
+--- Permissions ---
+  GET    /api/permissions          ?module=X
+  GET    /api/permissions/readFeatureByModule    ?module=X
+  GET    /api/permissions/filterByModuleAndFeature  ?moduleName=X&featureName=Y
+
+--- Utilisateurs ---
+  (CRUD standard via UserService)
+
+--- Profils ---
+  (CRUD standard via ProfileService)
+
+================================================================================
+5. LOGIQUE DE VERIFICATION DES PERMISSIONS
+================================================================================
+
+A. VERIFICATION DANS LES TEMPLATES (Frontend - a reproduire cote backend)
+------------------------------------------------------------------------
+
+La directive *afHasAnyAuthority verifie si l'utilisateur possede AU MOINS
+UNE des permissions requises (logique OR) :
+
+  Algorithme :
+  1. Recuperer les permissions utilisateur depuis sessionStorage
+  2. Pour chaque permission requise, verifier :
+     - L'utilisateur possede cette permission exacte
+     - OU l'utilisateur possede "ALL_ACCESS" (bypass total)
+  3. Si au moins une permission match -> AUTORISE
+  4. Sinon -> REFUSE (element masque)
+
+  Pseudo-code :
+  function hasAnyAuthority(requiredPermissions: string[]): boolean {
+    const userPermissions = getUserPermissions();  // depuis le JWT
+    return requiredPermissions.some(required =>
+      userPermissions.includes(required) ||
+      userPermissions.includes('ALL_ACCESS')
+    );
+  }
+
+B. PROTECTION DES ROUTES (Guard)
+---------------------------------
+
+Le AuthGuard actuel verifie uniquement si l'utilisateur est connecte
+(pas de verification de permissions specifiques par route).
+
+  canActivate():
+    if localStorage.isLoggedin exists -> AUTORISE
+    else -> REDIRIGER vers /auth/login
+
+C. INTERCEPTEUR HTTP
+---------------------
+
+L'intercepteur ajoute le token JWT a chaque requete sortante :
+  - Header: Authorization: Bearer <token>
+  - Exclut les URLs publiques : /signIn, /login, /public
+  - Gere les erreurs :
+    - 401 : Session invalide -> deconnexion + redirection login
+    - Token expire : deconnexion + redirection login
+
+================================================================================
+6. GUIDE D'IMPLEMENTATION NESTJS
+================================================================================
+
+Pour reproduire ce systeme dans NestJS, voici l'architecture recommandee :
+
+A. ENTITES (TypeORM/Prisma)
+----------------------------
+
+  // permission.entity.ts
+  Permission {
+    id: number
+    code: string          // ex: "READ_AGENT"
+    label: string         // ex: "Lire les agents"
+    module: string        // ex: "ACTES_GESTION"
+    feature: string       // ex: "AGENT"
+  }
+
+  // role.entity.ts
+  Role {
+    id: number
+    code: string
+    libelle: string
+    permissions: Permission[]  // ManyToMany
+  }
+
+  // user.entity.ts
+  User {
+    id: number
+    login: string
+    password: string       // hash bcrypt
+    roles: Role[]          // ManyToMany
+    // ou
+    profile: Profile       // ManyToOne -> Profile -> Roles
+  }
+
+B. AUTH MODULE
+--------------
+
+  // auth.service.ts
+  signIn(login, password):
+    1. Trouver l'utilisateur par login
+    2. Verifier le mot de passe (bcrypt.compare)
+    3. Collecter toutes les permissions via les roles
+    4. Generer le JWT avec :
+       {
+         sub: user.login,
+         auth: permissions.map(p => p.code).join(','),
+         IdUser: user.id
+       }
+
+  // jwt.strategy.ts (Passport)
+  validate(payload):
+    return {
+      userId: payload.IdUser,
+      username: payload.sub,
+      permissions: payload.auth.split(',')
+    }
+
+C. GUARDS DE PERMISSIONS
+--------------------------
+
+  // permissions.guard.ts
+  @Injectable()
+  export class PermissionsGuard implements CanActivate {
+    canActivate(context: ExecutionContext): boolean {
+      const requiredPermissions = this.reflector.get<string[]>(
+        'permissions', context.getHandler()
+      );
+      if (!requiredPermissions) return true;
+
+      const { user } = context.switchToHttp().getRequest();
+      return requiredPermissions.some(permission =>
+        user.permissions.includes(permission) ||
+        user.permissions.includes('ALL_ACCESS')
+      );
+    }
+  }
+
+D. DECORATEUR DE PERMISSIONS
+------------------------------
+
+  // permissions.decorator.ts
+  export const RequirePermissions = (...permissions: string[]) =>
+    SetMetadata('permissions', permissions);
+
+  // Utilisation dans un controller :
+  @RequirePermissions('READ_AGENT', 'ALL_ACCESS')
+  @Get('agents')
+  findAll() { ... }
+
+E. CONSTANTES DE PERMISSIONS
+------------------------------
+
+  // authority.constants.ts
+  export const Authority = {
+    ALL_ACCESS: 'ALL_ACCESS',
+    ROOT_ADMIN: 'ROOT_ADMIN',
+
+    // Agents
+    READ_AGENT: 'READ_AGENT',
+    ADD_AGENT: 'ADD_AGENT',
+    EDIT_AGENT: 'EDIT_AGENT',
+    DELETE_AGENT: 'DELETE_AGENT',
+    IMPORT_AGENT: 'IMPORT_AGENT',
+    EXPORT_AGENT: 'EXPORT_AGENT',
+    // ... (reprendre toutes les constantes)
+  };
+
+F. STRUCTURE DE FICHIERS NESTJS RECOMMANDEE
+---------------------------------------------
+
+  src/
+  |-- auth/
+  |   |-- auth.module.ts
+  |   |-- auth.controller.ts
+  |   |-- auth.service.ts
+  |   |-- jwt.strategy.ts
+  |   |-- jwt-auth.guard.ts
+  |   |-- guards/
+  |   |   |-- permissions.guard.ts
+  |   |-- decorators/
+  |   |   |-- permissions.decorator.ts
+  |   |   |-- current-user.decorator.ts
+  |   |-- constants/
+  |       |-- authority.constants.ts
+  |
+  |-- users/
+  |   |-- user.entity.ts
+  |   |-- users.module.ts
+  |   |-- users.service.ts
+  |   |-- users.controller.ts
+  |
+  |-- roles/
+  |   |-- role.entity.ts
+  |   |-- roles.module.ts
+  |   |-- roles.service.ts
+  |   |-- roles.controller.ts
+  |
+  |-- permissions/
+      |-- permission.entity.ts
+      |-- permissions.module.ts
+      |-- permissions.service.ts
+      |-- permissions.controller.ts
+
+G. EXEMPLE COMPLET D'UN CONTROLLER PROTEGE
+--------------------------------------------
+
+  @Controller('agents')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  export class AgentsController {
+
+    @Get()
+    @RequirePermissions(Authority.READ_AGENT)
+    findAll() { ... }
+
+    @Post()
+    @RequirePermissions(Authority.ADD_AGENT)
+    create(@Body() dto) { ... }
+
+    @Put(':id')
+    @RequirePermissions(Authority.EDIT_AGENT)
+    update(@Param('id') id, @Body() dto) { ... }
+
+    @Delete(':id')
+    @RequirePermissions(Authority.DELETE_AGENT)
+    remove(@Param('id') id) { ... }
+  }
+
+================================================================================
+7. POINTS IMPORTANTS POUR LA MIGRATION
+================================================================================
+
+1. Le claim JWT "auth" contient les permissions en chaine separee par des
+   virgules. Le backend doit generer ce format exact pour la compatibilite
+   avec le frontend existant.
+
+2. La permission "ALL_ACCESS" agit comme un super-admin bypass. Toute
+   verification de permission doit aussi verifier ALL_ACCESS.
+
+3. Les permissions sont granulaires (CRUD par entite). Un role est
+   simplement un groupement de permissions.
+
+4. Le frontend ne verifie PAS les permissions par route (uniquement
+   login/pas login). La securite reelle DOIT etre cote backend avec
+   les guards NestJS.
+
+5. Les endpoints API doivent suivre le meme schema d'URL que le frontend
+   attend (voir section 4).
+
+6. Le token expire et le frontend gere la deconnexion automatique.
+   Le backend doit configurer un TTL coherent sur le JWT.
+
+7. Les modules de permissions sont : DASHBOARD, ACTES_GESTION,
+   PROJECT_LIST, BUDGET, COURRIER, GED, SECURITE, REFERENTIEL.
+
+================================================================================
+FIN DU RAPPORT
+================================================================================

@@ -1,0 +1,81 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row mt-2 ">
+    
+            <div formArrayName="criterEvaluation" *ngFor="let member of ligneCritere.controls; let i = index">
+                <div class="row" [formGroupName]="i">
+                    <div class="col-md-4 col-sm-12">
+                        <div class="mb-3">
+                            <label for="colFormLabelLg" class="form-label"> Choisir un critère d'évaluation<small
+                                    style="color: red;">*</small></label>
+                            <ng-select [items]="criterEvaluate" (change)="selectionChange($event)" bindLabel="libelle"
+                                placeholder="Choisir un critère d'évaluation" bindValue="id" formControlName="evaluationCriteriaId">
+    
+                            </ng-select>
+    
+                        </div>
+                    </div>
+    
+                 
+                    <!-- <div *ngIf="typeNumber" class="col-md-4 col-sm-12">
+                        <div class="mb-3">
+                            <label for="colFormLabelLg" class="form-label"> Valeur Attendue<small
+                                    style="color: red;">*</small></label>
+                            <input type="number" class="form-control" placeholder="Valeur Attendue">
+    
+                        </div>
+                    </div> -->
+    
+                    <!-- <div *ngIf="typeText" class="col-md-4 col-sm-12">
+                        <div class="mb-3">
+                            <label for="colFormLabelLg" class="form-label"> Valeur Attendue<small
+                                    style="color: red;">*</small></label>
+                            <input type="text" class="form-control" placeholder="Valeur Attendue" formControlName="expectedValue">
+    
+                        </div>
+                    </div> -->
+    
+                    <div class="col-md-4 col-sm-12">
+                        <div class="mb-3">
+                            <label for="colFormLabelLg" class="form-label"> Valeur Attendue<small
+                                    style="color: red;">*</small></label>
+                            <input type="text" class="form-control" placeholder="Valeur Attendue" formControlName="expectedValue">
+    
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-12">
+                        <div class="mb-3">
+                            <label for="colFormLabelLg" class="form-label"> Pondération en %<small
+                                    style="color: red;">*</small></label>
+                            <input type="text" class="form-control" placeholder="Pondération en %" formControlName="ponderation">
+    
+                        </div>
+                    </div>
+    
+                    <div class="col-md-2 py-4 ">
+                        <button type="button" class="btn btn-outline-danger btn-rounded cursor-pointer"
+                            (click)="removeMember(i)">
+                            <i class="mdi mdi-delete-outline"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-outline-primary btn-rounded cursor-pointer" (click)="addNewCritere()">
+                    <i class="mdi mdi-plus-circle-outline"></i> Ajouter un nouveau critère d'évaluation
+                </button>
+            </div><br>
+    
+    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="close()">
+                    Fermer
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </form>
+</section>

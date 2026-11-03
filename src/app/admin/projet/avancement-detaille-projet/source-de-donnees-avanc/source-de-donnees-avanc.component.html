@@ -1,0 +1,75 @@
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div class="row">
+    <div class="mb-3 col-8">
+      <label for="libelle" class="form-label">Libellé</label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+    </div>
+    <div class="mb-3 col-4">
+      <label class="form-label">Fichier</label>
+      <input type="file" class="form-control" style="width: 90%;" accept=".pdf, .doc, .docx, .xlsx, .xls">
+    </div>
+  </div>
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text">
+      <i class="feather icon-plus-circle"></i> Ajouter
+    </button>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="row">
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+    <table mat-table [dataSource]="sources" *ngIf="!loadingIndicator">
+      <ng-container matColumnDef="libelle">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Libelle</th>
+        <td mat-cell *matCellDef="let budget"> {{budget?.libelle}} </td>
+      </ng-container>
+      <ng-container matColumnDef="file">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Fichier</th>
+        <td mat-cell *matCellDef="let budget">
+          <span style="cursor: pointer;">
+             <i class="feather icon-download icon-lg"></i>
+          </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="etat">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:50px;">Source principal</th>
+        <td mat-cell *matCellDef="let budget; let i = index">
+          <input type="radio" class="form-check-input" [value]="i" [(ngModel)]="selectedFichierPrincipal" (change)="setFichierPrincipal(i)">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Actions </th>
+        <td mat-cell *matCellDef="let budget" class="text-center">
+          <div class="text-center d-inline-block">
+              <span class="text-center cursor-pointer" ngbTooltip="Supprimer" matRipple>
+                  <mat-icon class="align-middle text-danger icon-lg" >delete</mat-icon>
+              </span>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+      <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+    </table>
+    <div class="paginate">
+      <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                      [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                      [ellipses]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+<!--  <button type="button" class="btn btn-primary" (click)="chargerFichier()">Charger le fichier principal</button>-->
+</div>

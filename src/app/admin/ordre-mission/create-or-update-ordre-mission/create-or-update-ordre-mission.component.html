@@ -1,0 +1,281 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-2">
+        <label class="form-label">Choisir un type d'ordre de mission<small style="color: red">*</small></label>
+        <ng-select
+          placeholder="Choisir un type d'ordre de mission"
+          formControlName="ordreMission"
+          (change)="selectionChange($event)"
+        >
+          <ng-option value="INTERIEUR">Intérieur</ng-option>
+          <ng-option value="EXTERIEUR">Exterieur</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-3" style="position: relative">
+        <label class="form-label"
+          >Matricule<small style="color: red">*</small></label
+        >
+        <input
+          [multiple]="true"
+          type="text"
+          class="form-control"
+          placeholder="Sélectionner un agent"
+          formControlName="agentIds"
+          [value]="selectedAgentName"
+          readonly
+          (click)="openBasicModal(matriculeModal, 'agentIds')"
+        />
+        <button
+          type="button"
+          class="btn btn-warning btn-icon mt-3"
+          ngbTooltip="Rechercher Matricule"
+          style="
+            position: absolute;
+            top: 47%;
+            right: 5px;
+            transform: translateY(-50%);
+          "
+          (click)="openBasicModal(matriculeModal, 'agentIds')"
+        >
+          <i class="feather icon-search"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-2">
+        <label class="form-label">Choisir un groupe</label>
+        <ng-select placeholder="Choisir un groupe" formControlName="groupe">
+          <ng-option value="GROUPE1">I</ng-option>
+          <ng-option value="GROUPE2">II</ng-option>
+        </ng-select>
+      </div>
+       <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Responsable de la mission <small style="color: red">*</small></label>
+        <input
+          type="text"
+          class="form-control form-control-md"
+          formControlName="responsableMission"
+        />
+      </div>
+<!-- 
+      <div class="col-md-6 col-sm-12 mb-2">
+        <label class="form-label">Responsable mission <small style="color: red">*</small></label>
+        <ng-select
+          placeholder="Responsable mission "
+          formControlName="priseEnChargeId"
+          aria-autocomplete="list"
+          [searchable]="true"
+          [multiple]="true"
+          [loading]="loadingPriseCharge"
+          notFoundText="Aucun élément trouvé"
+          loadingText="Chargement des élément en cours..."
+        >
+          <ng-option *ngFor="let item of priseCharge" [value]="item.id">
+            {{ item.libelle }}
+          </ng-option>
+        </ng-select>
+      </div> -->
+    </div>
+        <div class=" mb-4 col-md-12">
+      <!-- <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="feather icon-layers"></i> Structure et Frais
+          <span class="badge bg-light text-dark ms-2">{{ structureFraisLignes.length }}</span>
+        </h5>
+      </div> -->
+      <div class="mb-4">
+        <div formArrayName="structureFraisLignes">
+          <div *ngFor="let ligne of structureFraisLignes.controls; let i = index" class="mb-3 bg-white">
+            <div [formGroupName]="i" class="row align-items-end p-3 border rounded bg-white mb-3" [class.bg-light]="i % 2 === 0">
+              <div class="col-md-5 col-sm-12 mb-2 bg-white">
+                <label class="form-label">Prise en charge
+                  <small style="color: red">*</small>
+                </label>
+                <ng-select 
+                  placeholder="Choisir Responsable mission" 
+                  formControlName="structure"
+                  [clearable]="false"
+                >
+                  <ng-option value="DGPSN">DGPSN</ng-option>
+                  <ng-option value="PAPSA">PAPSA</ng-option>
+                </ng-select>
+              </div>
+              
+              <div class="col-md-5 col-sm-12 mb-2">
+                <label class="form-label">
+                  Nature frais
+                  <small style="color: red">*</small>
+                </label>
+                <ng-select
+                  placeholder="Frais"
+                  formControlName="fraisIds"
+                  aria-autocomplete="list"
+                  [loading]="loadingFrais"
+                  notFoundText="Aucun élément trouvé"
+                  loadingText="Chargement des éléments en cours..."
+                  [searchable]="true"
+                  [clearable]="false"
+                >
+                  <ng-option *ngFor="let item of frais" [value]="item.id">
+                    {{ item.libelle }}
+                  </ng-option>
+                </ng-select>
+              </div>
+
+              <div class="col-md-2 col-sm-12 mb-2">
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                  <a class="icon-md text-danger" (click)="supprimerStructureFrais(i)" ngbTooltip="Supprimer Ligne">
+                    <mat-icon class="icon-md">delete</mat-icon>
+                  </a>
+                  <a class="icon-md text-primary" (click)="ajouterStructureFrais()" ngbTooltip="Ajouter Ligne">
+                    <mat-icon class="icon-md">add_circle_outline</mat-icon>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message d'information -->
+        <!-- <div class="alert alert-info mt-3 d-flex align-items-center" *ngIf="structureFraisLignes.length > 1">
+          <i class="feather icon-info me-2"></i>
+          <div>
+            <strong>Information :</strong> 
+            Un seul ordre de mission sera créé avec <strong>{{ structureFraisLignes.length }} structures et frais</strong> différents.
+          </div>
+        </div> -->
+
+        <!-- Message d'avertissement pour validation DGPSN -->
+        <div class="alert alert-warning mt-3 d-flex align-items-center" *ngIf="structureFraisLignes.length === 1 && structureFraisLignes.at(0).get('structure')?.value === 'DGPSN'">
+          <i class="feather icon-alert-triangle me-2"></i>
+          <div>
+            <strong>Attention :</strong> 
+            La durée de la mission pour le DGPSN ne peut pas dépasser <strong>10 jours</strong>.
+          </div>
+        </div>
+      </div>
+      </div>
+
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label class="form-label">Objet de la mission<small style="color: red">*</small></label>
+        <textarea
+          type="text"
+          [rows]="3"
+          class="form-control form-control-lg"
+          placeholder="Objet de la mission"
+          formControlName="objectMission"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="mb-2 col-md-6">
+        <label class="form-label">Destination</label>
+        <textarea
+          type="text"
+          [rows]="3"
+          class="form-control form-control-lg"
+          placeholder="Destination"
+          formControlName="destination"
+        ></textarea>
+      </div>
+
+      <div class="mb-2 col-md-6">
+        <label class="form-label">Itinéraire</label>
+        <textarea
+          type="text"
+          [rows]="3"
+          class="form-control form-control-lg"
+          placeholder="Itinéraire"
+          formControlName="itineraire"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Moyen de transport</label>
+        <ng-select
+          placeholder="Moyen de transport"
+          formControlName="moyenTranportId"
+          aria-autocomplete="list"
+          [searchable]="true"
+          [loading]="loadingPriseCharge"
+          notFoundText="Aucun élément trouvé"
+          loadingText="Chargement des élément en cours..."
+        >
+          <ng-option *ngFor="let item of moyenTranport" [value]="item.id">
+            {{ item.libelle }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Date de début Ordre<small style="color: red">*</small></label>
+        <input
+          type="date"
+          class="form-control form-control-lg"
+          formControlName="dateDepartOrdre"
+        />
+      </div>
+
+      <div class="col-md-4 col-sm-12 mb-3">
+        <label class="form-label">Date fin Ordre<small style="color: red">*</small></label>
+        <input
+          type="date"
+          class="form-control form-control-lg"
+          formControlName="dateRetourOrdre"
+        />
+      </div>
+    </div>
+
+    <!-- <div class="row">
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Date de début Mission<small style="color: red">*</small></label>
+        <input
+          type="date"
+          class="form-control form-control-lg"
+          formControlName="dateDepartMission"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Date fin Mission<small style="color: red">*</small></label>
+        <input
+          type="date"
+          class="form-control form-control-lg"
+          formControlName="dateRetourMission"
+        />
+      </div>
+    </div> -->
+
+    <!-- Section Structure et Frais (Lignes multiples avec icônes) -->
+    <!-- </div> -->
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">
+        <i class="feather icon-x"></i> Fermer
+      </button>
+      <button type="button" class="btn btn-primary" (click)="save()">
+        <i class="feather icon-save"></i> Enregistrer
+      </button>
+    </div>
+  </form>
+</section>
+
+<ng-template #matriculeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Sélectionner Matricule</h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.close()"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-app-agent-matricule [modal]="modal"></app-app-agent-matricule>
+  </div>
+</ng-template>

@@ -1,0 +1,38 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row mb-2">
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Code <small style="color: red;">*</small></label>
+        <input type="text" class="form-control" formControlName="code">
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Libellé <small style="color: red;">*</small></label>
+        <input type="text" class="form-control" formControlName="libelle">
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row mb-2">
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Code <small style="color: red;">*</small></label>
+        <input type="text" class="form-control" formControlName="code">
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <label class="form-label">Libellé <small style="color: red;">*</small></label>
+        <input type="text" class="form-control" formControlName="libelle">
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+    </div>
+  </form>
+</section>

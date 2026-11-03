@@ -1,0 +1,172 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="Projet">{{projet?.libelle}}</h6>
+  </div>
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouvelle mission
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+    <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+      <ng-container matColumnDef="numeroOrdreMission">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">N° Ordre</th>
+        <td mat-cell *matCellDef="let mission"> {{mission?.numeroOrdreMission}} </td>
+      </ng-container>
+      <ng-container matColumnDef="typeMission">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Type</th>
+        <td mat-cell *matCellDef="let mission"> {{mission?.typeMission}} </td>
+      </ng-container>
+      <ng-container matColumnDef="objet">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Objet</th>
+        <td mat-cell *matCellDef="let mission"> {{mission?.objet}} </td>
+      </ng-container>
+      <ng-container matColumnDef="lieuDestination">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Destination</th>
+        <td mat-cell *matCellDef="let mission"> {{mission?.lieuDestination}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dateDebut">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Date Début</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.dateDebut | date: 'dd-MM-yyyy'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dateFin">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Date Fin</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.dateFin | date: 'dd-MM-yyyy'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dureeJours">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Durée (jours)</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.dureeJours}} </td>
+      </ng-container>
+      <ng-container matColumnDef="budgetAlloue">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Budget</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.budgetAlloue}} {{mission?.devise}} </td>
+      </ng-container>
+      <ng-container matColumnDef="idResponsableMission">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Responsable</th>
+        <td mat-cell *matCellDef="let mission"> {{mission?.responsable?.nom}} {{mission?.responsable?.prenom}} </td>
+      </ng-container>
+      <ng-container matColumnDef="statut">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Statut</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.statut}} </td>
+      </ng-container>
+      <ng-container matColumnDef="rapportDisponible">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">Rapport</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.rapportDisponible ? 'Oui' : 'Non'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="dateRapport">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Date Rapport</th>
+        <td mat-cell *matCellDef="let mission" class="text-center"> {{mission?.dateRapport | date: 'dd-MM-yyyy'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Actions</th>
+        <td mat-cell *matCellDef="let mission" class="text-center bg-white">
+          <!-- <div class="text-center d-inline-block">
+            <a  role="button" ngbTooltip="Modifier" placement="top"
+               (click)="openBasicModal(modalUpdate, mission)">
+              <i class="icon-md text-primary me-2 cursor-pointer" data-feather="edit" appFeatherIcon></i>
+            </a>
+            <a  role="button" ngbTooltip="Supprimer" placement="top"
+               (click)="deleteMission(mission.id)">
+              <i class="icon-md text-danger cursor-pointer" data-feather="trash-2" appFeatherIcon></i>
+            </a>
+          </div> -->
+           <!-- <div class="text-center d-inline-block bg-white">
+                        <a role="button" ngbTooltip="Participants" placement="top"
+                            (click)="openUrl(mission.id, '/admin/acces/participant-mission')">
+                            <i class="icon-md text-primary me-2 cursor-pointer" data-feather="user" appFeatherIcon></i>
+                        </a>
+                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                            <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                        </span>
+                        <mat-menu #menu="matMenu">
+                            <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                                (click)="openBasicModal(modalUpdate,mission)">
+                                <span class="me-2">Modifier</span>
+                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                            </a>
+                            <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                                (click)="deleteMission(mission.id)">
+                                <span class="me-2">Supprimer</span>
+                                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                            </a>
+                        </mat-menu>
+                    </div> -->
+                    <div class="text-center d-inline-block bg-white">
+  <a role="button" ngbTooltip="Participants" placement="top"
+     (click)="openUrl(mission.id, '/admin/acces/participant-mission')">
+    <mat-icon class="text-primary me-2 cursor-pointer icon-md">person</mat-icon>
+  </a>
+
+  <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+    <mat-icon class="text-muted icon-lg">more_vert</mat-icon>
+  </span>
+
+  <mat-menu #menu="matMenu">
+    <a class="d-flex justify-content-between align-items-center"
+       (click)="openBasicModal(modalUpdate, mission)">
+      <span class="me-2">Modifier</span>
+      <mat-icon class="text-primary icon-lg">edit</mat-icon>
+    </a>
+
+    <a class="d-flex justify-content-between align-items-center"
+       (click)="deleteMission(mission.id)">
+      <span class="me-2">Supprimer</span>
+      <mat-icon class="text-primary icon-lg">delete</mat-icon>
+    </a>
+  </mat-menu>
+</div>
+
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <div class="paginate">
+      <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                      [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm"
+                      [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+      </ngb-pagination>
+    </div>
+  </section>
+</div>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Mission</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-mission [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId"
+                     [isSearch]="false" [modal]="modalRef"></app-form-mission>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification Mission</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-mission [label]="'Modifier'" (submit)="close($event)" [missionToUpdate]="missionToUpdate"
+                     [isSearch]="false" [modal]="modalRef" [projetId]="projetId"></app-form-mission>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher Mission</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-mission [label]="'Rechercher'" (submit)="doSearch($event)" [projetId]="projetId"
+                     [isSearch]="true" [modal]="modalRef"></app-form-mission>
+  </div>
+</ng-template>

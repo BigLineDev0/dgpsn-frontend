@@ -1,0 +1,23 @@
+// Dans votre fichier list-courrier-arriver.component.scss
+
+.table-container {
+  // Styles combinés pour l'apparence
+  background: white;
+  border-radius: 8px;
+  position: relative; // Nécessaire pour les colonnes "sticky" (figées)
+
+  // La correction clé : autoriser le défilement horizontal
+  overflow-x: auto; 
+}
+
+.mat-table {
+  width: 100%;
+  // Définir une largeur minimale est CRUCIAL pour forcer l'apparition du scroll
+  min-width: 1400px; // Ajustez cette valeur en fonction du nombre et de la largeur de vos colonnes
+}
+
+.mat-cell, .mat-header-cell {
+  white-space: nowrap;
+}
+
+/* ... le reste de votre fichier SCSS ... */

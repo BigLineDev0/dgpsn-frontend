@@ -1,0 +1,340 @@
+<!-- Formulaire de Recherche -->
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Référence</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Référence du courrier"
+          formControlName="reference"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Destinataire</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Nom du destinataire"
+          formControlName="destinataire"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Objet</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Objet du courrier"
+          formControlName="objet"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Date du courrier du</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="dateCourrier"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Date d'envoi</label>
+        <input type="date" class="form-control" formControlName="dateEnvoi" />
+      </div>
+
+      <!-- Nature et Urgence -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Nature Courrier <small style="color: red">*</small></label
+        >
+        <ng-select
+          [items]="natureId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner une nature"
+          formControlName="natureId"
+        ></ng-select>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Etat Urgence Courrier <small style="color: red">*</small></label
+        >
+        <ng-select
+          [items]="urgenceId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un niveau d'urgence"
+          formControlName="urgenceId"
+        ></ng-select>
+      </div>
+
+      <!-- Statut et Mode d'envoi -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Statut Courrier <small style="color: red">*</small></label
+        >
+        <ng-select
+          [items]="statutId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un statut"
+          formControlName="statutId"
+        ></ng-select>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Mode Envoi Courrier <small style="color: red">*</small></label
+        >
+        <ng-select
+          [items]="modeEnvoiId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un mode d'envoi"
+          formControlName="modeEnvoiId"
+        ></ng-select>
+      </div>
+    </div>
+
+    <div class="modal-footer mt-3">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+        Annuler
+      </button>
+    </div>
+  </form>
+</section>
+
+<!-- Formulaire d'Ajout/Modification -->
+<section *ngIf="!isSearch">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="row">
+      <!-- Référence -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Référence <span class="text-danger">*</span></label
+        >
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Référence du courrier"
+            formControlName="reference"
+            [readonly]="!!courrierToUpdate"
+            required
+          />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="generateReference()"
+            [disabled]="!!courrierToUpdate"
+            title="Générer une référence"
+          >
+            <i class="feather icon-refresh-cw"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Destinataire -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Destinataire <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Nom du destinataire"
+          formControlName="destinataire"
+          required
+        />
+      </div>
+
+      <!-- Objet -->
+      <div class="col-12 mb-3">
+        <label class="form-label"
+          >Objet <span class="text-danger">*</span></label
+        >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Objet du courrier"
+          formControlName="objet"
+          required
+        />
+      </div>
+
+      <!-- Dates -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Date du courrier <span class="text-danger">*</span></label
+        >
+        <input
+          type="date"
+          class="form-control"
+          formControlName="dateCourrier"
+          required
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Date d'envoi</label>
+        <div class="input-group">
+          <input type="date" class="form-control" formControlName="dateEnvoi" />
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="copyDepartDate()"
+            [disabled]="!form.get('dateCourrier')?.value"
+            title="Copier la date du courrier"
+          >
+            <i class="feather icon-copy"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="marquerCommeEnvoye()"
+            title="Marquer comme envoyé maintenant"
+          >
+            <i class="feather icon-send"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Nature et Urgence -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Nature Courrier <span class="text-danger">*</span></label
+        >
+        <ng-select
+          [items]="natureId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner une nature"
+          formControlName="natureId"
+          required
+        >
+        </ng-select>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Etat Urgence Courrier <span class="text-danger">*</span></label
+        >
+        <ng-select
+          [items]="urgenceId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un niveau d'urgence"
+          formControlName="urgenceId"
+          required
+        >
+        </ng-select>
+      </div>
+
+      <!-- Statut et Mode d'envoi -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Statut Courrier <span class="text-danger">*</span></label
+        >
+        <ng-select
+          [items]="statutId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un statut"
+          formControlName="statutId"
+          required
+        >
+        </ng-select>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label"
+          >Mode Envoi Courrier <span class="text-danger">*</span></label
+        >
+        <ng-select
+          [items]="modeEnvoiId"
+          bindLabel="libelle"
+          bindValue="id"
+          placeholder="Sélectionner un mode d'envoi"
+          formControlName="modeEnvoiId"
+          required
+        >
+        </ng-select>
+      </div>
+
+      <!-- Numéros d'enregistrement et de suivi -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Numéro d'enregistrement</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Numéro d'enregistrement"
+          formControlName="numeroEnregistrement"
+        />
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Numéro de suivi</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Numéro de suivi"
+          formControlName="numeroSuivi"
+        />
+      </div>
+
+      <!-- Instructions et Notes -->
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Instructions</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          placeholder="Instructions particulières"
+          formControlName="instructions"
+        ></textarea>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-3">
+        <label class="form-label">Notes internes</label>
+        <textarea
+          class="form-control"
+          rows="3"
+          placeholder="Notes internes"
+          formControlName="notes"
+        ></textarea>
+      </div>
+
+      <!-- Description -->
+      <!-- Description -->
+      <div class="col-12 mb-3">
+        <label class="form-label">Description / Contenu</label>
+        <textarea
+          class="form-control"
+          rows="6"
+          placeholder="Description du courrier"
+          formControlName="description"
+          style="
+            height: 200px;
+            max-height: 300px;
+            margin-bottom: 50px;
+            resize: vertical;
+          "
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+        <i class="feather icon-x"></i> Annuler
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        <i class="feather icon-save"></i>
+        {{ courrierToUpdate ? "Mettre à jour" : "Enregistrer" }}
+      </button>
+    </div>
+  </form>
+</section>

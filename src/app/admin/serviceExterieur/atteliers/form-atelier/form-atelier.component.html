@@ -1,0 +1,109 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Titre de l'atelier <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Titre de l'atelier" formControlName="titreAtelier">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Thème principal <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Thème principal" formControlName="theme">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Objectifs de l'atelier <span class="text-danger">*</span></label>
+            <textarea rows="4" class="col-12" formControlName="objectif"></textarea>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de l'atelier <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateAtelier">
+            </div>
+            <div class="mb-3 col-md-3">
+                <label class="form-label">Heure de début <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" formControlName="heurDebut">
+            </div>
+            <div class="mb-3 col-md-3">
+                <label class="form-label">Heure de fin <span class="text-danger">*</span></label>
+                <input type="time" class="form-control" formControlName="heurFin">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Lieu de l'atelier <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" placeholder="Lieu de l'atelier" formControlName="lieu">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Nombre max de participants <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" placeholder="Nombre max" formControlName="nombreParticipantsMax">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Agent <span class="text-danger">*</span></label>
+                <ng-select placeholder="Sélectionner un animateur" formControlName="agentId" [searchable]="true">
+                    <ng-option *ngFor="let agent of agents" [value]="agent.id">
+                        {{ agent.prenom }} <!-- Display only prenom since nom is missing -->
+                    </ng-option>
+                </ng-select>
+
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Coût d'organisation <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" class="form-control" placeholder="Coût d'organisation" formControlName="coutOrganisation">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Statut <span class="text-danger">*</span></label>
+                <ng-select
+                        placeholder="Sélectionner un statut"
+                        formControlName="statut"
+                        [items]="statutAtelier"
+                        bindLabel="description"
+                bindValue="name">
+                </ng-select>
+
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Titre de l'atelier</label>
+                <input type="text" class="form-control" placeholder="Titre de l'atelier" formControlName="titreAtelier">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Thème principal</label>
+                <input type="text" class="form-control" placeholder="Thème principal" formControlName="theme">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Lieu de l'atelier</label>
+                <input type="text" class="form-control" placeholder="Lieu de l'atelier" formControlName="lieu">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Statut</label>
+                <ng-select
+                        placeholder="Sélectionner un statut"
+                        formControlName="statut"
+                        [items]="statutAtelier"
+                        bindLabel="description"
+                        bindValue="name">
+                </ng-select>
+
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

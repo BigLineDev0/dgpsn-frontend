@@ -1,0 +1,135 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div formArrayName="realisations">
+      <div *ngFor="let realisation of realisations.controls; let i=index" [formGroupName]="i" class="row mb-2">
+        <!-- <div class="col-md-2">
+          <label class="form-label">Code</label>
+          <input type="text" class="form-control" placeholder="Code" formControlName="code">
+        </div> -->
+        <!-- <div class="col-md-4">
+          <label class="form-label">Libellé</label>
+          <input type="text" class="form-control" placeholder="Libellé" formControlName="libelle">
+        </div> -->
+          <div class="mb-3 col-md-4">
+        <label for="realisationsId" class="form-label">Libellé realisations</label>
+        <ng-select placeholder="Sélectionner Libellé" formControlName="realisationsId">
+          <ng-option *ngFor="let realisations of realisationsLibelle" [value]="realisations.id">
+             {{ realisations.code }} {{ realisations.libelle }}
+          </ng-option>
+        </ng-select>
+      </div>
+        <div class="col-md-4">
+          <label class="form-label">Montant</label>
+          <input type="number" class="form-control" placeholder="Montant" formControlName="montant">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" formControlName="date">
+        </div>
+        <!-- USE SELECT end for fournisseur -->
+        <div class="col-md-4 mt-3">
+          <label class="form-label">Fournisseur</label>
+          <ng-select placeholder="Sélectionner Fournisseur" formControlName="fournisseurId">
+            <ng-option *ngFor="let fournisseur of fournisseursInput" [value]="fournisseur.id">
+              {{ fournisseur.raisonSociale }}
+            </ng-option>
+          </ng-select>
+        </div>
+        <!-- <div class="col-md-12 mt-3">
+          <label class="form-label">Fournisseur</label>
+          <input type="text" class="form-control" placeholder="Fournisseur" formControlName="fournisseur">
+        </div> -->
+        <div class="col-md-4 mt-3">
+          <label class="form-label">Numéro Bon</label>
+          <input type="text" class="form-control" placeholder="Numéro Bon" formControlName="numeroBon">
+        </div>
+        <div class="col-md-4 mt-3">
+          <label class="form-label">Numéro BE</label>
+          <input type="text" class="form-control" placeholder="Numéro BE" formControlName="numeroBE">
+        </div>
+        <div class="col-md-6 mt-3">
+          <label class="form-label">Numéro Mandat</label>
+          <input type="text" class="form-control" placeholder="Numéro Mandat" formControlName="numeroMandat">
+        </div>
+        <div class="col-md-6 mt-3">
+          <label class="form-label">Facture</label>
+          <input type="text" class="form-control" placeholder="Numéro Facture" formControlName="facture">
+        </div>
+        <div class="col-md-12 mt-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" rows="5" formControlName="description"></textarea>
+        </div>
+        <!-- <div class="col-md-1 d-flex align-items-end">
+          <button type="button" class="btn btn-danger btn-sm" (click)="removeRealisation(i)">-</button>
+        </div> -->
+      </div>
+    </div>
+    <!-- <button type="button" class="btn btn-primary btn-sm mb-3" (click)="addRealisation()">+ Ajouter Réalisation</button> -->
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="code" class="form-label">Code</label>
+        <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="libelle" class="form-label">Libellé</label>
+        <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Montant</label>
+        <input type="number" class="form-control" placeholder="Montant" formControlName="montant">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-control" formControlName="date">
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="fournisseur" class="form-label">Fournisseur</label>
+        <input type="text" class="form-control form-control-lg" id="fournisseur" placeholder="Fournisseur" formControlName="fournisseur">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="ligneBudgetaireId" class="form-label">Ligne Budgetaire</label>
+        <ng-select placeholder="Sélectionner Ligne Budgetaire" formControlName="ligneBudgetaireId">
+          <ng-option *ngFor="let ligne of ligneBudgetaireList" [value]="ligne.id">
+            {{ ligne.libelle }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="numeroBon" class="form-label">Numéro Bon</label>
+        <input type="text" class="form-control form-control-lg" id="numeroBon" placeholder="Numéro Bon" formControlName="numeroBon">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="numeroBE" class="form-label">Numéro BE</label>
+        <input type="text" class="form-control form-control-lg" id="numeroBE" placeholder="Numéro BE" formControlName="numeroBE">
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="numeroMandat" class="form-label">Numéro Mandat</label>
+        <input type="text" class="form-control form-control-lg" id="numeroMandat" placeholder="Numéro Mandat" formControlName="numeroMandat">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control form-control-lg" id="description" placeholder="Description" formControlName="description">
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer mt-2">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

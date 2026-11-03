@@ -1,0 +1,228 @@
+<!-- add-compte/add-compte.component.html -->
+<div class="page-container">
+  <!-- En-tête moderne avec la charte graphique -->
+  <div class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1 class="page-title">Nouveau Compte Bancaire</h1>
+        <p class="page-subtitle">Créer un nouveau compte de trésorerie</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu du formulaire -->
+  <div class="form-container">
+    <form [formGroup]="compteForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Section 1: Informations Générales -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="section-icon">info</mat-icon>
+            Informations Générales
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Numéro de Compte</mat-label>
+                <input matInput formControlName="numeroCompte" placeholder="Ex: 00001234567890">
+                <mat-icon matPrefix>account_balance</mat-icon>
+                <mat-error *ngIf="compteForm.get('numeroCompte')?.hasError('required')">
+                  Le numéro de compte est requis
+                </mat-error>
+                <mat-error *ngIf="compteForm.get('numeroCompte')?.hasError('minlength')">
+                  Minimum 10 caractères
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Libellé du Compte</mat-label>
+                <input matInput formControlName="libelleCompte" placeholder="Ex: Compte Principal DGPSN">
+                <mat-icon matPrefix>description</mat-icon>
+                <mat-error>{{ getErrorMessage('libelleCompte') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Banque</mat-label>
+                <mat-select formControlName="banqueId">
+                  <mat-option *ngFor="let banque of banques" [value]="banque.id">
+                    {{ banque.libelle }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>business</mat-icon>
+                <mat-error>{{ getErrorMessage('banqueId') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Type de Compte</mat-label>
+                <mat-select formControlName="typeCompte">
+                  <mat-option *ngFor="let type of typesCompte" [value]="type.name">
+                    {{ type.description }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>account_balance_wallet</mat-icon>
+                <mat-error>{{ getErrorMessage('typeCompte') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Devise</mat-label>
+                <mat-select formControlName="devise">
+                  <mat-option *ngFor="let devise of devises" [value]="devise">
+                    {{ devise }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>attach_money</mat-icon>
+                <mat-error>{{ getErrorMessage('devise') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Solde Initial</mat-label>
+                <input matInput type="number" formControlName="soldeInitial" placeholder="0">
+                <mat-icon matPrefix>savings</mat-icon>
+                <mat-error>{{ getErrorMessage('soldeInitial') }}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Date d'Ouverture</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dateOuverture">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-icon matPrefix>event</mat-icon>
+                <mat-error>{{ getErrorMessage('dateOuverture') }}</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Section 2: Configuration Spécifique -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="section-icon">settings</mat-icon>
+            Configuration Spécifique
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-12 mb-3">
+              <mat-checkbox formControlName="isCompteDesigne" color="primary" class="custom-checkbox">
+                <strong>Compte Désigné</strong>
+                <span class="text-muted ms-2">(ressources des bailleurs)</span>
+              </mat-checkbox>
+            </div>
+
+            <div class="col-md-6" *ngIf="compteForm.get('isCompteDesigne')?.value">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Projet</mat-label>
+                <mat-select formControlName="projetId">
+                  <mat-option *ngFor="let projet of projets" [value]="projet.id">
+                    {{ projet.libelle }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>work</mat-icon>
+                <mat-error>Le projet est requis pour un compte désigné</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="compteForm.get('isCompteDesigne')?.value">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Bailleur</mat-label>
+                <mat-select formControlName="bailleurId">
+                  <mat-option *ngFor="let bailleur of bailleurs" [value]="bailleur.id">
+                    {{ bailleur.libelle }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matPrefix>public</mat-icon>
+                <mat-error>Le bailleur est requis pour un compte désigné</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Section 3: Coordonnées Bancaires -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="section-icon">credit_card</mat-icon>
+            Coordonnées Bancaires
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>RIB</mat-label>
+                <input matInput formControlName="rib" placeholder="Relevé d'Identité Bancaire">
+                <mat-icon matPrefix>qr_code</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>IBAN</mat-label>
+                <input matInput formControlName="iban" placeholder="Ex: SN08 SGBS...">
+                <mat-icon matPrefix>location_on</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Code SWIFT/BIC</mat-label>
+                <input matInput formControlName="swift" placeholder="Ex: SGBSSNDAXXX">
+                <mat-icon matPrefix>language</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Observations</mat-label>
+                <textarea matInput formControlName="observations" rows="3"
+                          placeholder="Informations complémentaires..."></textarea>
+                <mat-icon matPrefix>notes</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button mat-stroked-button type="button" (click)="resetForm()" [disabled]="loading">
+          <mat-icon>refresh</mat-icon>
+          Réinitialiser
+        </button>
+        <div class="action-buttons-right">
+          <button mat-stroked-button type="button" (click)="goBack()" [disabled]="loading">
+            <mat-icon>close</mat-icon>
+            Annuler
+          </button>
+          <button mat-raised-button color="primary" type="submit" 
+                  [disabled]="compteForm.invalid || loading">
+            <mat-spinner *ngIf="loading" diameter="20" class="spinner-button"></mat-spinner>
+            <mat-icon *ngIf="!loading">save</mat-icon>
+            <span *ngIf="!loading">Enregistrer</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+      <ol class="breadcrumb ">
+      <li class="breadcrumb-item active"><a>Referentiel</a></li>
+      <li class="breadcrumb-item text-primary" aria-current="page">Liste Plans Geographiques</li>
+      </ol>
+  </nav>
+  <div class="d-flex justify-content-end align-items-baseline mt-3 mb-3">
+      <button (click)="openBasicModal(basicModal)"  type="button" class="btn btn-primary">Nouvel Plan Geographique</button>
+      </div>
+  <!-- <div class="d-flex align-items-center flex-wrap text-nowrap">
+
+      <a class="me-4 d-block" (click)="activeListViewMode()">
+          <i class="feather icon-list icon-xl"></i>
+      </a>
+
+      <a class="me-4" (click)="activeBlockViewMode()">
+          <i class="feather icon-grid icon-xl"></i>
+      </a>
+
+      <button (click)="false" type="button" class="btn btn-primary" 
+          (click)="openNewindicateur(indicateurModal)">Nouveau indicateur</button>
+  </div> -->
+</div>
+<div class="row mt-3 mb-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body m-0 p-0">
+        <ngb-accordion [closeOthers]="true">
+          <ngb-panel id="static-1" title="Recherche">
+            <ng-template ngbPanelContent>
+              <app-create-or-update-plangeo></app-create-or-update-plangeo>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0" style="background-color: #f9fafb;">
+      <!-- is only used before getting data to the api-->
+      <app-spinner *ngIf="loading" [displayedColumns]="displayedColumns"></app-spinner>
+      <!-- is only used before getting data to the api-->
+
+      <table mat-table [dataSource]="datasource?.content" *ngIf="!loading">
+        <ng-container matColumnDef="projet">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Projet </th>
+          <td mat-cell *matCellDef="let plan"> {{plan.projet.code}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cadreLogique">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> CadreLogique  </th>
+          <td mat-cell *matCellDef="let plan" class=""> <span>{{plan.cadreLogique?.libelle}} </span></td>
+        </ng-container>
+
+        
+        
+     
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+            Actions </th>
+          <td mat-cell *matCellDef="let statut" class="text-center">
+            <div class="text-center d-inline-block">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+              </span>
+
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex align-items-center"
+                  (click)="false">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a  ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="false">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+          [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+          [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Plan Geographique </h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-create-or-update-plangeo ></app-create-or-update-plangeo>
+  </div>
+</ng-template>

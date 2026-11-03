@@ -1,0 +1,57 @@
+<app-agent-routing *ngIf="curentRoute ==='/admin/acces/agent/conge' " />
+<nav
+  *ngIf="!isCongeAgentRoute && activeMenuForAgentProfile()"
+  class="page-breadcrumb"
+  style="position: relative; top: 15px; left: 0px"
+>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Agents</a></li>
+    <li class="breadcrumb-item active">
+      <a routerLink="/liste-agents">Demande Congé</a>
+    </li>
+  </ol>
+</nav>
+<ul
+  ngbNav
+  #fillJustifyNav="ngbNav"
+  [(activeId)]="active"
+  class="nav-tabs nav-fill"
+>
+  <li [ngbNavItem]="1">
+    <a ngbNavLink id="conge administratif">
+      <mat-icon class="align-middle">how_to_reg</mat-icon>
+      Congé Annuel
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-demande [typeConge]="'ADMINISTRATIF'"></app-list-demande>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink id="maternite">
+      <mat-icon class="align-middle">pregnant_woman</mat-icon>
+      Congés de Maternité
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-demande [typeConge]="'MATERNITE'"></app-list-demande>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="3">
+    <a ngbNavLink id="maladie">
+      <mat-icon class="align-middle">local_hospital</mat-icon>
+      Congés Absences
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-demande [typeConge]="'MALADIE'"></app-list-demande>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="4">
+    <a ngbNavLink id="longue duree">
+      <mat-icon class="align-middle">miscellaneous_services</mat-icon>
+     Absences
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-demande [typeConge]="'AUTRES'"></app-list-demande>
+    </ng-template>
+  </li>
+</ul>
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>

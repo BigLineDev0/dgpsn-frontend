@@ -1,0 +1,40 @@
+<section>
+    <form [formGroup]="form">
+        <div class="row mt-2">
+
+            <div class="col-md-6 col-sm-12">
+                <div class="mb-3">
+                    <label for="colFormLabelLg" class="form-label">Choisir un type de document</label>
+                    <ng-select [items]="typeDocument"
+                    bindLabel="libelle"
+                    bindValue="id"
+                    placeholder="Selectionner..." formControlName="typeDocumentId">
+         </ng-select>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-12 mb-3">
+                <label for="colFormCodeLg" class="form-label">Obligatoire</label>
+                  <ng-select [items]="type"
+                             bindLabel="name"
+                             bindValue="value"
+                             placeholder="Selectionner..." formControlName="obligatoire">
+                  </ng-select>
+                </div>
+
+              <div class="col-md-3 col-sm-12 mb-3">
+                <label for="colFormCodeLg" class="form-label">Collectif</label>
+                  <ng-select [items]="type"
+                             bindLabel="name"
+                             bindValue="value"
+                             placeholder="Selectionner..." formControlName="collectif">
+                  </ng-select>
+                </div>
+
+        </div>
+
+        <div class="modal-footer mt-3">
+            <button type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+        </div>
+    </form>
+</section>

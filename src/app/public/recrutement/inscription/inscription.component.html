@@ -1,0 +1,99 @@
+<section>
+    <div class="text-center mb-5">
+        <h1 class="mb-3">Formulaire de Recrutement</h1>
+        <p class="lead text-muted">Créez une nouvelle offre d'emploi en complétant les détails ci-dessous</p>
+    </div>
+    
+    <form [formGroup]="form" (ngSubmit)="save()">
+        <!-- Détails du poste -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Détails du poste</h5>
+            </div>
+            <div class="card-body bg-white">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Libellé</label>
+                        <input type="text" class="form-control form-control-lg" placeholder="Libellé" formControlName="libelle" />
+                        <div *ngIf="form.get('libelle')?.invalid && form.get('libelle')?.touched" class="text-danger">
+                            Le libellé est requis
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Type de contrat</label>
+                        <select class="form-select form-select-lg" formControlName="typeContrat">
+                            <option value="" disabled>Sélectionnez un type</option>
+                            <option *ngFor="let item of typeContrats" [value]="item.name">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Date limite</label>
+                        <input type="date" class="form-control form-control-lg" formControlName="dateLimite" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caractéristiques -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Caractéristiques</h5>
+            </div>
+            <div formArrayName="characteristics" class="card-body bg-white">
+                <div *ngFor="let characteristic of characteristics.controls; let i = index" [formGroupName]="i" class="row align-items-center mb-3">
+                    <div class="col-md-4 mb-3">
+                        <select class="form-select" formControlName="categorieCaracteristique" (change)="onCategorieChange($event, i)">
+                            <option value="" disabled>Sélectionnez une catégorie</option>
+                            <option *ngFor="let item of categorieCaracteristiques" [value]="item.categorieName">
+                                {{ item.libelle }}
+                            </option>
+                        </select>
+                        <div *ngIf="characteristic.get('categorieCaracteristique')?.invalid && characteristic.get('categorieCaracteristique')?.touched" class="text-danger">
+                            La catégorie est requise
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <select class="form-select" formControlName="caracteristique">
+                            <option value="" disabled>Sélectionnez une caractéristique</option>
+                            <option *ngFor="let item of filteredCaracteristiques[i]" [value]="item.id">
+                                {{ item.libelle }}
+                            </option>
+                        </select>
+                        <div *ngIf="characteristic.get('caracteristique')?.invalid && characteristic.get('caracteristique')?.touched" class="text-danger">
+                            La caractéristique est requise
+                        </div>
+                    </div>
+                  <div class="d-flex align-items-end h-100 w-250px">
+                      <div class="d-flex align-items-center gap-3">
+                          <div class="form-check mb-3">
+                              <input type="checkbox" class="form-check-input" formControlName="exige" id="exige-{{i}}" />
+                              <label class="form-check-label mb-0" for="exige-{{i}}">Exigé ?</label>
+                          </div>
+                          <div class="mb-3">
+                              <button type="button" class="btn btn-outline-danger btn-sm rounded-circle" (click)="removeCharacteristic(i)">
+                                  <i class="bi bi-trash"></i>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" (click)="addCharacteristic()">
+                        <i class="bi bi-plus-circle me-2"></i>Ajouter une caractéristique
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!form.valid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+            </button>
+        </div>
+    </form>
+</section>

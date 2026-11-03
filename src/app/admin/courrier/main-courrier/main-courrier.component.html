@@ -1,0 +1,64 @@
+<nav
+  *ngIf="!isCongeAgentRoute && activeMenuForAgentProfile()"
+  class="page-breadcrumb"
+  style="position: relative; top: 15px; left: 0px"
+>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Agents</a></li>
+    <li class="breadcrumb-item active">
+      <a routerLink="/liste-agents">Courrier</a>
+    </li>
+  </ol>
+</nav>
+
+<ul
+  ngbNav
+  #fillJustifyNav="ngbNav"
+  [(activeId)]="active"
+  class="nav-tabs nav-fill"
+>
+  <li [ngbNavItem]="1">
+    <a ngbNavLink id="courrier-arrive">
+      <mat-icon class="align-middle">download</mat-icon>
+      Courrier Arrivé
+      <span class="badge bg-primary ms-2">{{ courriersActifs.length }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-courrier-arriver
+        [courriers]="courriersActifs"
+        (onArchiver)="archiverCourrier($event)"
+      ></app-list-courrier-arriver>
+    </ng-template>
+  </li>
+
+  <li [ngbNavItem]="2">
+    <a ngbNavLink id="courrier-depart">
+      <mat-icon class="align-middle">upload</mat-icon>
+      Courrier Départ
+      <span class="badge bg-secondary ms-2">{{ courriersDepartActifs.length }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <app-list-courrier-depart
+        [courriers]="courriersDepartActifs"
+        (onArchiver)="archiverCourrierDepart($event)"
+      ></app-list-courrier-depart>
+    </ng-template>
+  </li>
+
+  <!-- Nouvel onglet Archives -->
+  <li [ngbNavItem]="3">
+    <a ngbNavLink>
+      <mat-icon class="align-middle">archive</mat-icon>
+      Archives
+      <span class="badge bg-info ms-2">{{ courriersArchives.length }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <app-archive-courrier
+        [courriersArchives]="courriersArchives"
+        (onDesarchiver)="desarchiverCourrier($event)"
+      ></app-archive-courrier>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>

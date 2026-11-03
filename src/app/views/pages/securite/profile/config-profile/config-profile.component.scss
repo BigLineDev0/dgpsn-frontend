@@ -1,0 +1,20 @@
+// Fix pour le z-index avec Material
+::ng-deep .ng-dropdown-panel {
+  z-index: 9999 !important;
+}
+
+// Fix pour l'overflow du mat-expansion-panel
+::ng-deep mat-expansion-panel {
+  overflow: visible !important;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  overflow: visible !important;
+}
+
+// Style du ng-select
+::ng-deep .ng-select {
+  .ng-select-container {
+    min-height: 38px;
+  }
+}

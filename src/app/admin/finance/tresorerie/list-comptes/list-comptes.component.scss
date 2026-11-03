@@ -1,0 +1,199 @@
+// list-comptes/list-comptes.component.scss
+
+.pagination { 
+  margin-bottom: 0; 
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.page-link {
+  cursor: pointer;
+  user-select: none;
+}
+
+.page-item.disabled .page-link {
+  cursor: not-allowed;
+}
+
+/* Tableaux Material */
+table.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ✅ EN-TÊTES VERTS comme dans l'image */
+th.mat-header-cell {
+  background-color: #5a7a5e !important; /* Vert foncé comme dans l'image */
+  color: #ffffff !important; /* Texte blanc */
+  font-weight: bold;
+  padding: 12px 8px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+td.mat-cell {
+  padding: 12px 8px;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 
+              0 8px 10px 1px rgba(0, 0, 0, 0.14), 
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+tr.mat-row:hover {
+  background-color: #f5f5f5;
+}
+
+.table-row {
+  transition: background-color 0.2s;
+}
+
+th.mat-header-cell[matColumnDef="actions"],
+td.mat-cell[matColumnDef="actions"] {
+  text-align: center;
+  min-width: 150px;
+  background-color: #ffffff !important;
+}
+
+/* ✅ Classe pour l'en-tête vert */
+.table-head-bg {
+  background-color: #5a7a5e !important;
+  
+  th {
+    background-color: #5a7a5e !important;
+    color: #ffffff !important;
+  }
+}
+
+/* Cards statistiques */
+.stats-card {
+  border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: all 0.3s ease;
+  border: none;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .card-body {
+    padding: 1.25rem;
+
+    h6 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    small {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.stats-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+.bg-success-light {
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+.bg-primary-light {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.bg-info-light {
+  background-color: rgba(23, 162, 184, 0.1);
+}
+
+.bg-danger-light {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Badge styles */
+.badge {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.813rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+}
+
+/* Scrollbar personnalisé */
+.table-container {
+  max-height: 600px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+
+    &:hover {
+      background: #555;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stats-card {
+    margin-bottom: 1rem;
+  }
+
+  .pagination-wrapper {
+    overflow-x: auto;
+  }
+}
+
+/* Loading indicator */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Empty state */
+.paginate {
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  font-size: 1rem;
+}

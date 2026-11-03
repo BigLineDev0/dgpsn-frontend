@@ -1,0 +1,89 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="col-sm-12" *ngIf="addParent">
+      <div class="mb-3">
+        <label for="colFormLabelLg" class="form-label">{{niveau?.label}}<small style="color: red;">*</small>
+        </label>
+        <ng-select [items]="parents" bindLabel="libelle" bindValue="id" formControlName="parentId">
+        </ng-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="colFormCodeLg" class="form-label">Code<small style="color: red;">*</small></label>
+          <input type="text" class="form-control form-control-lg" id="colFormCodeLg" placeholder="Code"
+            formControlName="code">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="colFormLabelLg" class="form-label">Libellé<small style="color: red;">*</small></label>
+          <input type="text" class="form-control form-control-lg" id="colFormLabelLg" placeholder="Libellé"
+            formControlName="libelle">
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="colFormLabelLg" class="form-label">Longitude</label>
+          <input type="text"  class="form-control form-control-lg" id="longitude" placeholder="Longitude"
+            formControlName="longitude">
+            <!-- pattern='/\d+,?\d*/g' -->
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="latitude" class="form-label">Latitude</label>
+          <input type="text" class="form-control form-control-lg" id="label" placeholder="Latitude"
+            formControlName="latitude">
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+<!--    <div class="col-sm-12">-->
+<!--      <div class="mb-3">-->
+<!--        <label for="colFormLabelLg" class="form-label">Type Cadre Logique-->
+<!--        </label>-->
+<!--        <ng-select [items]="cadretype" bindLabel="libelle" bindValue="id" formControlName="typeCadreLogiqueId">-->
+<!--        </ng-select>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="colFormCodeLg" class="form-label">Code</label>
+          <input type="email" class="form-control form-control-lg" id="colFormCodeLg" placeholder="Code"
+            formControlName="code">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="colFormLabelLg" class="form-label">Libellé</label>
+          <input type="email" class="form-control form-control-lg" id="colFormLabelLg" placeholder="Libellé"
+            formControlName="libelle">
+        </div>
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer mt-3">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

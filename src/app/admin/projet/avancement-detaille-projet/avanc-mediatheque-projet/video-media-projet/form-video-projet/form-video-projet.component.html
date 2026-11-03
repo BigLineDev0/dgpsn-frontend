@@ -1,0 +1,82 @@
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé</label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+          <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+            <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d1.toggle()">
+              <i data-feather="calendar" appFeatherIcon></i>
+            </button>
+            <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+              #d1="ngbDatepicker" formControlName="date">
+          </div> -->
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+
+  </form>
+  <div class="modal-footer mt-2">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+
+
+</section>
+
+
+
+
+
+
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé<small style="color: red;">*</small></label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date<small style="color: red;">*</small></label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+          <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+            <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d1.toggle()">
+              <i data-feather="calendar" appFeatherIcon></i>
+            </button>
+            <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+              #d1="ngbDatepicker" formControlName="date">
+          </div> -->
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Lien<small style="color: red;">*</small></label>
+          <input type="text" class="form-control" placeholder="lien video sur youtube" formControlName="src">
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+  </div>
+
+
+</section>

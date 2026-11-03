@@ -1,0 +1,133 @@
+<!-- ptba-container.component.html -->
+<div class="ptba-container-wrapper">
+    <!-- En-tête avec onglets -->
+    <div class="container-header">
+        <div class="header-content">
+            <h1>PTBA - Consolidés</h1>
+            <p class="subtitle">Délégation Générale à la Protection Sociale et à la Solidarité Nationale (DGPSN) - Sénégal</p>
+        </div>
+
+        <!-- Section de sélection Année/Budget -->
+        <div class="selection-section">
+            <div class="selection-controls">
+                <!-- Mode de recherche -->
+<!--                <div class="search-mode">-->
+<!--                    <label class="radio-label">-->
+<!--                        <input-->
+<!--                                type="radio"-->
+<!--                                name="searchMode"-->
+<!--                                value="year"-->
+<!--                                [(ngModel)]="searchMode"-->
+<!--                                (change)="onSearchModeChange()"-->
+<!--                        />-->
+<!--                        <span>Par Année</span>-->
+<!--                    </label>-->
+<!--&lt;!&ndash;                    <label class="radio-label">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                type="radio"&ndash;&gt;-->
+<!--&lt;!&ndash;                                name="searchMode"&ndash;&gt;-->
+<!--&lt;!&ndash;                                value="budget"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="searchMode"&ndash;&gt;-->
+<!--&lt;!&ndash;                                (change)="onSearchModeChange()"&ndash;&gt;-->
+<!--&lt;!&ndash;                        />&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span>Par Budget</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </label>&ndash;&gt;-->
+<!--                </div>-->
+
+                <!-- Sélecteur d'année -->
+                <div class="year-selector">
+                    <label for="yearSelect">Année :</label>
+                    <select
+                            id="yearSelect"
+                            class="form-select"
+                            [(ngModel)]="selectedYear"
+                            (change)="applySelection()"
+                    >
+                        <option *ngFor="let year of availableYears" [value]="year">
+                            {{ year }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Sélecteur de budget (visible uniquement en mode budget) -->
+<!--                <div class="budget-selector" *ngIf="searchMode === 'budget'">-->
+<!--                    <label for="budgetSelect">Budget :</label>-->
+<!--                    <select-->
+<!--                            id="budgetSelect"-->
+<!--                            class="form-select"-->
+<!--                            [(ngModel)]="selectedBudgetId"-->
+<!--                            (change)="applySelection()"-->
+<!--                            [disabled]="isLoadingBudgets"-->
+<!--                    >-->
+<!--                        <option value="">&#45;&#45; Sélectionner un budget &#45;&#45;</option>-->
+<!--                        <option *ngFor="let budget of availableBudgets" [value]="budget.id">-->
+<!--                            {{ budget.libelle }} ({{ budget.annee }})-->
+<!--                        </option>-->
+<!--                    </select>-->
+<!--                    &lt;!&ndash; 🆕 Message de chargement des budgets &ndash;&gt;-->
+<!--                    <span *ngIf="isLoadingBudgets" class="loading-text">Chargement...</span>-->
+<!--                    <span *ngIf="budgetsError" class="error-text">{{ budgetsError }}</span>-->
+<!--                </div>-->
+
+                <!-- Bouton d'application -->
+                <button
+                        class="btn-apply"
+                        (click)="applySelection()"
+                        [disabled]="(searchMode === 'budget' && !selectedBudgetId) || isLoadingBudgets"
+                >
+                    <span class="icon">🔍</span>
+                    Charger les données
+                </button>
+            </div>
+
+            <!-- 🆕 Informations sur la sélection actuelle -->
+            <div class="selection-info" *ngIf="ptbaParams.year">
+                <div class="info-badge mode-badge">
+                    <span class="info-label">Mode :</span>
+                    <span class="info-value">
+                        {{ searchMode === 'year' ? 'Consolidé par année' : 'Budget spécifique' }}
+                    </span>
+                </div>
+                <div class="info-badge year-badge">
+                    <span class="info-label">Année :</span>
+                    <span class="info-value">{{ ptbaParams.year }}</span>
+                </div>
+                <div class="info-badge budget-badge" *ngIf="searchMode === 'budget' && selectedBudgetId">
+                    <span class="info-label">Budget :</span>
+                    <span class="info-value">{{ getBudgetName(selectedBudgetId) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglets de navigation -->
+        <div class="tabs-navigation">
+            <button
+                    class="tab-button"
+                    [class.active]="activeView === 'filters'"
+                    (click)="switchView('filters')">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">Vue avec Filtres</span>
+            </button>
+            <button
+                    class="tab-button"
+                    [class.active]="activeView === 'excel'"
+                    (click)="switchView('excel')">
+                <span class="tab-icon">📋</span>
+                <span class="tab-label">Vue Tableau</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenu des vues -->
+    <div class="views-container">
+        <!-- Vue 1: Filtres + Tableau interactif -->
+        <div class="view-content" *ngIf="activeView === 'filters'">
+            <app-main-ptba [ptbaParams]="ptbaParams"></app-main-ptba>
+        </div>
+
+        <!-- Vue 2: Tableau Excel fidèle -->
+        <div class="view-content" *ngIf="activeView === 'excel'">
+            <app-ptba-table-excel [ptbaParams]="ptbaParams"></app-ptba-table-excel>
+        </div>
+    </div>
+</div>

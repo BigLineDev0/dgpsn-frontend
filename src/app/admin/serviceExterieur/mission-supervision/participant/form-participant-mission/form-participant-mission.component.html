@@ -1,0 +1,56 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-12">
+                <label class="form-label">Employé</label>
+                <ng-select placeholder="Sélectionner un employé" formControlName="idEmploye">
+                    <ng-option *ngFor="let employe of employes" [value]="employe.id">
+                        {{ employe?.nom }} {{ employe?.prenom }}
+                    </ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Rôle dans la mission</label>
+                <input type="text" class="form-control" placeholder="Rôle dans la mission" formControlName="roleMission">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date d'assignation</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateAssignation">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Employé</label>
+                <ng-select placeholder="Sélectionner un employé" formControlName="idEmploye">
+                    <ng-option *ngFor="let employe of employes" [value]="employe.id">
+                        {{ employe?.nom }} {{ employe?.prenom }}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Rôle dans la mission</label>
+                <input type="text" class="form-control" placeholder="Rôle dans la mission" formControlName="roleMission">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date d'assignation</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateAssignation">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

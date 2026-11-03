@@ -1,0 +1,112 @@
+<div class="dialog-container">
+    <!-- Header -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon>folder_open</mat-icon>
+            </div>
+            <div class="header-text">
+                <h2>Ajout workflow</h2>
+                <!-- <p>Créez un nouveau workflow pour votre organisation</p> -->
+            </div>
+        </div>
+        <button mat-icon-button class="close-btn" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+<!-- 
+    <mat-divider></mat-divider> -->
+
+    <!-- Content -->
+    <div class="dialog-content">
+        <form [formGroup]="form" class="workflow-form">
+            <!-- Code -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>vpn_key</mat-icon>
+                    Code
+                    <span class="required">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <input
+                            matInput
+                            placeholder="Ex: WF_CONGE_001"
+                            formControlName="code">
+                    <mat-icon matPrefix>tag</mat-icon>
+                    <!-- <mat-error *ngIf="form.get('code')?.hasError('required')">
+                        Le code est obligatoire
+                    </mat-error> -->
+                </mat-form-field>
+            </div>
+
+            <!-- Module -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>category</mat-icon>
+                    Module
+                    <span class="required">*</span>
+                </label>
+                <ng-select
+                        [items]="worfklowTypes"
+                        notFoundText="Aucun élément trouvé"
+                        loadingText="Chargement des éléments en cours..."
+                        bindLabel="libelle"
+                        bindValue="name"
+                        placeholder="Sélectionnez un module"
+                        formControlName="type"
+                        class="custom-ng-select">
+                    <ng-template ng-option-tmp let-item="item">
+                        <div class="select-option">
+                            <mat-icon>description</mat-icon>
+                            <span>{{ item.libelle }}</span>
+                        </div>
+                    </ng-template>
+                </ng-select>
+                <!-- <mat-error *ngIf="form.get('type')?.touched && form.get('type')?.hasError('required')" class="error-message">
+                    Le module est obligatoire
+                </mat-error> -->
+            </div>
+
+            <!-- Libellé -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>description</mat-icon>
+                    Description 
+                    <span class="required">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <textarea
+                            matInput
+                            placeholder="Décrivez le workflow..."
+                            formControlName="libelle"
+                            rows="3"
+                            maxlength="50"></textarea>
+                    <mat-icon matPrefix>notes</mat-icon>
+                    <mat-hint align="end">{{ form.get('libelle')?.value?.length || 0 }}/500</mat-hint>
+                    <mat-error *ngIf="form.get('libelle')?.hasError('required')">
+                        La description est obligatoire
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+<!-- 
+    <mat-divider></mat-divider> -->
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+        <button mat-stroked-button class="cancel-btn" (click)="close()">
+            <mat-icon>cancel</mat-icon>
+            Annuler
+        </button>
+        <button
+                mat-raised-button
+                color="primary"
+                class="submit-btn"
+                [disabled]="!form.valid"
+                (click)="save()">
+            <mat-icon>check_circle</mat-icon>
+            Enregistrer
+        </button>
+    </div>
+</div>

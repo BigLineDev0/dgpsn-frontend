@@ -1,0 +1,7 @@
+export enum TYPE_CONGE{
+    ANNUEL = "ANNUEL",
+    MATERNITE = "MATERNITE",
+    MALADIE = "MALADIE",
+    AUTRES = "AUTRES",
+}
+

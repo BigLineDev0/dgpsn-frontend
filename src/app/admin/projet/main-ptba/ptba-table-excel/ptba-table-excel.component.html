@@ -1,0 +1,214 @@
+<div class="excel-view-container">
+    <!-- Message de chargement -->
+    <div *ngIf="isLoading" class="loading-message">
+        Chargement du PTBA en cours...
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+    </div>
+
+    <!-- Tableau Excel -->
+    <div class="excel-table-wrapper" *ngIf="!isLoading && !errorMessage">
+        <table class="excel-table">
+            <!-- En-têtes complexes -->
+            <thead>
+            <!-- Ligne 1: Trimestres -->
+            <tr class="header-row-1">
+                <th rowspan="3" class="col-objectifs">Objectifs</th>
+                <th rowspan="3" class="col-actions">Actions</th>
+                <th rowspan="3" class="col-activites">Activités</th>
+                <th rowspan="3" class="col-indicateurs">Indicateurs/Cibles</th>
+                <th rowspan="3" class="col-taches">Taches</th>
+
+                <!-- Trimestres avec semaines -->
+                <th colspan="6" class="trimestre-header trim-1">TRIMESTRE 1</th>
+                <th colspan="6" class="trimestre-header trim-2">TRIMESTRE 2</th>
+                <th colspan="6" class="trimestre-header trim-3">TRIMESTRE 3</th>
+                <th colspan="6" class="trimestre-header trim-4">TRIMESTRE 4</th>
+
+                <th rowspan="3" class="col-acteur-resp">Acteurs Responsable et implique</th>
+                <th rowspan="3" class="col-cout">Coût {{ annee }} en CFA</th>
+
+                <!-- Sources de financement - 🆕 Nombre de colonnes dynamique -->
+                <th [attr.colspan]="bailleurs.length" class="sources-header">Sources de financement</th>
+
+                <th rowspan="3" class="col-sources-verif">SOURCES ET MOYENS DE VERIFICATION</th>
+                <th rowspan="3" class="col-observations">Observations</th>
+            </tr>
+
+            <!-- Ligne 2: Mois -->
+            <tr class="header-row-2">
+                <ng-container *ngFor="let mois of trimestre1Mois">
+                    <th colspan="2" class="mois-header trim-1">{{ mois }}</th>
+                </ng-container>
+                <ng-container *ngFor="let mois of trimestre2Mois">
+                    <th colspan="2" class="mois-header trim-2">{{ mois }}</th>
+                </ng-container>
+                <ng-container *ngFor="let mois of trimestre3Mois">
+                    <th colspan="2" class="mois-header trim-3">{{ mois }}</th>
+                </ng-container>
+                <ng-container *ngFor="let mois of trimestre4Mois">
+                    <th colspan="2" class="mois-header trim-4">{{ mois }}</th>
+                </ng-container>
+
+                <!-- 🆕 Bailleurs dynamiques -->
+                <th *ngFor="let bailleur of bailleurs" rowspan="2" class="source-col">
+                    {{ bailleur }}
+                </th>
+            </tr>
+
+            <!-- Ligne 3: Semaines (S2, S3, etc.) -->
+            <tr class="header-row-3">
+                <!-- 12 mois x 2 semaines = 24 colonnes -->
+                <ng-container *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]">
+                    <th class="semaine-col striped">S{{ i*2 + 1 }}</th>
+                    <th class="semaine-col striped">S{{ i*2 + 2 }}</th>
+                </ng-container>
+            </tr>
+            </thead>
+
+            <!-- Corps du tableau -->
+            <tbody>
+            <ng-container *ngFor="let group of groupedData; let groupIndex = index">
+                <ng-container *ngFor="let actionGroup of group.actions; let actionIndex = index">
+                    <ng-container *ngFor="let activity of actionGroup.activities; let activityIndex = index">
+                        <tr class="data-row">
+                            <!-- Objectif (fusionné) -->
+                            <td *ngIf="actionIndex === 0 && activityIndex === 0"
+                                [attr.rowspan]="group.objectifRowspan"
+                                class="cell-objectif">
+                                <span class="text-decoration-underline">{{activity?.objectifCode}}</span> : {{ group?.objectif }}
+                            </td>
+
+                            <!-- Action (fusionné) -->
+                            <td *ngIf="activityIndex === 0"
+                                [attr.rowspan]="actionGroup.actionRowspan"
+                                class="cell-action">
+                                <span class="text-decoration-underline">{{activity?.actionCode}}</span> : {{ actionGroup?.action }}
+                            </td>
+
+                            <!-- Activité -->
+                            <td class="cell-activite"> <span class="text-decoration-underline">{{activity?.activiteCode}}</span> : {{ activity?.activite }}</td>
+
+                            <!-- Indicateurs -->
+                            <td class="cell-indicateurs">{{ activity?.indicateurs }}</td>
+
+                            <!-- Tâches -->
+                            <td class="cell-taches">{{ activity?.taches }}</td>
+
+                            <!-- Trimestre 1 - 3 mois x 2 semaines -->
+                            <ng-container *ngFor="let monthIdx of [0, 1, 2]">
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 1, monthIdx)">
+                                </td>
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 1, monthIdx)">
+                                </td>
+                            </ng-container>
+
+                            <!-- Trimestre 2 - 3 mois x 2 semaines -->
+                            <ng-container *ngFor="let monthIdx of [0, 1, 2]">
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 2, monthIdx)">
+                                </td>
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 2, monthIdx)">
+                                </td>
+                            </ng-container>
+
+                            <!-- Trimestre 3 - 3 mois x 2 semaines -->
+                            <ng-container *ngFor="let monthIdx of [0, 1, 2]">
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 3, monthIdx)">
+                                </td>
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 3, monthIdx)">
+                                </td>
+                            </ng-container>
+
+                            <!-- Trimestre 4 - 3 mois x 2 semaines -->
+                            <ng-container *ngFor="let monthIdx of [0, 1, 2]">
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 4, monthIdx)">
+                                </td>
+                                <td class="cell-semaine striped"
+                                    [class.active]="hasMonthActivity(activity, 4, monthIdx)">
+                                </td>
+                            </ng-container>
+
+                            <!-- Acteurs -->
+                            <td class="cell-acteur">
+                                <div class="acteur-resp">{{ activity.acteurResponsable }}</div>
+                                <div class="acteur-impl" *ngIf="activity.acteurImplique">{{ activity.acteurImplique }}</div>
+                            </td>
+
+                            <!-- Coût -->
+                            <td class="cell-cout">
+                                <span *ngIf="activity.coutCFA > 0">{{ formatCurrency(activity.coutCFA) }}</span>
+                            </td>
+
+                            <!-- 🆕 Sources de financement dynamiques -->
+                            <td *ngFor="let bailleur of bailleurs" class="cell-source">
+                                {{ getSourceValue(activity, bailleur) }}
+                            </td>
+
+                            <!-- Sources et moyens de vérification -->
+                            <td class="cell-verification">{{ activity.sourcesVerification }}</td>
+
+                            <!-- Observations -->
+                            <td class="cell-observations">{{ activity.observations }}</td>
+                        </tr>
+                    </ng-container>
+
+                    <!-- Ligne de total par action -->
+                    <tr class="total-action-row" *ngIf="actionIndex === group.actions.length - 1">
+                        <td colspan="5" class="total-label">Total {{ actionGroup.action }}</td>
+                        <td colspan="24" class="total-empty"></td>
+                        <td class="total-acteur"></td>
+                        <td class="total-cout">{{ formatCurrency(getTotalAction(group.objectif, actionGroup.action)) }}</td>
+
+                        <!-- 🆕 Totaux par bailleur pour l'action -->
+                        <td *ngFor="let bailleur of bailleurs" class="cell-source total-source">
+                            {{ formatCurrency(getTotalActionByBailleur(group.objectif, actionGroup.action, bailleur)) }}
+                        </td>
+
+                        <td colspan="2" class="total-empty"></td>
+                    </tr>
+                </ng-container>
+
+                <!-- Ligne de total par objectif -->
+                <tr class="total-objectif-row">
+                    <td colspan="5" class="total-objectif-label">Total {{ group.objectif }}</td>
+                    <td colspan="24" class="total-empty"></td>
+                    <td class="total-acteur"></td>
+                    <td class="total-objectif-cout">{{ formatCurrency(getTotalObjectif(group.objectif)) }}</td>
+
+                    <!-- 🆕 Totaux par bailleur pour l'objectif -->
+                    <td *ngFor="let bailleur of bailleurs" class="cell-source total-source">
+                        {{ formatCurrency(getTotalObjectifByBailleur(group.objectif, bailleur)) }}
+                    </td>
+
+                    <td colspan="2" class="total-empty"></td>
+                </tr>
+            </ng-container>
+
+            <!-- Ligne de total général -->
+            <tr class="grand-total-row">
+                <td colspan="5" class="grand-total-label">TOTAL GÉNÉRAL</td>
+                <td colspan="24" class="total-empty"></td>
+                <td class="total-acteur"></td>
+                <td class="grand-total-cout">{{ formatCurrency(getGrandTotal()) }}</td>
+
+                <!-- 🆕 Totaux généraux par bailleur -->
+                <td *ngFor="let bailleur of bailleurs" class="cell-source total-source grand-total-source">
+                    {{ formatCurrency(getTotalByBailleur(bailleur)) }}
+                </td>
+
+                <td colspan="2" class="total-empty"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

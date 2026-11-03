@@ -1,0 +1,27 @@
+<app-routing-avancement-projet [pageTitle]="'Vision des Performances'"></app-routing-avancement-projet>
+
+<div class="row">
+  <div class="mb-3 card p-0">
+    <div class="card-body p-2">
+      <h5 class="badge text-secondary me-1 cursor-pointer" ngbTooltip="{{libelle}}">{{libelle}}</h5>
+      <!--        <i class="icon-lg text-secondary" data-feather="chevron-right" appFeatherIcon></i>-->
+      <!--        <h3 class="badge text-secondary cursor-pointer" ngbTooltip="{{lancement?.libelle}}">{{lancement?.libelle | textFormatter: 'split:50'}}</h3>-->
+    </div>
+  </div>
+</div>
+<ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>Impacts attendus</a>
+    <ng-template ngbNavContent>
+      <app-list-impact-attendu-projet></app-list-impact-attendu-projet>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>Objectifs spécifiques</a>
+    <ng-template ngbNavContent>
+      <app-list-objectif-projet></app-list-objectif-projet>
+    </ng-template>
+  </li>
+</ul>
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
+

@@ -1,0 +1,124 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Numéro d'ordre de mission</label>
+                <input type="text" class="form-control" placeholder="Numéro d'ordre" formControlName="numeroOrdreMission">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Type de mission</label>
+                <ng-select placeholder="Sélectionner un type" formControlName="typeMission">
+                    <ng-option value="Mission">Mission</ng-option>
+                    <ng-option value="Supervision">Supervision</ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Objet de la mission</label>
+            <textarea rows="4" class="col-12" formControlName="objet"></textarea>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Lieu de destination</label>
+                <input type="text" class="form-control" placeholder="Lieu de destination" formControlName="lieuDestination">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Responsable de la mission</label>
+                <ng-select placeholder="Sélectionner un responsable" formControlName="idResponsableMission">
+                    <ng-option *ngFor="let employe of employes" [value]="employe.id">
+                        {{ employe?.nom }} {{ employe?.prenom }}
+                    </ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de début</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateDebut">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date de fin</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateFin">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Durée (jours)</label>
+                <input type="number" class="form-control" placeholder="Durée en jours" formControlName="dureeJours">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Budget alloué</label>
+                <input type="number" class="form-control form-control-lg" placeholder="Budget alloué" formControlName="budgetAlloue">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Devise</label>
+                <ng-select placeholder="Sélectionner une devise" formControlName="devise">
+                    <ng-option value="USD">USD</ng-option>
+                    <ng-option value="EUR">EUR</ng-option>
+                    <ng-option value="XAF">XAF</ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Statut</label>
+                <ng-select placeholder="Sélectionner un statut" formControlName="statut">
+                    <ng-option value="Planifiée">Planifiée</ng-option>
+                    <ng-option value="En cours">En cours</ng-option>
+                    <ng-option value="Terminée">Terminée</ng-option>
+                    <ng-option value="Annulée">Annulée</ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Rapport disponible</label>
+                <mat-checkbox formControlName="rapportDisponible">Disponible</mat-checkbox>
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date du rapport</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="dateRapport">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Numéro d'ordre de mission</label>
+                <input type="text" class="form-control" placeholder="Numéro d'ordre" formControlName="numeroOrdreMission">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Type de mission</label>
+                <ng-select placeholder="Sélectionner un type" formControlName="typeMission">
+                    <ng-option value="Mission">Mission</ng-option>
+                    <ng-option value="Supervision">Supervision</ng-option>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Lieu de destination</label>
+                <input type="text" class="form-control" placeholder="Lieu de destination" formControlName="lieuDestination">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Statut</label>
+                <ng-select placeholder="Sélectionner un statut" formControlName="statut">
+                    <ng-option value="Planifiée">Planifiée</ng-option>
+                    <ng-option value="En cours">En cours</ng-option>
+                    <ng-option value="Terminée">Terminée</ng-option>
+                    <ng-option value="Annulée">Annulée</ng-option>
+                </ng-select>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

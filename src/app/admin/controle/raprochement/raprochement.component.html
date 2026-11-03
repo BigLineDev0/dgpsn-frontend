@@ -1,0 +1,227 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a>Contrôle & Pilotage</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Rapprochements</li>
+        </ol>
+    </nav>
+    <div class="mt-2 d-flex align-items-center">
+        <button type="button" class="btn btn-success btn-icon me-2" ngbTooltip="Exporter">
+            <i class="feather icon-download"></i>
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-icon-text" (click)="clearFilters()">
+            <i class="feather icon-refresh-cw me-1"></i> Réinitialiser
+        </button>
+    </div>
+</div>
+
+<!-- KPIs -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-lg-3 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0 text-uppercase fw-normal text-muted" style="font-size: 0.75rem;">
+                        Total Rapproché
+                    </h6>
+                    <div class="badge bg-light text-success p-2 rounded">
+                        <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #10b981;">check_circle</mat-icon>
+                    </div>
+                </div>
+                <h3 class="mb-0 text-success" style="font-size: 1.5rem; font-weight: 600;">
+                    {{ formatMontant(stats.totalRapproche) }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-3 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0 text-uppercase fw-normal text-muted" style="font-size: 0.75rem;">
+                        Total Écarts
+                    </h6>
+                    <div class="badge bg-light text-danger p-2 rounded">
+                        <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #ef4444;">warning</mat-icon>
+                    </div>
+                </div>
+                <h3 class="mb-0 text-danger" style="font-size: 1.5rem; font-weight: 600;">
+                    {{ formatMontant(stats.totalEcarts) }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-3 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0 text-uppercase fw-normal text-muted" style="font-size: 0.75rem;">
+                        Taux Rapprochement
+                    </h6>
+                    <div class="badge bg-light text-primary p-2 rounded">
+                        <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #3b82f6;">percent</mat-icon>
+                    </div>
+                </div>
+                <h3 class="mb-0 text-primary" style="font-size: 1.5rem; font-weight: 600;">
+                    {{ stats.tauxRapprochement.toFixed(1) }}%
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-3 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <h6 class="card-title mb-0 text-uppercase fw-normal text-muted" style="font-size: 0.75rem;">
+                        Nombre d'Écarts
+                    </h6>
+                    <div class="badge bg-light text-warning p-2 rounded">
+                        <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #f59e0b;">format_list_numbered</mat-icon>
+                    </div>
+                </div>
+                <h3 class="mb-0 text-warning" style="font-size: 1.5rem; font-weight: 600;">
+                    {{ stats.nombreEcarts }}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtres -->
+<div class="row mb-3">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body py-2">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label mb-1">Période</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedPeriode" (change)="applyFilters()">
+                            <option value="">Toutes</option>
+                            <option *ngFor="let periode of periodeOptions" [value]="periode">{{ periode }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label mb-1">Statut</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedStatut" (change)="applyFilters()">
+                            <option value="">Tous</option>
+                            <option *ngFor="let statut of statutOptions" [value]="statut.value">{{ statut.label }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label mb-1">Recherche</label>
+                        <input type="text" class="form-control form-control-sm" 
+                               placeholder="Compte, libellé..." 
+                               [(ngModel)]="searchQuery" 
+                               (keyup.enter)="applyFilters()" />
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-primary btn-sm w-100" (click)="applyFilters()">
+                            <i class="feather icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="table-container mat-elevation-z8" tabindex="0">
+            <table mat-table [dataSource]="dataSource?.payload" *ngIf="!loadingIndicator">
+                
+                <ng-container matColumnDef="periode">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Période</th>
+                    <td mat-cell *matCellDef="let rap" class="text-left">
+                        <span class="badge bg-light text-dark">{{ rap.periode }}</span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="compte">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Compte</th>
+                    <td mat-cell *matCellDef="let rap" class="text-left">
+                        <code class="text-primary">{{ rap.compte }}</code>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="libelle">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:250px;">Libellé</th>
+                    <td mat-cell *matCellDef="let rap" class="text-left">{{ rap.libelle }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="montantComptable">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:140px;">M. Comptable</th>
+                    <td mat-cell *matCellDef="let rap" class="text-end">
+                        <strong>{{ formatMontant(rap.montantComptable) }}</strong>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="montantBudgetaire">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:140px;">M. Budgétaire</th>
+                    <td mat-cell *matCellDef="let rap" class="text-end">
+                        <strong>{{ formatMontant(rap.montantBudgetaire) }}</strong>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ecart">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Écart</th>
+                    <td mat-cell *matCellDef="let rap" class="text-end">
+                        <div [ngClass]="getEcartClass(rap.ecart)">
+                            <strong>{{ formatMontant(rap.ecart) }}</strong>
+                            <small class="d-block">({{ rap.ecartPourcentage.toFixed(2) }}%)</small>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="statut">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Statut</th>
+                    <td mat-cell *matCellDef="let rap" class="text-left">
+                        <span class="badge" [ngClass]="getStatutBadgeClass(rap.statut)">
+                            {{ getStatutLabel(rap.statut) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">Actions</th>
+                    <td mat-cell *matCellDef="let rap" class="text-center bg-white">
+                        <div class="text-center d-inline-block bg-white">
+                            <a class="me-2" role="button" ngbTooltip="Voir détails" placement="left" container="body"
+                               (click)="voirDetails(rap)">
+                                <mat-icon class="text-primary icon-lg">visibility</mat-icon>
+                            </a>
+                            <a role="button" ngbTooltip="Réconcilier" placement="left" container="body"
+                               (click)="reconcilier(rap)">
+                                <mat-icon class="text-success icon-lg">done_all</mat-icon>
+                            </a>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+                <tr mat-row *matRowDef="let rap; columns: displayedColumns"></tr>
+            </table>
+
+            <span *ngIf="dataSource?.metadata?.totalElements == 0" class="paginate text-danger mt-4">
+                Aucun rapprochement trouvé
+            </span>
+
+            <div class="paginate">
+                <ngb-pagination [collectionSize]="dataSource?.metadata?.totalElements" 
+                                [page]="pageOptions.page+1"
+                                [pageSize]="pageOptions.size" 
+                                [maxSize]="5" 
+                                (pageChange)="paginate($event)" 
+                                size="sm"
+                                [rotate]="true" 
+                                [ellipses]="true" 
+                                [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
+        </section>
+    </div>
+</div>

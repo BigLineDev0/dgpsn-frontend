@@ -1,0 +1,273 @@
+<app-routing-avancement-projet [addButtontitle]="'Nouveau problème'"
+  [pageTitle]="'Problème'"></app-routing-avancement-projet>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div class="row">
+    <div class="mb-3 card p-0">
+      <div class="card-body p-2">
+        <h5 class="badge text-secondary me-1 cursor-pointer" ngbTooltip="{{libelle}}">{{libelle}}</h5>
+        <!--        <i class="icon-lg text-secondary" data-feather="chevron-right" appFeatherIcon></i>-->
+        <!--        <h3 class="badge text-secondary cursor-pointer" ngbTooltip="{{lancement?.libelle}}">{{lancement?.libelle | textFormatter: 'split:50'}}</h3>-->
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Import">
+      <i class="feather icon-arrow-up-circle"></i>
+    </button>
+    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouveau problème
+    </button>
+  </div>
+
+</div>
+<div class="row mt-2">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <!-- is only used before getting data to the api-->
+      <app-spinner *ngIf="loading" [displayedColumns]="displayedColumns"></app-spinner>
+      <!-- is only used before getting data to the api-->
+
+      <table mat-table [dataSource]="datasource?.content" *ngIf="!loading">
+
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text me-4" style="min-width:30px;">Libelle</th>
+          <td mat-cell *matCellDef="let probleme" class="text-left">{{probleme?.libelle}}</td>
+        </ng-container>
+        <ng-container matColumnDef="identificationDate">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:40px;">Date
+            Identification </th>
+          <td mat-cell *matCellDef="let probleme" class="text-center">{{probleme.identificationDate | date: 'dd/MM/yyyy'
+            }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="criticite">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;">Criticité
+          </th>
+          <td mat-cell *matCellDef="let probleme" class="text-center">{{probleme.criticity?.description}}</td>
+        </ng-container>
+        <ng-container matColumnDef="statut">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;">Statut</th>
+          <td mat-cell *matCellDef="let probleme" class="text-center">{{probleme.status?.libelle}}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:60px;"> Actions
+          </th>
+          <td mat-cell *matCellDef="let probleme" class="text-center">
+            <div class="d-flex justify-content-center align-items-center">
+              <a ngbDropdownItem class="d-flex align-items-center me-2" ngbTooltip="Validation"
+                (click)="openCommentaire(validationModal, probleme)" *afHasAnyAuthority=valider>
+                <!-- <i data-feather="check-circle" appFeatherIcon class="icon-lg me-2" [ngStyle]="{'color': probleme.valid ? '#00813d' : '#f4c276'}"></i> -->
+                <mat-icon [ngClass]="{ 'text-success': probleme.valid, 'text-gray': !probleme.valid }" class="icon-lg">
+                  {{ probleme.valid ? 'check_circle' : 'highlight_off' }}
+
+                </mat-icon>
+              </a>
+              <a ngbDropdownItem class="d-flex align-items-center me-2" ngbTooltip="Recommandation"
+                (click)="navigateToRecommandation(probleme.id, probleme.libelle)">
+                <i data-feather="list" appFeatherIcon class="icon-sm me-2"></i>
+              </a>
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+              </span>
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex align-items-center" (click)="openBasicModal(updateModal, probleme)">
+                  <i data-feather="edit-2" appFeatherIcon class="icon-sm me-2"></i>
+                  <span>Modifier</span>
+                </a>
+                <a ngbDropdownItem class="d-flex align-items-center" (click)="deleteIssueLog(probleme.id)">
+                  <i data-feather="trash" appFeatherIcon class="icon-sm me-2"></i>
+                  <span>Supprimer</span>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+          [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+          [ellipses]="true" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout problème</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-probleme-projet (submit)="close($event)" [isSearch]="false"
+      [projetId]="projetId"></app-form-probleme-projet>
+  </div>
+</ng-template>
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher problème</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-probleme-projet [isSearch]="true" (search)="doSearch($event)"
+      [projetId]="projetId"></app-form-probleme-projet>
+  </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier problème</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-probleme-projet (submit)="close($event)" [problemeRiskToUpdate]="problemeRiskToUpdate"
+      [projetId]="projetId" [isSearch]="false"></app-form-probleme-projet>
+  </div>
+</ng-template>
+
+<ng-template #importModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Importer problème</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Pièce jointe</label>
+          <input type="file" [formEnctype]="" class="form-control" (change)="fileChange($event)"
+            accept=".pdf, .doc, .docx, .xlsx, .xls">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="importPloblem()" type="button" class="btn btn-primary btn-xs me-2">Importer</button>
+  </div>
+</ng-template>
+
+<ng-template #actionRealizedModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Action réalisées</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!--    <app-list-action-realized [issuelogId]="issuelogId"></app-list-action-realized>-->
+  </div>
+</ng-template>
+<ng-template #validationModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Validation : <span> `` {{problemeToValid?.libelle}}
+        ``</span></h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+  
+    <ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill">
+      <li [ngbNavItem]="1" *ngIf="profile != 'CDP'">
+        <a ngbNavLink>Validation</a>
+        <ng-template ngbNavContent>
+          <section>
+            <form>
+              <!-- Groupe de boutons radio stylés -->
+              <!-- Groupe de boutons radio stylés -->
+              <div class="form-group mt-2">
+                <label style="margin-right: 15px;">Valider ? :</label>
+                <div class="form-check form-check-inline">
+                  <input type="radio" id="option1" class="form-check-input" name="validationOption" [(ngModel)]="valid"
+                    value="true" required>
+                  <label class="form-check-label" for="option1">Oui</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input type="radio" id="option2" class="form-check-input" name="validationOption" [(ngModel)]="valid"
+                    value="false" required>
+                  <label class="form-check-label" for="option2">Non</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="styled-textarea">Votre commentaire :</label>
+                <textarea id="styled-textarea" rows="5" placeholder="Tapez votre commentaire ici..."
+                  [(ngModel)]="validComment" name="validComment"></textarea>
+              </div>
+      
+              <div class="modal-footer">
+                <div>
+                  <button type="button" class="btn btn-secondary me-2" (click)="closeValidation()">Fermer</button>
+                  <button type="button" class="btn btn-primary" (click)="saveValidation()">Enregistrer</button>
+                </div>
+              </div>
+            </form>
+          </section>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>Historique</a>
+        <ng-template ngbNavContent>
+          <div class="row mt-2">
+            <div class="col-lg-12">
+              <section class="table-container mat-elevation-z8" tabindex="0">
+                <!-- is only used before getting data to the api-->
+                <app-spinner *ngIf="loading" [displayedColumns]="displayedValidationColumns"></app-spinner>
+                <!-- is only used before getting data to the api-->
+          
+                <table mat-table [dataSource]="validations" *ngIf="!loading">
+          
+                  <ng-container matColumnDef="acteur">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text me-4" style="min-width:30px;">Acteur</th>
+                    <td mat-cell *matCellDef="let validation" class="text-left">{{validation?.acteur}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="profil">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:40px;">Profil </th>
+                    <td mat-cell *matCellDef="let validation" class="text-center">{{validation.profil 
+                      }}</td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="validation">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;">Validation
+                    </th>
+                    <td mat-cell *matCellDef="let validation" class="text-center">{{validation?.validation}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="commentaire">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;">Commentaire</th>
+                    <td mat-cell *matCellDef="let validation" class="text-center">{{validation?.commentaire}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;">Date</th>
+                    <td mat-cell *matCellDef="let validation" class="text-center">{{validation?.date | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+                  </ng-container>
+          
+  
+                  <tr mat-header-row *matHeaderRowDef="displayedValidationColumns; sticky: true" class="table-head-bg"></tr>
+                  <tr mat-row *matRowDef="let emprow; columns: displayedValidationColumns"></tr>
+                </table>
+          
+                <div class="paginate">
+                  <ngb-pagination [collectionSize]="3" [page]="pageOptions.page+1"
+                    [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                    [ellipses]="true" [boundaryLinks]="true">
+                  </ngb-pagination>
+                </div>
+              </section>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
+    
+  </div>
+</ng-template>

@@ -1,0 +1,573 @@
+// Variables
+
+$primary-color: #4f6c52;       // ton vert principal
+$secondary-color: #3b5240;     // vert foncé secondaire
+$accent-color: #6f8d71;        // vert clair pour accents et hover
+$highlight-color: #a3b29c;     // couleur de mise en avant subtile
+
+// Textes
+$text-primary: #1f2937;         // texte sombre
+$text-secondary: #6b7280;       // texte secondaire / muted
+$text-light: #9ca3af;           // texte clair
+
+// Fond et surfaces
+$background: #f9fafb;           // fond global
+$white: #ffffff;                // blanc pur
+$border-color: #e5e7eb;        // bordures
+
+// Statuts
+$error-color: #ef4444;          // erreur / danger
+$success-color: #10b981;        // succès / validation
+
+
+$border-radius: 12px;
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+@mixin hover-shadow {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+// Main Container
+.candidature-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: $background;
+  min-height: 100vh;
+
+  @media (min-width: 768px) {
+    padding: 3rem 2rem;
+  }
+}
+
+// Job Offer Card
+.job-offer-card {
+  background: $white;
+  border-radius: $border-radius;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  @include card-shadow;
+  transition: $transition;
+
+  &:hover {
+    @include hover-shadow;
+  }
+
+  .job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .icon-title {
+      font-size: 1.5rem;
+      height: 1.5rem;
+      width: 1.5rem;
+      margin-right: 0.5rem;
+      color: $primary-color;
+      vertical-align: middle;
+    }
+
+    .job-type {
+      display: flex;
+      align-items: center;
+      background-color: $primary-color;
+      color: $white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      gap: 0.5rem;
+      height: fit-content;
+      margin-top: 0.5rem;
+
+      .icon-type {
+        // font-size: 1rem;
+        height: 1rem;
+        width: 1rem;
+        color: $white;
+      }
+
+      .job-type-text {
+        display: inline-block;
+      }
+    }
+
+    .job-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+  }
+
+  .job-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    color: $text-secondary;
+    font-size: 0.95rem;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      // &::before {
+      //   content: '';
+      //   display: none;
+      // }
+
+      mat-icon {
+        // font-size: 1.1em;
+        // height: 1.1em;
+        // width: 1.1em;
+        color: $highlight-color;
+      }
+    }
+  }
+
+  .job-description {
+    color: $text-secondary;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .job-requirements {
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: $text-primary;
+      margin-bottom: 0.75rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: $text-secondary;
+
+        &::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: $success-color;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// Form Container
+.form-container {
+  background: $white;
+  border-radius: $border-radius;
+  padding: 2rem;
+  @include card-shadow;
+
+  @media (min-width: 768px) {
+    padding: 3rem;
+  }
+
+  .form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-subtitle {
+      color: $text-secondary;
+      font-size: 1rem;
+    }
+  }
+}
+
+// Progress Bar
+.progress-container {
+  margin-bottom: 3rem;
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: $border-color;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $primary-color 0%, $highlight-color 100%);
+      transition: width 0.4s ease;
+      border-radius: 999px;
+    }
+  }
+
+  .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .progress-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: $border-color;
+        color: $text-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        transition: $transition;
+      }
+
+      .step-label {
+        font-size: 0.875rem;
+        color: $text-light;
+        text-align: center;
+        transition: $transition;
+      }
+
+      &.active {
+        .step-number {
+          background-color: $primary-color;
+          color: $white;
+          transform: scale(1.1);
+        }
+
+        .step-label {
+          color: $text-primary;
+          font-weight: 600;
+        }
+      }
+
+      &.completed {
+        .step-number {
+          background-color: $success-color;
+          color: $white;
+
+          &::after {
+            content: '✓';
+          }
+        }
+
+        .step-label {
+          color: $text-secondary;
+        }
+      }
+    }
+  }
+}
+
+// Form Steps
+.form-step {
+  animation: fadeIn 0.4s ease;
+
+  .step-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $border-color;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Form Elements
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid $border-color;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: $text-primary;
+    transition: $transition;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(26, 26, 46, 0.1);
+    }
+
+    &::placeholder {
+      color: $text-light;
+    }
+
+    &.error {
+      border-color: $error-color;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .error-message {
+    display: block;
+    color: $error-color;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+}
+
+// Checkbox Group
+.checkbox-group {
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+
+    input[type='checkbox'] {
+      width: auto;
+      margin-top: 0.25rem;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    span {
+      color: $text-secondary;
+      line-height: 1.5;
+    }
+  }
+}
+
+// File Upload
+.file-upload-area {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .file-upload-label {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 2px dashed $border-color;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: $transition;
+    color: $text-secondary;
+
+    &:hover {
+      border-color: $primary-color;
+      background-color: rgba(26, 26, 46, 0.02);
+    }
+
+    .file-name {
+      color: $text-primary;
+      font-weight: 500;
+    }
+  }
+
+  .remove-file-btn {
+    padding: 0.5rem 1rem;
+    background-color: $error-color;
+    color: $white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: $transition;
+
+    &:hover {
+      background-color: darken($error-color, 10%);
+    }
+  }
+}
+
+.uploaded-files {
+  margin-top: 1rem;
+
+  .uploaded-file {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: $background;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+
+    span {
+      color: $text-primary;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+// Form Actions
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid $border-color;
+  flex-wrap: wrap;
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: $transition;
+    border: none;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 1.2em;
+      height: 1.2em;
+      width: 1.2em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    &.btn-secondary {
+      background-color: $border-color;
+      color: $text-primary;
+
+      &:hover:not(:disabled) {
+        background-color: darken($border-color, 10%);
+      }
+    }
+
+    &.btn-primary {
+      background-color: $primary-color;
+      color: $white;
+
+      &:hover:not(:disabled) {
+        background-color: lighten($primary-color, 10%);
+        transform: translateY(-2px);
+        @include hover-shadow;
+      }
+    }
+
+    &.btn-submit {
+      background: linear-gradient(135deg, $primary-color 0%, $highlight-color 100%);
+      color: $white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        @include hover-shadow;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767px) {
+  .form-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .progress-steps {
+    .step-label {
+      font-size: 0.75rem;
+    }
+
+    .step-number {
+      width: 32px;
+      height: 32px;
+      font-size: 0.875rem;
+    }
+  }
+}

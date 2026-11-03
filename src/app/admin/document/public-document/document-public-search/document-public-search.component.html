@@ -1,0 +1,50 @@
+<form [formGroup]="form">
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-3">
+                <label for="titre" class="form-label">Titre</label>
+                <input type="text" class="form-control form-control-lg" id="titre" placeholder="Titre" formControlName="titre">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="mb-3">
+                <label for="auteur" class="form-label">Auteur(s)</label>
+                <input type="text" class="form-control form-control-lg" id="auteur" placeholder="Auteurs" formControlName="authors">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control form-control-lg" id="date" placeholder="Date" formControlName="date">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="mb-3">
+                <label class="form-label" for="documentTypeId">Type document</label>
+                <input type="text" class="form-control form-control-lg" id="documentTypeId" placeholder="Type document" formControlName="documentType">               
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="mb-3">
+                <label for="themes" class="form-label">Thèmes</label>
+                <input type="text" class="form-control form-control-lg" id="themes" placeholder="Themes" formControlName="themes">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="mb-3">
+                <label class="form-label" for="pad">PAD</label>
+                <input type="text" class="form-control form-control-lg" id="pad" placeholder="PAD" formControlName="partner">
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+            <div class="mb-3">
+                <label class="form-label" for="sectors">Sectors</label>
+                <input type="text" class="form-control form-control-lg" id="sectors" placeholder="Séctors" formControlName="sector">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-danger me-4" (click)="form.reset()">Annuler</button>
+        <button (click)="doSearch()" type="button" class="btn btn-primary">Rechercher</button>
+    </div>
+</form>

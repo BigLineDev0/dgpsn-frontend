@@ -1,0 +1,100 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="code" class="form-label">Code</label>
+        <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="libelle" class="form-label">Libellé</label>
+        <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+          formControlName="libelle">
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Montant</label>
+        <input type="number" class="form-control" placeholder="Montant" formControlName="montant">
+      </div>
+      <div class=" mb-3 col-md-6">
+        <label for="year">Année</label>
+        <ng-select placeholder="Sélectionner" id="year" [clearable]="false" class="form-select-custom"
+          formControlName="annee">
+          <ng-option *ngFor="let year of availableYears" [value]="year.value">{{ year.value
+            }}</ng-option>
+        </ng-select>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Code -->
+        <div class="col-md-6 mb-3">
+          <label for="code" class="form-label">Code</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="code"
+            placeholder="Code"
+            formControlName="code"
+          />
+        </div>
+
+        <!-- Libellé -->
+        <div class="col-md-6 mb-3">
+          <label for="libelle" class="form-label">Libellé</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="libelle"
+            placeholder="Libellé"
+            formControlName="libelle"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Montant -->
+        <div class="col-md-6 mb-3">
+          <label for="montant" class="form-label">Montant</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="montant"
+            placeholder="Montant"
+            formControlName="montant"
+          />
+        </div>
+
+        <!-- Année -->
+        <div class="col-md-6 mb-3">
+          <label for="year" class="form-label">Année</label>
+          <ng-select
+            placeholder="Sélectionner"
+            id="year"
+            [clearable]="false"
+            class="form-select-custom form-control-lg w-100"
+            formControlName="annee"
+          >
+            <ng-option *ngFor="let year of availableYears" [value]="year.value">
+              {{ year.value }}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="modal-footer mt-2">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>
+

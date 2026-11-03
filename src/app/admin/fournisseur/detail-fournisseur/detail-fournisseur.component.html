@@ -1,0 +1,82 @@
+<div class="modal-header">
+    <h5 class="modal-title">Détails du Fournisseur : {{ fournisseurDetails?.raisonSociale }}</h5>
+    <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <!-- Section 1: Identification et Contact -->
+        <div class="col-md-6">
+            <h6>Informations Générales</h6>
+            <hr>
+            <p><strong>Code Fournisseur:</strong> {{ fournisseurDetails?.codeFournisseur }}</p>
+            <p><strong>Raison Sociale:</strong> {{ fournisseurDetails?.raisonSociale }}</p>
+            <p><strong>Type:</strong> {{ fournisseurDetails?.typeFournisseur }}</p>
+            <p><strong>Statut:</strong> 
+                <span class="badge" 
+                    [class.bg-success]="fournisseurDetails?.statut === 'ACTIF'"
+                    [class.bg-secondary]="fournisseurDetails?.statut === 'INACTIF'"
+                    [class.bg-warning]="fournisseurDetails?.statut === 'SUSPENDU'">
+                    {{ fournisseurDetails?.statut }}
+                </span>
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <h6>Coordonnées</h6>
+            <hr>
+            <p><strong>NINEA:</strong> {{ fournisseurDetails?.ninea }}</p>
+            <p>
+                <!-- Registre de Commerce (Facultatif) -->
+                <strong>Registre de Commerce:</strong> 
+                {{ fournisseurDetails?.registreCommerce || 'Non renseigné' }}
+            </p>
+            <p><strong>Téléphone:</strong> {{ fournisseurDetails?.telephone }}</p>
+            <p><strong>Email:</strong> {{ fournisseurDetails?.email }}</p>
+            <p><strong>Adresse:</strong> {{ fournisseurDetails?.adresse }}</p>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <!-- Section 2: Catégorie et Conditions -->
+        <div class="col-md-6">
+            <h6>Catégorie et Paiement</h6>
+            <hr>
+            <p><strong>Catégorie:</strong> {{ fournisseurDetails?.categorieFournisseur || 'Non définie' }}</p>
+            <p><strong>Délai de Paiement:</strong> {{ fournisseurDetails?.delaiPaiement || 0 }} jours</p>
+        </div>
+        
+        <!-- Section 3: Informations Bancaires (Facultatif) -->
+        <div class="col-md-6">
+            <h6>Informations Bancaires</h6>
+            <hr>
+            <p>
+                <!-- Banque (Facultatif) -->
+                <strong>Banque:</strong> {{ fournisseurDetails?.banque || 'Non renseigné' }}
+            </p>
+            <p>
+                <!-- RIB/IBAN (Facultatif) -->
+                <strong>RIB/IBAN:</strong> {{ fournisseurDetails?.rib || 'Non renseigné' }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <!-- Section 4: Contact Principal et Notes -->
+        <div class="col-md-6">
+            <h6>Contact Principal</h6>
+            <hr>
+            <p><strong>Nom du Contact:</strong> {{ fournisseurDetails?.nomContact || 'N/A' }}</p>
+            <p><strong>Fonction du Contact:</strong> {{ fournisseurDetails?.fonctionContact || 'N/A' }}</p>
+        </div>
+        <div class="col-md-6">
+            <h6>Notes</h6>
+            <hr>
+            <p class="text-muted small">{{ fournisseurDetails?.notes || 'Aucune observation.' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+</div>

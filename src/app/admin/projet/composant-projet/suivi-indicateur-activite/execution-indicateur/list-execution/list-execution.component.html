@@ -1,0 +1,137 @@
+<app-suivi-indicateur-activite  [addButtontitle]="'Nouvelle exécution'" [pageTitle]="'Execution'"></app-suivi-indicateur-activite>
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <div></div>
+    <div>
+        <h6 class="text-center text-primary" ngbTooltip="{{projetLibelle}}">{{projetLibelle}}</h6>
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+            <i class="feather icon-search"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+            <i class="feather icon-plus-circle"></i> Nouvelle Execution
+        </button>
+    </div>
+
+</div>
+
+<div class="row">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+            <ng-container matColumnDef="libelle">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;">Libelle</th>
+                <td mat-cell *matCellDef="let execution"> {{execution?.libelle}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="annee">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Annee</th>
+                <td mat-cell *matCellDef="let execution" class="text-center">
+                    <!-- <span>{{execution.agent?.tel}}</span><span>{{execution.predicatedDate | date: 'dd-MM-yyyy'}}
+            </span> -->
+                    {{execution?.annee}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="startingDate">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;"> Date Debut </th>
+                <td mat-cell *matCellDef="let execution" class="text-center">
+                    {{execution?.startingDate|date: 'dd-MM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endingDate">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;"> Date Fin </th>
+                <td mat-cell *matCellDef="let execution" class="text-center">
+                    {{execution?.endingDate  | date: 'dd-MM-yyyy'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estimatedAmount">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Montant Previsionnel</th>
+                <td mat-cell *matCellDef="let execution; let i = index" class="text-center">
+                    {{execution?.estimatedAmount}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorPrevue">{{sourceComparaison[i].montantPrevue}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actualAmount">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Montant Reel</th>
+                <td mat-cell *matCellDef="let execution; let i = index" class="text-center">
+                    {{execution?.actualAmount}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorReel">{{sourceComparaison[i].montantReel}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="comment">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:500px;"> Commentaire
+                </th>
+                <td mat-cell *matCellDef="let execution"> {{execution.comment}} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+                    Actions </th>
+                <td mat-cell *matCellDef="let execution" class="text-center">
+                    <div class="text-center d-inline-block">
+                            <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                            </span>
+                        <mat-menu #menu="matMenu">
+                            <a  ngbDropdownItem
+                                class="d-flex justify-content-between align-items-center"
+                                (click)="openBasicModal(modalUpdate, execution)">
+                                <span class="me-2">Modifier</span>
+                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                            </a>
+                            <a ngbDropdownItem
+                               class="d-flex justify-content-between align-items-center"
+                               (click)="deleteExecution(execution.id)">
+                                <span class="me-2">Supprimer</span>
+                                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                            </a>
+                        </mat-menu>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+            <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+        <div class="paginate">
+            <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                            [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                            [ellipses]="true" [boundaryLinks]="true">
+            </ngb-pagination>
+        </div>
+    </section>
+</div>
+
+<!--Add date importantes-->
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout Execution</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-execution [label]="'Enregistrer'" (submit)="close($event)"
+                            [isSearch]="false"></app-form-execution >
+    </div>
+</ng-template>
+<!--End date importantes-->
+
+<!--Update date importantes-->
+<ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modification Execution</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-execution [label]="'Modifier'" (submit)="close($event)" [executionToUpdate]="executionToUpdate"
+                            [isSearch]="false"></app-form-execution>
+    </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Rechercher Execution</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-execution [label]="'Enregistrer'" (submit)="close($event)" [managementUnitId]="managementUnitId" [isSearch]="true"></app-form-execution>
+    </div>
+</ng-template>

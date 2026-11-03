@@ -1,0 +1,105 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb ">
+        <li class="breadcrumb-item active"><a>Referentiel</a></li>
+        <li class="breadcrumb-item text-primary" aria-current="page">Liste status</li>
+        </ol>
+    </nav>
+    
+    <div class="d-flex justify-content-end align-items-baseline mt-3 mb-3">
+      
+        <button (click)="openBasicModal(basicModal)"  type="button" class="btn btn-primary">Nouvel statut</button>
+        </div>
+    
+</div>
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body m-0 p-0">
+          <ngb-accordion [closeOthers]="true">
+            <ngb-panel id="static-1" title="Recherche">
+              <ng-template ngbPanelContent>
+                <app-create-or-update-status (search)="doSearch($event)" [isSearch]="true"></app-create-or-update-status>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+<div class="row">
+    <div class="col-lg-12">
+      <section class="table-container mat-elevation-z8" tabindex="0" style="background-color: #f9fafb;">
+        <!-- is only used before getting data to the api-->
+        <app-spinner *ngIf="loading" [displayedColumns]="displayedColumns"></app-spinner>
+        <!-- is only used before getting data to the api-->
+  
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loading">
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Code </th>
+            <td mat-cell *matCellDef="let statut"> {{statut?.code}} </td>
+          </ng-container>
+  
+          <ng-container matColumnDef="libelle">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Libelle </th>
+            <td mat-cell *matCellDef="let statut" class=""> <span>{{statut.libelle}} </span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="statusType">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Type status  </th>
+            <td mat-cell *matCellDef="let statut" class=""> <span>{{statut.statusType?.name}} </span></td>
+          </ng-container>
+
+          
+          <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="width:80px;"> Actions </th>
+            <td mat-cell *matCellDef="let statut" class="text-center">
+              <div class="text-center d-flex justify-content-between">
+                <a  ngbDropdownItem ngbTooltip="modifier" (click)="openDialog(updateStatutModal, 'lg', statut)" class="">
+                  <i class="text-primary feather icon-edit"></i>
+                </a>
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteStatut(statut?.id)"> 
+                  <mat-icon class="text-primary icon-lg ">delete</mat-icon>
+                </a> 
+              </div>
+            </td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+            class="table-head-bg"
+          ></tr>
+          <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+  
+        <div class="paginate">
+          <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+            [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+            [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </section>
+    </div>
+</div>
+
+
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Ajout un statut </h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-create-or-update-status [isSearch]="false" (submit)="close()"></app-create-or-update-status>
+    </div>
+  </ng-template>
+  <ng-template #updateStatutModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Ajout {{referentielType?.label}}</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-create-or-update-status [isSearch]="false" [referentielType]="referentielType" [statutToUpdate]="statutToUpdate" (submit)="close()"></app-create-or-update-status>
+    </div>
+</ng-template>

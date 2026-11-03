@@ -1,0 +1,487 @@
+.excel-view-container {
+  padding: 20px;
+  background-color: #f0f0f0;
+  min-height: 100vh;
+}
+
+// ===== TOOLBAR =====
+.excel-toolbar {
+  background: white;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .toolbar-left {
+    h1 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #64748b;
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    gap: 10px;
+
+    .btn-action {
+      background-color: #4a5d53;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: #3a4d43;
+      }
+
+      .icon {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// ===== TABLEAU EXCEL =====
+.excel-table-wrapper {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+}
+
+.excel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 11px;
+  background: white;
+
+  // ===== EN-TÊTES =====
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: white;
+
+    th {
+      border: 1px solid #d1d5db;
+      padding: 6px 4px;
+      text-align: center;
+      font-weight: 600;
+      background-color: #e5e7eb;
+      color: #1f2937;
+      vertical-align: middle;
+      font-size: 10px;
+    }
+
+    // Ligne 1 - Trimestres
+    .header-row-1 {
+      .col-objectifs {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 150px;
+      }
+
+      .col-actions {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 150px;
+      }
+
+      .col-activites {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 200px;
+      }
+
+      .col-indicateurs {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 150px;
+      }
+
+      .col-taches {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 150px;
+      }
+
+      .trimestre-header {
+        background-color: #60a5fa;
+        color: white;
+        font-weight: 700;
+        font-size: 11px;
+        min-width: 120px;
+
+        &.trim-1 { background-color: #4a7c9e; }
+        &.trim-2 { background-color: #10b981; }
+        &.trim-3 { background-color: #f59e0b; }
+        &.trim-4 { background-color: #ef4444; }
+      }
+
+      .col-acteur-resp {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 120px;
+      }
+
+      .col-cout {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 100px;
+      }
+
+      .sources-header {
+        background-color: #8b5cf6;
+        color: white;
+        font-weight: 700;
+      }
+
+      .col-sources-verif {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 120px;
+      }
+
+      .col-observations {
+        background-color: #4a5d53;
+        color: white;
+        min-width: 120px;
+      }
+    }
+
+    // Ligne 2 - Mois
+    .header-row-2 {
+      .mois-header {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 2px;
+
+        &.trim-1 { background-color: #a3c5d5; color: #1e3a5a; }
+        &.trim-2 { background-color: #86efac; color: #14532d; }
+        &.trim-3 { background-color: #fcd34d; color: #78350f; }
+        &.trim-4 { background-color: #fca5a5; color: #7f1d1d; }
+      }
+
+      .source-col {
+        background-color: #c4b5fd;
+        color: #4c1d95;
+        font-size: 9px;
+        min-width: 80px;
+        writing-mode: horizontal-tb;
+        transform: rotate(0deg);
+      }
+    }
+
+    // Ligne 3 - Semaines
+    .header-row-3 {
+      .semaine-col {
+        background-color: #f3f4f6;
+        color: #374151;
+        font-size: 9px;
+        font-weight: 500;
+        min-width: 25px;
+        max-width: 25px;
+        padding: 4px 2px;
+      }
+    }
+  }
+
+  // ===== CORPS DU TABLEAU =====
+  tbody {
+    .data-row {
+      &:hover {
+        background-color: #f9fafb;
+      }
+
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 4px 6px;
+        vertical-align: top;
+        font-size: 10px;
+        line-height: 1.4;
+      }
+
+      // Cellules principales
+      .cell-objectif {
+        background-color: #e8f0ed;
+        font-weight: 600;
+        color: #2d4a3f;
+        font-size: 10px;
+      }
+
+      .cell-action {
+        background-color: #fef3c7;
+        font-weight: 600;
+        color: #92400e;
+        font-size: 10px;
+      }
+
+      .cell-activite {
+        background-color: white;
+        color: #374151;
+      }
+
+      .cell-indicateurs {
+        background-color: white;
+        color: #4b5563;
+      }
+
+      .cell-taches {
+        background-color: white;
+        color: #4b5563;
+      }
+
+      // Cellules de semaine (striées)
+      .cell-semaine {
+        min-width: 25px;
+        max-width: 25px;
+        padding: 2px;
+        text-align: center;
+        position: relative;
+
+        // Effet rayé vertical
+        &.striped {
+          background-image: repeating-linear-gradient(
+                          90deg,
+                          #f9fafb 0px,
+                          #f9fafb 2px,
+                          white 2px,
+                          white 4px
+          );
+        }
+
+        // Cellule active (avec activité planifiée)
+        &.active {
+          background-color: #22c55e !important;
+          background-image: repeating-linear-gradient(
+                          45deg,
+                          #22c55e,
+                          #22c55e 3px,
+                          #16a34a 3px,
+                          #16a34a 6px
+          ) !important;
+        }
+      }
+
+      // Acteurs
+      .cell-acteur {
+        background-color: white;
+        font-size: 9px;
+
+        .acteur-resp {
+          font-weight: 600;
+          color: #1f2937;
+          margin-bottom: 2px;
+        }
+
+        .acteur-impl {
+          color: #6b7280;
+          font-style: italic;
+        }
+      }
+
+      // Coût
+      .cell-cout {
+        background-color: #fef9c3;
+        font-weight: 600;
+        text-align: right;
+        color: #854d0e;
+      }
+
+      // Sources de financement
+      .cell-source {
+        background-color: white;
+        text-align: right;
+        color: #374151;
+        font-size: 9px;
+      }
+
+      // Vérification
+      .cell-verification {
+        background-color: white;
+        color: #4b5563;
+        font-size: 9px;
+      }
+
+      // Observations
+      .cell-observations {
+        background-color: white;
+        color: #6b7280;
+        font-size: 9px;
+      }
+    }
+
+    // Lignes de total par action
+    .total-action-row {
+      background-color: #fef3c7;
+      font-weight: 700;
+
+      td {
+        border: 1px solid #d1d5db;
+        padding: 6px;
+      }
+
+      .total-label {
+        color: #92400e;
+        font-size: 10px;
+        padding-left: 20px;
+      }
+
+      .total-cout {
+        text-align: right;
+        color: #92400e;
+        font-weight: 700;
+      }
+
+      .total-empty {
+        background-color: #fef3c7;
+      }
+
+      .total-sources {
+        background-color: #fef3c7;
+      }
+
+      .total-acteur {
+        background-color: #fef3c7;
+      }
+    }
+
+    // Lignes de total par objectif
+    .total-objectif-row {
+      background-color: #fed7aa;
+      font-weight: 700;
+
+      td {
+        border: 2px solid #9a3412;
+        padding: 6px;
+      }
+
+      .total-objectif-label {
+        color: #7c2d12;
+        font-size: 11px;
+        font-weight: 700;
+        padding-left: 10px;
+      }
+
+      .total-objectif-cout {
+        text-align: right;
+        color: #7c2d12;
+        font-weight: 700;
+        font-size: 11px;
+      }
+
+      .total-empty {
+        background-color: #fed7aa;
+      }
+
+      .total-sources {
+        background-color: #fed7aa;
+      }
+
+      .total-acteur {
+        background-color: #fed7aa;
+      }
+    }
+
+    // Ligne de total général
+    .grand-total-row {
+      background-color: #dc2626;
+      color: white;
+      font-weight: 700;
+
+      td {
+        border: 2px solid #7f1d1d;
+        padding: 8px;
+      }
+
+      .grand-total-label {
+        font-size: 12px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .grand-total-cout {
+        text-align: right;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .total-empty {
+        background-color: #dc2626;
+      }
+
+      .total-sources {
+        background-color: #dc2626;
+      }
+
+      .total-acteur {
+        background-color: #dc2626;
+      }
+    }
+  }
+}
+
+// ===== PRINT STYLES =====
+@media print {
+  .excel-toolbar {
+    display: none;
+  }
+
+  .excel-table-wrapper {
+    box-shadow: none;
+    max-height: none;
+  }
+
+  .excel-table {
+    font-size: 9px;
+
+    thead th {
+      font-size: 8px;
+    }
+
+    tbody td {
+      font-size: 8px;
+    }
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 1200px) {
+  .excel-view-container {
+    padding: 10px;
+  }
+
+  .excel-toolbar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+
+    .toolbar-right {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+
+  .excel-table {
+    font-size: 10px;
+  }
+}

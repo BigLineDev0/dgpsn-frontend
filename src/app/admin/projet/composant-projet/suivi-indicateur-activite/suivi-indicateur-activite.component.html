@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+<!--            <li class="breadcrumb-item active"><a>Projets</a></li>-->
+<!--            <li class="breadcrumb-item active"><a routerLink="projet/ptba/objectifs">Financement</a></li>-->
+<!--            <li class="breadcrumb-item text-primary">Objectifs</li>-->
+<!--            <li class="breadcrumb-item text-primary active"><a routerLink="projet/ptba/objectifs">Actions</a></li>-->
+            <li class="breadcrumb-item active"><a routerLink="/admin/acces/projet/ptba/objectifs">Activités</a></li>
+            <li class="breadcrumb-item active"><a routerLink="/admin/acces/projet/ptba/objectifs">Liste Indicateurs</a></li>
+            <li class="breadcrumb-item active">Suivi Indicateur</li>
+            <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+        </ol>
+    </nav>
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <a class="me-4 d-block"
+           ngbTooltip="Tache"
+           routerLink="/admin/acces/activite/suivi-indicateur/tache"
+           routerLinkActive="active-link">
+            <i class="feather icon-clipboard icon-md"
+               [ngClass]="isActiveUrl('tache') ? 'text-orange' : 'text-secondary'"></i>
+        </a>
+        <a class="me-4 d-block"
+           ngbTooltip="Source de financement"
+           routerLink="/admin/acces/activite/suivi-indicateur/source-financement">
+            <i class="feather icon-disc icon-md"
+               [ngClass]="isActiveUrl('source-financement') ? 'text-orange' : 'text-secondary'"></i>
+        </a>
+        <a class="me-4 d-block"
+           ngbTooltip="Execution"
+           routerLink="/admin/acces/activite/suivi-indicateur/execution">
+            <i class="feather icon-shuffle icon-md"
+               [ngClass]="isActiveUrl('execution') ? 'text-orange' : 'text-secondary'"></i>
+        </a>
+    </div>
+</div>

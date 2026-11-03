@@ -1,0 +1,195 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+      <ol class="breadcrumb ">
+        <li class="breadcrumb-item active"><a>Sécurité</a></li>
+        <li class="breadcrumb-item breadcrumb-active" aria-current="page">Profils</li>
+      </ol>
+    </nav>
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+      <button  (click)="openBasicModal(basicModal)" type="button"
+        class="btn btn-primary">Nouveau profil</button>
+    </div>
+  </div>
+
+  <!-- <div class="row mt-3 mb-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body p-0">
+          <ngb-accordion [closeOthers]="true">
+            <ngb-panel id="static-1" title="Recherche">
+              <ng-template ngbPanelContent>
+            <app-form-profile [isSearch]="true" (search)="doSearch($event)"></app-form-profile>
+              </ng-template>
+            </ngb-panel>
+          </ngb-accordion>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="row">
+    <div class="col-lg-12">
+      <section class="table-container mat-elevation-z8" tabindex="0">
+        <!-- is only used before getting data to the api-->
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+        <!-- is only used before getting data to the api-->
+
+        <table mat-table [dataSource]="profiles" *ngIf="!loadingIndicator">
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Code </th>
+            <td mat-cell *matCellDef="let profile" class=""> {{profile?.code}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="libelle">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Libellé </th>
+            <td mat-cell *matCellDef="let profile" class=""> <span> {{profile?.libelle}} </span></td>
+          </ng-container>
+          <ng-container matColumnDef="portee">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Portée </th>
+            <td mat-cell *matCellDef="let profile" class=""> <span> {{profile?.portee?.description}} </span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;"> Actions </th>
+            <td mat-cell *matCellDef="let profile" class="text-center">
+              <div *ngIf="profile?.code != 'ROOT_ADMIN'">
+                <div class="text-center d-inline-block">
+                  <a class="me-2 align-middle" ngbTooltip="Configurer" placement="left" (click)="goToConfigProfile(profile?.id)">
+<!--                    <mat-icon class="text-primary icon-lg">settings</mat-icon>-->
+                    <i class="icon-lg text-primary" data-feather="settings" appFeatherIcon></i>
+
+                  </a>
+                  <span [matMenuTriggerFor]="menu" class="align-middle text-center cursor-pointer me-2" matRipple>
+                    <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                  </span>
+                  <mat-menu #menu="matMenu">
+                    <div *ngIf="profile?.code != 'ROOT_ADMIN'">
+                      <a  ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(modalUpdate, profile)">
+                        <span class="me-2">Modifier</span>
+                        <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                      </a>
+                      <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteProfile(profile.id)">
+                        <span class="me-2">Supprimer</span>
+                        <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                      </a>
+                    </div>
+                    <!-- <div *ngIf="profile?.code != 'ROOT_ADMIN'">
+
+                    </div>
+
+
+                    <div *ngIf="profile?.code != 'ROOT_ADMIN'">
+
+                    </div> -->
+
+                  </mat-menu>
+                </div>
+              </div>
+
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+            class="table-head-bg"
+          ></tr>
+          <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+
+        <div class="paginate">
+          <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="Number(pageOptions.page+1)" [pageSize]="pageOptions.size"
+                          [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true" [ellipses]="true"
+                          [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-content-center">
+            <h6 class="mb-2 align-self-center">Profils</h6>
+            <button *afHasAnyAuthority="add" type="button" class="btn btn-primary mt-2 mb-2" (click)="openBasicModal(basicModal)">Nouveau
+              profil</button>
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="loadingIndicator">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+          </div>
+          <div class="error-message text-center" *ngIf="showErrorMessage">
+            Une erreur s'est produite lors du chargement. Veuillez réessayer.
+          </div>
+          <div class="table-responsive" *ngIf="!loadingIndicator && !showErrorMessage">
+            <table class="table table-striped" *afHasAnyAuthority="read">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Libellé</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let profile of profiles?.content">
+                  <td>{{profile.code}}</td>
+                  <td>{{profile.libelle}}</td>
+                  <td>
+                    <div ngbDropdown class="mb-2">
+                      <button ngbDropdownToggle class="btn p-0 no-dropdown-toggle-icon" type="button"
+                        id="dropdownMenuButton">
+                        <i class="icon-lg text-muted pb-3px" data-feather="more-vertical" appFeatherIcon></i>
+                      </button>
+                      <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+                        <a *afHasAnyAuthority="config" ngbDropdownItem class="d-flex align-items-center" (click)="goToConfigProfile(profile?.id)"><i
+                            data-feather="settings" appFeatherIcon class="icon-sm me-2"></i> <span
+                            class="">Configurer</span></a>
+                        <a *afHasAnyAuthority="update" ngbDropdownItem class="d-flex align-items-center"
+                          (click)="openBasicModal(modalUpdate, profile)"><i data-feather="edit-2" appFeatherIcon
+                            class="icon-sm me-2"></i> <span class="">Modifier</span></a>
+                        <a *afHasAnyAuthority="delete" ngbDropdownItem class="d-flex align-items-center" (click)="false"><i data-feather="trash"
+                            appFeatherIcon class="icon-sm me-2"></i> <span class="">Supprimer</span></a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <ngb-pagination [collectionSize]="profiles?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+                                [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+                                [boundaryLinks]="true">
+                </ngb-pagination>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <!--Add partener-->
+  <ng-template #basicModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Ajout profil</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-profile [label]="'Enregistrer'" [isSearch]="false" (submit)="close($event)"></app-form-profile>
+    </div>
+  </ng-template>
+  <!--End Add partener-->
+
+  <!--Update partener-->
+  <ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Modification profil</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-profile [label]="'Modifier'" (submit)="close($event)"
+        [profileToUpdate]="profileToUpdate" [isSearch]="false"></app-form-profile>
+    </div>
+  </ng-template>
+  <!--End Add parteners-->

@@ -1,0 +1,193 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Conge</a></li>
+      <li class="breadcrumb-item active"><a routerLink="/liste-agents/main-conge">Liste Congé</a>
+      </li>
+      <li class="breadcrumb-item active"><a routerLink="/liste-agents"> Cessation de Service</a></li>
+    </ol>
+
+    <!-- <button type="button" class="btn btn-primary me-2" >
+            solde annuel:<span class="badge bg-light text-dark me-2"style="font-size: 15px;">{{soldeAnnuel}} {{ soldeAnnuel ? '' : '0' }}</span>
+          </button> -->
+
+    <button type="button" class="btn btn-primary me-2 mb-4">
+      Solde Total Conge:<span class="badge bg-light text-dark me-2" style="font-size: 15px;">{{soldeTotale}}</span>
+    </button>
+    <span> {{congeAgentName?.prenom}} {{congeAgentName?.nom}}</span>
+  </nav>
+  <div class="mt-2">
+    <!-- [disabled]="soldeTotale === 0" *afHasAnyAuthority="add" " [disabled]="soldeTotale === 0  -->
+    <button  type="button" class="btn btn-primary btn-icon-text || conge?.statutType?.name !== 'ACCEPTER'"
+      (click)="openBasicModal(basicModal, 'lg')">
+      <i class="feather icon-plus-circle"></i> Nouvelle Cessation
+    </button>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="dataSource?.payload" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="nombreDeJoursdemande">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Nombre jour Pris</th>
+          <td mat-cell *matCellDef="let conge" class="text-left">
+            <span class="badge bg-primary me-5 text-center"
+              style="font-size: 13px;">{{conge?.nombreDeJoursdemande}}-Jours</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDemande">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">date Cessation service
+          </th>
+          <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.dateCessation | date:'dd-MM-yyyy'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Adressé A</th>
+          <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.libelle}} </td>
+        </ng-container>
+        <ng-container matColumnDef="objet">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;">Objet</th>
+          <td mat-cell *matCellDef="let conge" class="text-left">
+            <div class="description-content" [innerHTML]="conge?.description"></div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:130px;"> Actions
+          </th>
+          <td mat-cell *matCellDef="let conge" class="text-center bg-white">
+            <div class="text-center  d-inline-block me-4" style="font-size: 10px;">
+              <span ngbTooltip="Generer" placement="left"
+                [matMenuTriggerFor]="menuPrint" class="text-center cursor-pointer me-2" matRipple>
+                <mat-icon class="text-primary icon-lg align-middle">print</mat-icon>
+              </span>
+              <mat-menu #menuPrint="matMenu" class="bg-white">
+                <!-- *afHasAnyAuthority="generer_demande" *afHasAnyAuthority="[generer_demande]" -->
+                <a ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="openBasicModal(FicheDemande, 'md',conge)">
+                  <span class="me-2">Générer Cessation</span>
+                  <mat-icon class="text-primary icon-lg">insert_drive_file</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+            <div class="text-center d-inline-block me-2">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer"
+                matRipple>
+                <!-- <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i> -->
+                 <mat-icon class="icon-lg text-muted">more_vert</mat-icon>
+              </span>
+              <mat-menu #menu="matMenu">
+                <!-- *afHasAnyAuthority="updated" *afHasAnyAuthority="deleted"  -->
+                <a ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="openBasicModal(updateModal,'lg',conge)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a  ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center" (click)="delete(conge.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+      <span *ngIf="dataSource?.content?.length == 0" class="paginate text-danger mt-4">Les critères de recherche tels
+        qu'énoncés ne correspondent à aucun projet</span>
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="dataSource?.metadata?.totalElements" [page]="pageOptions.page+1"
+          [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+          [ellipses]="true" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- <ngb-alert *ngIf="soldeTotale === 0" [dismissible]="false" [type]="'danger'">
+  <h4 class="alert-heading text-center"></h4>
+  <p class="text-center">Le solde global de congé autorisé est épuisé. Une nouvelle demande d'autorisation de congé doit
+    être soumise.</p>
+  <hr>
+   <p class="mb-0 text-center"> L'agent <strong>{{object?.conge?.agent?.prenom}} {{object?.conge?.agent?.nom}}</strong> avait été autorisé à bénéficier d'un congé administratif
+    à partir du <strong>{{object?.conge?.dateDebut | date:'dd-MM-yyyy'}}</strong> pour une durée de <strong>{{object?.conge?.duree}} jours</strong>,
+    conformément à la décision n°<strong>D012239</strong>.
+    À ce jour, le solde global de congés autorisé est entièrement épuisé.
+    Pour toute nouvelle absence, une demande de congé devra être soumise afin d'ouvrir un nouveau compte de cessation.
+  </p> -->
+<!-- </ngb-alert> --> 
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title ">Cessation de Service</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-cessation (submit)="close($event)" (cessationCreated)="alerteCessationCreated($event)"
+      [isSearch]="false"></app-form-cessation>
+  </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier Cessation de service</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-cessation (submit)="close($event)" [cessationToUpdate]="cessationToUpdate"
+      [isSearch]="false"></app-form-cessation>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-cessation (submit)="close($event)" [isSearch]="true"></app-form-cessation>
+  </div>
+</ng-template>
+
+
+
+<ng-template #DocumentModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter Piéce Jointe</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-document-conge></app-document-conge> -->
+  </div>
+</ng-template>
+<!-- fiche demande-->
+<ng-template #FicheDemande let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Fiche Cessation de Service</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-cessation  [conge]="conge"></app-cessation>
+     </div>
+</ng-template>
+<!-- fiche demande -->
+
+<!-- fiche Arreter-->
+<ng-template #FicheArreter let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Décision</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-cessation  [conge]="conge"></app-cessation> -->
+  </div>
+</ng-template>
+<!-- fiche Arreter -->

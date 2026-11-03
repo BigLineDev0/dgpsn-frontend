@@ -1,0 +1,59 @@
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form action="#" class="form-description">
+      <p class="mb-3 mt-2">
+        <img src="assets/img/logo/logo-dgpsn2.png" style="width: 130px; height: auto;" alt="">
+      </p>
+      <p class="mt-3">
+        <strong>DGPSN :</strong> La plateforme digitale intégrée de la DGPSN centralise la gestion de la protection sociale, facilite l’accès aux services sociaux, assure le suivi des bénéficiaires et des programmes, et renforce la transparence ainsi que l’efficacité des actions de solidarité nationale au Sénégal.</p>
+    </form>
+  </div>
+<div class="form-container sign-in-container">
+		<form [formGroup]="signInForm">
+			<h3 style="color: #EFB808" class="mb-4">Connexion</h3>
+			<label class="w-100 text-start text-white pe-0">Identifiant</label>
+			<input type="text" placeholder="Login" formControlName="login" />
+		  <div class="password-container mt-3  position-relative">
+			<label for="password" class="w-100 text-start text-white">Mot de passe</label>
+
+			<input #password type="password" class="form-control pe-5"  id="password" placeholder="Mot de passe" formControlName="password">
+		  <i class="icon-xs position-absolute top-40 text-black translate-middle-y end-0 me-3  cursor-pointer"
+			  (click)="togglePassword(password)" [ngClass]="{'feather': true, 'icon-eye': getIcon(password).on, 'icon-eye-off': getIcon(password).off}"></i>
+			<!-- Lien mot de passe oublié -->
+			<div class="w-100 d-flex justify-content-end mt-1">
+			  <a href="#" class="text-decoration-none" style="color: #EFB808;font-size: 12px;">Mot de passe oublié ?</a>
+			</div>
+		  </div>
+      <button class="mt-4" *ngIf="!loading" (click)="signIn()">Se connecter</button>
+      <!-- <button class="mt-4" *ngIf="!loading" (click)="redirectToDashboard()">Se connecter</button> -->
+      <button class="btn mt-4 text-white" type="button" disabled *ngIf="loading">
+        <span class="spinner-border text-white spinner-border-sm" role="status" aria-hidden="true"></span>
+        Connection en cours...
+      </button>
+		</form>
+	</div>
+  <div class="overlay-container" id="overlay">
+    <div class="overlay">
+      <div class="overlay-panel-1 overlay-left">
+        <h1>Bienvenue</h1>
+        <p>Cliquez pour vous connecter à votre espace personnel</p>
+        <button class="ghost more-learn" id="signIn">Se connecter</button>
+      </div>
+      <div class="overlay-panel overlay-right mt-3">
+       
+        <img src="assets/img/logo/logo-dgpsn2.png" style="width: 130px; height: auto;" alt="">
+        <p style="font-size: 16px">Plateforme digitale intégrée de la Délégation Générale à la Protection Sociale et à la Solidarité Nationale.</p>
+        <button class="ghost text-black more-learn" id="signUp">En savoir plus</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <footer>
+    <p>
+      Design by
+      <a target="_blank" style="color: #ffff; font-weight: bold;" href="#">WEBGRAM</a>
+      - Copyright © 2025.
+    </p>
+  </footer>
+</div>

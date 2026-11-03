@@ -1,0 +1,154 @@
+.cv-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.cv-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.cv-info {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.cv-header h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.cv-header p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.cv-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.detail-item span {
+  margin-right: 10px;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.detail-item p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.cv-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px; /* Taille fixe pour l'image */
+  height: auto; /* Taille fixe pour l'image */
+  padding-left: 10px;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #26b247b9;
+}
+
+.documents-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.document-card {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.doc-icon {
+  font-size: 2rem;
+  color: #007bff;
+  margin-right: 15px;
+}
+
+.doc-info {
+  flex-grow: 1;
+}
+
+.doc-info h5 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.doc-type {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.doc-date {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.doc-actions a {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.entretien-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.table {
+  width: 100%;
+  background-color: white;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.badge-insuffisant {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-bien {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-tres-bien {
+  background-color: #28a745;
+  color: white;
+}

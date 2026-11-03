@@ -1,0 +1,102 @@
+$primary: #4f6c52;
+$secondary: #EFB808;
+//$secondary: #4f6c52;
+$text-dark: #000000;
+$text-light: #ffffff;
+$gray: #cdcdcd;
+
+section {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  
+  form {
+    background: white;
+    border-radius: 8px;
+    //box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+}
+
+body {
+  background-color: #f8f9fa;
+  color: $text-dark;
+  min-height: 100vh;
+  padding: 2rem 0;
+  margin: 0;
+}
+
+.card {
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  transform: none;
+  transition:  none;
+  
+  .card-header {
+    border-radius: 6px 6px 0 0 !important;
+  }
+}
+
+.card-header.bg-primary {
+  background-color: $primary !important;
+  color: $text-light;
+}
+
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: $text-dark;
+  &:hover {
+    background-color: darken($primary, 10%);
+    border-color: darken($primary, 10%);
+  }
+}
+
+.btn-secondary {
+  background-color: $secondary;
+  border-color: $secondary;
+  color: $text-light;
+  &:hover {
+    background-color: darken($secondary, 10%);
+    border-color: darken($secondary, 10%);
+  }
+}
+
+.btn-outline-primary {
+  border-color: $primary;
+  color: $primary;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: $primary;
+    color: $text-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-outline-danger {
+  border-color: $text-dark;
+  color: $text-dark;
+  &:hover {
+    background-color: $text-dark;
+    color: $text-light;
+  }
+}
+
+.form-control, .form-select {
+  border-color: $gray;
+  &:focus {
+    border-color: $gray;
+    box-shadow: 0 0 0 0.25rem rgba($gray, 0.25);
+  }
+}
+
+.form-check-input:checked {
+  background-color: $primary;
+  border-color: $gray;
+}

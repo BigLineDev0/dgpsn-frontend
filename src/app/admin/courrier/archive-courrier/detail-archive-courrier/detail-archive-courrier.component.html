@@ -1,0 +1,274 @@
+<div class="detail-courrier-container">
+  <!-- En-tête -->
+  <div class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h4 class="text-primary mb-2">
+          <mat-icon class="align-middle me-2">archive</mat-icon>
+          Courrier Archivé - {{ courrier?.reference }}
+        </h4>
+        <p class="text-muted mb-0">Détails complets du courrier archivé</p>
+      </div>
+      <button
+        mat-icon-button
+        class="close-btn"
+        (click)="onClose()"
+        matTooltip="Fermer"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Colonne gauche - Informations principales -->
+    <div class="col-lg-6">
+      <!-- Carte Informations générales -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">info</mat-icon>
+            Informations Générales
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Référence:</strong>
+              <span class="text-primary fw-bold">{{
+                courrier?.reference || "Non spécifié"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <strong *ngIf="courrier?.expediteur">Expéditeur:</strong>
+              <strong *ngIf="courrier?.destinataire">Destinataire:</strong>
+              <span>{{ courrier?.expediteur || courrier?.destinataire || "Non spécifié" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Objet:</strong>
+              <span class="fw-semibold">{{
+                courrier?.objet || "Non spécifié"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Type de courrier:</strong>
+              <span>{{ courrier?.typeCourrier || "Non spécifié" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Type:</strong>
+              <span class="badge" [ngClass]="courrier?.expediteur ? 'text-bg-info' : 'text-bg-warning'">
+                {{ courrier?.expediteur ? 'Arrivé' : 'Départ' }}
+              </span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Carte Dates principales -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">event</mat-icon>
+            Dates Principales
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item" *ngIf="courrier?.dateArrivee">
+              <strong>Date d'arrivée:</strong>
+              <span>{{ formatDate(courrier?.dateArrivee) }}</span>
+            </div>
+            <div class="info-item" *ngIf="courrier?.dateReception">
+              <strong>Date de réception:</strong>
+              <span>{{ formatDate(courrier?.dateReception) }}</span>
+            </div>
+            <div class="info-item" *ngIf="courrier?.dateDepart">
+              <strong>Date de départ:</strong>
+              <span>{{ formatDate(courrier?.dateDepart) }}</span>
+            </div>
+            <div class="info-item" *ngIf="courrier?.dateEnvoi">
+              <strong>Date d'envoi:</strong>
+              <span>{{ formatDate(courrier?.dateEnvoi) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Colonne droite - Archivage et métadonnées -->
+    <div class="col-lg-6">
+      <!-- Carte Informations d'archivage -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">archive</mat-icon>
+            Informations d'Archivage
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Date d'archivage:</strong>
+              <span class="text-info fw-semibold">{{ formatDate(courrier?.dateArchivage) }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Archivé par:</strong>
+              <span>{{ courrier?.archivePar || "Système" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Statut:</strong>
+              <span
+                [class]="getStatutClass(courrier?.statutType)"
+                class="badge"
+              >
+                {{ courrier?.statutType?.description || "Archivé" }}
+              </span>
+            </div>
+            <div class="info-item">
+              <strong>Niveau d'urgence:</strong>
+              <span [class]="getUrgenceClass(courrier?.urgence?.libelle)" class="badge">
+                {{ courrier?.urgence?.libelle || "NORMALE" }}
+              </span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Carte Documents joints -->
+      <mat-card
+        class="mb-4"
+        *ngIf="courrier?.documents && courrier.documents.length > 0"
+      >
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">attachment</mat-icon>
+            Documents Joints
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="documents-list">
+            <div
+              *ngFor="let doc of courrier.documents"
+              class="document-item d-flex align-items-center justify-content-between p-2 border rounded mb-2"
+            >
+              <div class="d-flex align-items-center">
+                <mat-icon class="text-muted me-2">description</mat-icon>
+                <span>{{ doc.nom }}</span>
+              </div>
+              <button mat-icon-button color="primary" matTooltip="Télécharger">
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Carte Métadonnées de conservation -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">storage</mat-icon>
+            Conservation
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Durée de conservation:</strong>
+              <span>{{ courrier?.dureeConservation || "5 ans" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Date d'échéance:</strong>
+              <span>{{ calculerDateEcheance() }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Emplacement d'archive:</strong>
+              <span class="text-muted">{{ courrier?.emplacementArchive || "Archive principale" }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Description détaillée -->
+  <div class="row" *ngIf="courrier?.description">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">subject</mat-icon>
+            Description Détaillée
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0" style="white-space: pre-line">
+            {{ courrier?.description }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Notes supplémentaires -->
+  <div class="row" *ngIf="courrier?.notes">
+    <div class="col-12 mt-4">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">note</mat-icon>
+            Notes Additionnelles
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0 text-muted" style="white-space: pre-line">
+            {{ courrier?.notes }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Historique -->
+  <div class="row" *ngIf="courrier?.historique">
+    <div class="col-12 mt-4">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">history</mat-icon>
+            Historique
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0 text-muted" style="white-space: pre-line">
+            {{ courrier?.historique }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-end gap-2">
+        <button mat-stroked-button color="secondary" (click)="onClose()">
+          <mat-icon class="me-2">close</mat-icon>
+          Fermer
+        </button>
+        <button mat-raised-button color="primary" (click)="desarchiver()">
+          <mat-icon class="me-2">unarchive</mat-icon>
+          Désarchiver
+        </button>
+        <button mat-raised-button color="accent" (click)="telechargerArchive()">
+          <mat-icon class="me-2">download</mat-icon>
+          Télécharger
+        </button>
+        <button mat-raised-button color="warn" (click)="imprimer()">
+          <mat-icon class="me-2">print</mat-icon>
+          Imprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Projets</a></li>
+      <li class="breadcrumb-item active"><a routerLink="/projet">Liste projets</a></li>
+      <li class="breadcrumb-item active">Avancement detaillé</li>
+      <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+    </ol>
+  </nav>
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <a class="me-4 d-block" ngbTooltip="Taux d'avancement" routerLink="/programme/taux-projet-config"  routerLinkActive="active-link">
+      <i class="feather icon-trending-up icon-md"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Indicateurs" routerLink="/projet/avancement-detaille/indicateur" #tooltip1="ngbTooltip">
+      <i class="feather icon-activity icon-md" [ngClass]="activeUrl('avancement-detaille/indicateur', tooltip1)"></i>
+    </a>
+<!--    <a class="me-4" ngbTooltip="Financement" routerLink="/projet/avancement-detaille/financement" #tooltip11="ngbTooltip">-->
+<!--      <i class="feather icon-dollar-sign icon-md" [ngClass]="activeUrl('avancement-detaille/financement', tooltip11)"></i>-->
+<!--    </a>-->
+    <!--<a class="me-4" ngbTooltip="Problèmes" routerLink="/projet/avancement-detaille/probleme" #tooltip4="ngbTooltip">
+      <i class="feather icon-slash icon-md" [ngClass]="activeUrl('avancement-detaille/probleme', tooltip4)"></i>
+    </a>-->
+    <a class="me-4" ngbTooltip="Missions" routerLink="/projet/avancement-detaille/mission" #tooltip5="ngbTooltip">
+      <i class="feather icon-tag icon-md" [ngClass]="activeUrl('avancement-detaille/mission', tooltip5)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Statuts" routerLink="/projet/avancement-detaille/statut" #tooltip6="ngbTooltip">
+      <i class="feather icon-check-square icon-md" [ngClass]="activeUrl('avancement-detaille/statut', tooltip6)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Etats" routerLink="/projet/avancement-detaille/etat" #tooltip7="ngbTooltip">
+      <i class="feather icon-flag icon-md" [ngClass]="activeUrl('avancement-detaille/etat', tooltip7)"></i>
+    </a>
+    <!-- <a class="me-4" ngbTooltip="Vision des Performances" routerLink="/projet/avancement-detaille/vision-performance" #tooltip8="ngbTooltip">
+      <i class="feather icon-pen-tool icon-md" [ngClass]="activeUrl('avancement-detaille/vision-performance', tooltip8)"></i>
+    </a> -->
+    <a class="me-4" ngbTooltip="Documents" routerLink="/projet/avancement-detaille/document" #tooltip9="ngbTooltip" placement="top" routerLinkActive="active-link">
+      <i class="feather icon-folder icon-md" [ngClass]="activeUrl('avancement-detaille/document', tooltip9)"></i>
+    </a>
+    <a ngbTooltip="Médiathèque" routerLink="/projet/avancement-detaille/mediatheque" #tooltip10="ngbTooltip" placement="top">
+      <i class="feather icon-monitor icon-md" [ngClass]="activeUrl('avancement-detaille/mediatheque', tooltip10)"></i>
+    </a>
+  </div>
+</div>

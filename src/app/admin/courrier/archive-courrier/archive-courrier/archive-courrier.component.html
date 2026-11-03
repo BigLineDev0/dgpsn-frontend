@@ -1,0 +1,236 @@
+<div
+  class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-4"
+>
+  <!-- <div>
+    <h4 class="page-title">
+      <mat-icon class="align-middle me-2">archive</mat-icon>
+      Archives des Courriers
+    </h4>
+    <p class="text-muted mb-0">Liste de tous les courriers archivés</p>
+  </div> -->
+  <!-- <div class="mt-2">
+    <span class="badge bg-info fs-6">
+      <mat-icon class="align-middle me-1">inventory_2</mat-icon>
+      {{ courriersArchives.length }} courrier(s) archivé(s)
+    </span>
+  </div> -->
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <!-- Spinner de chargement -->
+      <div *ngIf="loadingIndicator" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+        <p class="mt-2 text-muted">Chargement des archives...</p>
+      </div>
+
+      <!-- Tableau des archives -->
+      <table
+        mat-table
+        [dataSource]="courriersArchives"
+        *ngIf="!loadingIndicator"
+        class="w-100"
+      >
+        <!-- Colonne Référence -->
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Référence
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let courrier"
+            class="text-left fw-bold text-primary"
+          >
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">description</mat-icon> -->
+            {{ courrier.reference }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Expéditeur -->
+        <ng-container matColumnDef="expediteur">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Expéditeur
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-left">
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">person</mat-icon> -->
+            {{ courrier.expediteur }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Objet -->
+        <ng-container matColumnDef="objet">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Objet
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-left">
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">subject</mat-icon> -->
+            {{ courrier.objet }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Date d'arrivée -->
+        <ng-container matColumnDef="dateArrivee">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Date d'arrivée
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-left">
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">event</mat-icon> -->
+            {{ courrier.dateArrivee | date : "dd/MM/yyyy" }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Date d'archivage -->
+        <ng-container matColumnDef="dateArchivage">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Date d'archivage
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-left">
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">archive</mat-icon> -->
+            {{ courrier.dateArchivage | date : "dd/MM/yyyy" }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Archivé par -->
+        <ng-container matColumnDef="archivePar">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text">
+            Archivé par
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-left">
+            <!-- <mat-icon class="align-middle me-1" style="font-size: 16px;">person_pin</mat-icon> -->
+            {{ courrier.archivePar || "Système" }}
+          </td>
+        </ng-container>
+
+        <!-- Colonne Actions -->
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="table-head-text text-center"
+          >
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let courrier" class="text-end">
+            <div class="btn-group" role="group">
+              <!-- Désarchiver -->
+              <button
+                mat-icon-button
+                color="primary"
+                class="me-2 action-btn"
+                (click)="desarchiverCourrier(courrier)"
+                matTooltip="Désarchiver ce courrier"
+                matTooltipPosition="left"
+              >
+                <mat-icon class="text-info icon-lg align-middle"
+                  >archive</mat-icon
+                >
+              </button>
+
+              <!-- Voir détails -->
+              <button
+                mat-icon-button
+                color="info"
+                class="me-2 action-btn"
+                (click)="voirDetails(courrier)"
+                matTooltip="Voir les détails complets"
+                matTooltipPosition="left"
+              >
+                <!-- <mat-icon>visibility</mat-icon> -->
+                <i class="text-primary icon-md feather icon-file-text"></i>
+              </button>
+
+              <!-- Générer accusé -->
+              <!-- <button 
+                mat-icon-button 
+                color="accent"
+                class="me-2 action-btn"
+                (click)="genererAccuse(courrier)"
+                matTooltip="Générer un accusé de réception"
+                matTooltipPosition="left"
+              >
+                <mat-icon>assignment_turned_in</mat-icon>
+              </button> -->
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns"
+          class="table-head-bg"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="archive-row"
+        ></tr>
+      </table>
+
+      <!-- Message si pas d'archives -->
+      <div
+        *ngIf="!loadingIndicator && courriersArchives.length === 0"
+        class="text-center py-5"
+      >
+        <mat-icon class="display-1 text-muted" style="font-size: 80px"
+          >archive</mat-icon
+        >
+        <h5 class="text-muted mt-3">Aucun courrier archivé</h5>
+        <p class="text-muted">
+          Les courriers que vous archivez apparaîtront dans cette liste.
+        </p>
+        <button mat-raised-button color="primary" class="mt-3">
+          <mat-icon class="me-2">help</mat-icon>
+          Comment archiver un courrier ?
+        </button>
+      </div>
+
+      <!-- Pagination -->
+      <div class="paginate mt-3" *ngIf="courriersArchives.length > 0">
+        <ngb-pagination
+          [collectionSize]="courriersArchives.length"
+          [page]="pageOptions.page + 1"
+          [pageSize]="pageOptions.size"
+          [maxSize]="5"
+          (pageChange)="paginate($event)"
+          size="sm"
+          [rotate]="true"
+          [ellipses]="true"
+          [boundaryLinks]="true"
+        ></ngb-pagination>
+
+        <div class="text-center mt-2">
+          <small class="text-muted">
+            Affichage de {{ courriersArchives.length }} courrier(s) archivé(s)
+          </small>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<!-- ... le reste de votre template existant ... -->
+
+<!-- Modal pour les détails de l'archive -->
+<ng-template #detailModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title text-primary">
+      <mat-icon class="align-middle me-2">visibility</mat-icon>
+      Détails du Courrier Archivé
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.dismiss()"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body p-0">
+    <app-detail-archive-courrier
+      [courrier]="courrierToUpdate"
+      (close)="modal.close()"
+      (desarchiverCourrier)="desarchiverCourrier($event)"
+    ></app-detail-archive-courrier>
+  </div>
+</ng-template>

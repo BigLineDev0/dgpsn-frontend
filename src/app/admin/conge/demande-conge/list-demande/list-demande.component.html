@@ -1,0 +1,503 @@
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    </nav>
+    <div class="mt-2">
+        <button type="button" class="btn btn-warning btn-icon me-2"
+            ngbTooltip="Exporter Tableau de Suivi des Conges et absence Annuel"
+            (click)="openBasicModal(exportModal,'md')" *ngIf="typeConge ==='ADMINISTRATIF'">
+            <i class="feather icon-download"></i>
+        </button>
+        <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal, 'lg')">
+            <i class="feather icon-search"></i>
+        </button>
+        <!-- *afHasAnyAuthority="add" -->
+        <button *afHasAnyAuthority="['add']" type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal, 'lg')">
+            <i class="feather icon-plus-circle"></i> Nouvelle Demande
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <section class="table-container mat-elevation-z8" tabindex="0">
+            <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+            <table mat-table [dataSource]="dataSource?.payload" *ngIf="!loadingIndicator">
+                <ng-container matColumnDef="matricule">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Matricule
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.agent?.matricule}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nom">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Nom</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.agent?.nom}} </td>
+                </ng-container>
+                <ng-container matColumnDef="prenom">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">prenom</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.agent?.prenom}} </td>
+                </ng-container>
+                <ng-container matColumnDef="dateDemande">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">date Demande
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.dateDemande | date:'dd-MM-yyyy'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="libelle">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;">Adressé A
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.libelle}} </td>
+                </ng-container>
+                <ng-container matColumnDef="dateDebut">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:160px;">Date début
+                        souhaitée
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.dateDebut | date:'dd-MM-yyyy'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="dateFin">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:170px;">Date début
+                        autorisation</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.dateDepart | date:'dd-MM-yyyy'}} {{
+                        conge?.dateDepart ? '' : '-------------' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="dateReprise">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Date fin
+                        autorisation</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.dateReprise | date:'dd-MM-yyyy'}}
+                        {{conge?.dateReprise ? '' : '-------------' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="duree">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Durée Congé
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-left"> {{conge?.duree}} </td>
+                </ng-container>
+                <ng-container matColumnDef="objet">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:1000px;">Objet</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left">
+                        <div class="description-content" [innerHTML]="conge?.description"></div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="etape" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:220px;">Etape</th>
+                    <td mat-cell *matCellDef="let conge" class="text-left bg-white">
+                        <div *ngIf="conge?.workflowStep; else noStep">
+                            <span class="status-badge-validation cursor-pointer break-line-chip"
+                                [ngbTooltip]="conge?.workflowStep?.libelle" placement="left"
+                                (click)="openBasicModal(historiqueValidationModal,'lg', conge)">
+                                {{ conge?.workflowStep?.libelle }}
+                            </span>
+                        </div>
+                        <ng-template #noStep>---</ng-template>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:225px;">
+                        <span class="me-3">Validation</span> Actions
+                    </th>
+                    <td mat-cell *matCellDef="let conge" class="text-end bg-white">
+
+                        <div class="text-center  d-inline-block" style="font-size: 10px;">
+                            <span
+                                style="font-size: 11px; display: inline-flex; align-items: center; justify-content: space-between; width:54px;"
+                                [matMenuTriggerFor]="menu1" class="cursor-pointer me-3" matRipple
+                                ngbTooltip="Validation" [ngClass]="getBadgeClass(conge?.statutType)">
+                                <small>{{conge?.statutType.description}}</small>
+                            </span>
+                            <mat-menu #menu1="matMenu" class="bg-black text-white">
+                                <ng-container *ngIf="typeConge === 'ADMINISTRATIF'">
+                                    <ng-container *afHasAnyAuthority="['validateConge']">
+                                        <button ngbDropdownItem
+                                                (click)="onUpdateStatus(conge, 'ACCEPTER')"
+                                                [disabled]="conge?.statutType?.name === 'ACCEPTER'">
+                                            <mat-icon class="text-white icon-lg align-middle">done_outline</mat-icon>
+                                            <span class="me-2">Accepté</span>
+                                        </button>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="typeConge !== 'ADMINISTRATIF'">
+                                    <ng-container *afHasAnyAuthority="['validateConge']">
+                                        <button ngbDropdownItem
+                                                (click)="updateStatus(conge, 'ACCEPTER')"
+                                                [disabled]="conge?.statutType?.name === 'ACCEPTER'">
+                                            <mat-icon class="text-white icon-lg align-middle">done_outline</mat-icon>
+                                            <span class="me-2">Accepté</span>
+                                        </button>
+                                    </ng-container>
+                                </ng-container>
+                                <button *afHasAnyAuthority="['validateConge']" ngbDropdownItem (click)="updateStatus(conge, 'TRAITEMENT_ENCOUR')"
+                                    [disabled]="conge?.statutType?.name == 'TRAITEMENT_ENCOUR'">
+                                    <mat-icon class="text-white icon-lg align-middle">hourglass_empty</mat-icon>
+                                    <span class="me-2">En cours...</span>
+                                </button>
+                                <button *afHasAnyAuthority="['validateConge']" ngbDropdownItem (click)="updateStatus(conge, 'REFUSER')"
+                                    [disabled]="conge?.statutType?.name == 'REFUSER'">
+                                    <mat-icon class="text-danger icon-lg align-middle">clear</mat-icon>
+                                    <span class="me-2">Rejeté</span>
+                                </button>
+                            </mat-menu>
+                            <span
+                                    ngbTooltip="Générer"
+                                    placement="left"
+                                    [matMenuTriggerFor]="menuPrint"
+                                    class="text-center cursor-pointer me-2"
+                                    matRipple>
+  <mat-icon
+          *ngIf="typeConge == 'ADMINISTRATIF'"
+          class="text-primary icon-lg align-middle">
+    print
+  </mat-icon>
+</span>
+
+                            <mat-menu #menuPrint="matMenu" class="bg-white">
+
+                                <!-- ✅ Générer la demande -->
+                                <ng-container *ngIf="typeConge == 'ADMINISTRATIF'">
+                                    <ng-container *afHasAnyAuthority="['generer_demande']">
+                                        <a
+                                                ngbDropdownItem
+                                                class="d-flex justify-content-between align-items-center"
+                                                (click)="openBasicModal(FicheDemande, 'md', conge)">
+                                            <span class="me-2">Générer la demande</span>
+                                            <mat-icon class="text-primary icon-lg">insert_drive_file</mat-icon>
+                                        </a>
+                                    </ng-container>
+                                </ng-container>
+
+                                <!-- ✅ Générer la décision -->
+                                <ng-container *ngIf="typeConge === 'ADMINISTRATIF'">
+                                    <ng-container *afHasAnyAuthority="['generer_decision']">
+                                        <a ngbDropdownItem
+                                           class="d-flex justify-content-between align-items-center"
+                                           (click)="openBasicModal(FicheDecide, 'md', conge)">
+                                            <span class="me-2">Générer la Décision</span>
+                                            <mat-icon class="text-primary icon-lg">insert_drive_file</mat-icon>
+                                        </a>
+                                    </ng-container>
+                                </ng-container>
+
+                                <!-- ✅ Générer l’attestation de reprise -->
+                                <ng-container *ngIf="typeConge == 'ADMINISTRATIF'">
+                                    <ng-container *afHasAnyAuthority="['generer_fiche']">
+                                        <a
+                                                ngbDropdownItem
+                                                class="d-flex justify-content-between align-items-center"
+                                                (click)="openBasicModal(FicheRenseignement, 'md', conge)">
+                                            <span class="me-2">Générer l'attestation de reprise</span>
+                                            <mat-icon class="text-primary icon-lg">insert_drive_file</mat-icon>
+                                        </a>
+                                    </ng-container>
+                                </ng-container>
+
+
+                            </mat-menu>
+
+                            <ng-container *ngIf="typeConge === 'ADMINISTRATIF'">
+                                <ng-container *afHasAnyAuthority="['readCessationServices']">
+                                    <a class="me-2"
+                                       role="button"
+                                       ngbTooltip="Cessation de service"
+                                       placement="left"
+                                       (click)="openNavigateCessationService(conge?.id)">
+                                        <i class="icon-lg text-primary align-middle"
+                                           data-feather="edit-3"
+                                           appFeatherIcon></i>
+                                    </a>
+                                </ng-container>
+                            </ng-container>
+
+                            <a *afHasAnyAuthority="['readDocument']"
+                               class="me-2"
+                               role="button"
+                               ngbTooltip="documents"
+                               placement="left"
+                               (click)="openBasicModal(DocumentModal, 'xl', conge)">
+                                <mat-icon class="text-primary icon-lg align-middle">attach_file</mat-icon>
+                            </a>
+                            <!-- <span class="mdi mdi mdi-chemical-weapon me-2 text-danger icon-lg" ngbTooltip="Réouverture cessation perdu"></span> -->
+                        </div>
+
+                        <div class="text-center d-inline-block bg-white">
+                            <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                            </span>
+                            <mat-menu #menu="matMenu" class="bg-white">
+                                <a *afHasAnyAuthority="['updated']" ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                                    (click)="openBasicModal(updateModal,'lg',conge)">
+                                    <span class="me-2">Modifier</span>
+                                    <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                                </a>
+                                <!-- *afHasAnyAuthority="deleted" *afHasAnyAuthority="updated"-->
+                                <a *afHasAnyAuthority="['deleted']" ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                                    (click)="delete(conge.id)">
+                                    <span class="me-2">Supprimer</span>
+                                    <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                                </a>
+                            </mat-menu>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+                <tr mat-row *matRowDef="let conge; columns: displayedColumns"
+                    [ngClass]="{'table-danger': conge?.libelle === 'pas de correspondance'}">
+                </tr>
+            </table>
+
+            <span *ngIf="dataSource?.metadata?.totalElements == 0" class="paginate text-danger mt-4">Aucune demande de
+                congé trouvée</span>
+
+            <div class="paginate">
+                <ngb-pagination [collectionSize]="dataSource?.metadata?.totalElements" [page]="pageOptions.page+1"
+                    [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm"
+                    [rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
+        </section>
+    </div>
+</div>
+
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title badge bg-primary" style="color: #ffffff; font-size: 14px;">Demande de Congé</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-add-demande [isCongeAgentRoute]="isCongeAgentRoute" [typeConge]="typeConge" (submit)="close($event)"
+            [isAnnee]="false" [isSearch]="false"></app-add-demande>
+    </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modifier Demande</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-add-demande [isCongeAgentRoute]="isCongeAgentRoute" [typeConge]="typeConge" [isAnnee]="false"
+            (submit)="close($event)" [demandeToUpdate]="congeToUpdate" [isSearch]="false"></app-add-demande>
+    </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Rechercher</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-add-demande [isCongeAgentRoute]="isCongeAgentRoute" [isAnnee]="false" [typeConge]="congeToUpdate"
+            (search)="doSearch($event)" [isSearch]="true"></app-add-demande>
+    </div>
+</ng-template>
+
+<ng-template #importModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Importation Congé</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <!--    <app-import-project (submit)="close($event)"></app-import-project>-->
+    </div>
+</ng-template>
+
+<ng-template  #DocumentModal let-modal>
+    <div  class="modal-header">
+        <h5 class="modal-title">Ajouter Piéce Jointe</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-list-document [agentId]="null" [category]="typeConge" [categoryId]="congeToUpdate.id"
+            [statut]="congeToUpdate.statutType" [inputAgent]="false"></app-list-document>
+        <!-- [agents]="demandeAdministratif" -->
+    </div>
+</ng-template>
+
+<ng-template #modalView let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Lecture document</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <!-- <app-view-document-pdf [documentId]="documentId"></app-view-document-pdf> -->
+        <!-- <iframe [src]="documentPath" width="100%" height="600px" frameborder="0"></iframe> -->
+    </div>
+</ng-template>
+
+<ng-template #basicAnneeModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title text-warning fs-5">Cloture Cessation</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-add-demande [isCongeAgentRoute]="isCongeAgentRoute" (search)="doSearch($event)"
+            [isAnnee]="true"></app-add-demande>
+    </div>
+</ng-template>
+
+<ng-template #DocumentModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajouter Piéce Jointe</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <!-- <app-list-document [agentId]="null"  [agents]="demandeAdministratif" [category]="'ADMINISTRATIF'" [categoryId]="congeToUpdate.id"  [statut]="congeToUpdate.statutType" [inputAgent]="false"></app-list-document> -->
+
+    </div>
+</ng-template>
+
+<ng-template #modalView let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Lecture document</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <!-- <app-view-document-pdf [documentId]="documentId"></app-view-document-pdf> -->
+        <!-- <iframe [src]="documentPath" width="100%" height="600px" frameborder="0"></iframe> -->
+    </div>
+</ng-template>
+
+<!-- fiche demande-->
+<ng-template #FicheDemande let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" style="color: #CC9900; font-size: 14px;">Fiche de Demande congé Administratif </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-demande [administratifDemande]="true" [conge]="congeToUpdate"></app-demande>
+    </div>
+</ng-template>
+<!-- fiche demande -->
+
+<!-- fiche renseignement -->
+<ng-template #FicheRenseignement let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" style="color: #CC9900; font-size: 14px;">Attestation de Reprise </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-renseignement [typeConge]="typeConge" [renseignementFiche]="true"
+            [conge]="congeToUpdate"></app-renseignement>
+    </div>
+</ng-template>
+
+<ng-template #FicheDecide let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" style="color: #CC9900; font-size: 14px;">Décision Congé</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-decider-arreter [deciderAdministratif]="true" [typeConge]="typeConge"
+            [conge]="congeToUpdate"></app-decider-arreter>
+    </div>
+</ng-template>
+
+<ng-template #historiqueValidationModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Formulaire de validation :
+            <!-- <span
+                style="color: #AB8217;">{{etapeValidation}}</span> -->
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal(modal)" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <ul ngbNav #defaultNav="ngbNav" [(activeId)]="defaultNavActiveId" class="nav-tabs">
+            <li [ngbNavItem]="1">
+                <a ngbNavLink>Formulaire de validation</a>
+                <ng-template ngbNavContent>
+                    <app-form-validation
+                        [data]="{workflowType:'DEMANDE_CONGE', etapeId: selectedStepId, entityId: selectedFluxId}"
+                        (onclose)="closeModal(modal)">
+                    </app-form-validation>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink>Historique des validations</a>
+                <ng-template ngbNavContent>
+                    <app-historique-validation
+                        [data]="{workflowType:'DEMANDE_CONGE', entityId: selectedFluxId}"></app-historique-validation>
+                </ng-template>
+            </li>
+        </ul>
+        <div [ngbNavOutlet]="defaultNav" class="border border-top-0 p-3"></div>
+    </div>
+</ng-template>
+<ng-template #updateDecisionModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title text-warning fs-5">Entree le numéro de décision du congé</h5>
+        <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <input type="text" [(ngModel)]="numeroDecision" placeholder="Numéro de décision" class="form-control mb-3"
+                required>
+            <button class="btn btn-primary" (click)="updateNumeroDecisionAndAccept()"
+                [disabled]="!numeroDecision">Enregistrer</button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- ========== HTML TEMPLATE ========== -->
+<ng-template #exportModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel" style="color: yellow; font-size: 12px;">
+            Exporter Tableau de Suivi des Congés et Absences Annuel {{annee}}
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"
+            [disabled]="loadingExport"></button>
+    </div>
+    <div class="modal-body position-relative">
+        <div class="mb-3 col-md-12">
+            <label for="year" class="form-label">Année</label>
+            <ng-select placeholder="Sélectionner une année" id="year" [clearable]="false" class="form-select-custom"
+                [(ngModel)]="annee" [disabled]="loadingExport">
+                <ng-option *ngFor="let year of availableYears" [value]="year.value">
+                    {{ year.value }}
+                </ng-option>
+            </ng-select>
+        </div>
+
+        <div class="d-flex gap-2 mt-4 justify-content-end">
+            <!-- Bouton Excel avec état de chargement -->
+            <button class="btn btn-primary btn-md" (click)="exportExcel()" [disabled]="loadingExport">
+                <span *ngIf="!loadingExport">
+                    <i class="fas fa-file-excel me-2"></i>
+                    Exporter Excel
+                </span>
+                <span *ngIf="loadingExport">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Export en cours...
+                </span>
+            </button>
+
+            <!-- Bouton CSV (décommenté si besoin) -->
+            <!-- <button 
+                class="btn btn-warning btn-md text-white" 
+                (click)="exportCSV()"
+                [disabled]="loadingExport">
+                <span *ngIf="!loadingExport">
+                    <i class="fas fa-file-csv me-2"></i>
+                    Exporter CSV
+                </span>
+                <span *ngIf="loadingExport">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Export en cours...
+                </span>
+            </button> -->
+
+            <button class="btn btn-secondary" (click)="closeDemande()" [disabled]="loadingExport">
+                Fermer
+            </button>
+        </div>
+
+        <!-- Overlay de loading -->
+        <div class="loading-overlay" *ngIf="loadingExport">
+            <div class="spinner-container">
+                <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mt-3 text-dark fw-bold">Export en cours...</p>
+                <small class="text-muted">Veuillez patienter...</small>
+            </div>
+        </div>
+    </div>
+</ng-template>

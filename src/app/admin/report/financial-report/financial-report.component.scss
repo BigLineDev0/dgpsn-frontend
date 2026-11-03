@@ -1,0 +1,797 @@
+// Variables
+$primary-color: #4f6c52;
+$primary-light: lighten($primary-color, 45%);
+$primary-dark: darken($primary-color, 10%);
+$green-header: #A8D08D;
+$yellow-row: #FFFF00;
+$gray-header: #D9D9D9;
+$black-bg: #000000;
+$blue-accent: #00B0F0;
+$text-color: #333;
+$border-color: #e0e0e0;
+$background: #f5f5f5;
+
+.financial-report {
+  min-height: 100vh;
+  background-color: $background;
+  padding: 20px;
+
+  // En-tête du rapport
+  .report-header-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .header-info {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid $border-color;
+
+      h2 {
+        margin: 0 0 8px 0;
+        font-size: 22px;
+        font-weight: 700;
+        color: $text-color;
+      }
+
+      .subtitle {
+        margin: 0 0 16px 0;
+        font-style: italic;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .ministry,
+      .delegation {
+        margin: 4px 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: $text-color;
+      }
+    }
+
+    .filters-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+
+      .filters-group {
+        display: flex;
+        gap: 20px;
+        flex: 1;
+        justify-content: start;
+        flex-wrap: wrap;
+
+        .custom-select-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          label {
+            font-size: 12px;
+            font-weight: 600;
+            color: $primary-color;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          .custom-select {
+            padding: 10px 16px;
+            border: 2px solid $primary-color;
+            border-radius: 8px;
+            background-color: white;
+            color: $text-color;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            outline: none;
+
+            &:hover {
+              border-color: $primary-dark;
+              background-color: $primary-light;
+            }
+
+            &:focus {
+              border-color: $primary-dark;
+              box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+            }
+          }
+        }
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        .custom-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 11px 20px;
+          border: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          outline: none;
+
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &.btn-export {
+            background-color: $primary-color;
+            color: white;
+
+            &:hover {
+              background-color: $primary-dark;
+            }
+          }
+
+          &.btn-print {
+            background-color: white;
+            color: $primary-color;
+            border: 2px solid $primary-color;
+
+            &:hover {
+              background-color: $primary-light;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Onglets personnalisés
+  .custom-tabs {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .tabs-header {
+      display: flex;
+      background-color: $primary-light;
+      border-bottom: 3px solid $primary-color;
+      overflow-x: auto;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $primary-light;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $primary-color;
+        border-radius: 4px;
+      }
+
+      .tab-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 24px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        position: relative;
+        color: $text-color;
+        font-weight: 500;
+        font-size: 14px;
+
+        .tab-icon {
+          font-size: 20px;
+        }
+
+        .tab-label {
+          font-weight: 500;
+        }
+
+        &:hover {
+          background-color: rgba($primary-color, 0.1);
+        }
+
+        &.active {
+          background-color: white;
+          border-bottom-color: $primary-color;
+          color: $primary-color;
+          font-weight: 600;
+
+          .tab-label {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    .tabs-content {
+      .tab-pane {
+        padding: 24px;
+        animation: fadeIn 0.3s ease-in;
+      }
+    }
+  }
+
+  // Titre du rapport
+  .report-title-section {
+    text-align: center;
+    margin-bottom: 30px;
+
+    .main-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #000;
+      margin: 0 0 8px 0;
+      padding: 12px;
+      border: 2px solid #000;
+      background-color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .period-indicator {
+      font-size: 13px;
+      color: $primary-color;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .engagement-count {
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+      margin: 8px 0 0 0;
+    }
+  }
+
+  // Conteneur de tableau Excel
+  .excel-table-container {
+    margin-bottom: 20px;
+    border: 1px solid #000;
+
+    .table-title {
+      background-color: $green-header;
+      padding: 10px 15px;
+      font-weight: 700;
+      font-size: 13px;
+      border-bottom: 1px solid #000;
+      text-transform: uppercase;
+
+      &.black-title {
+        background-color: $black-bg;
+        color: white;
+      }
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 600px;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $primary-color;
+        border-radius: 4px;
+
+        &:hover {
+          background: $primary-dark;
+        }
+      }
+    }
+
+    // Style du tableau Excel
+    .excel-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      font-family: 'Calibri', 'Arial', sans-serif;
+
+      th,
+      td {
+        border: 1px solid #000;
+        padding: 6px 8px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+
+        .header-row {
+          &.green-header {
+            background-color: $green-header;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+
+            th {
+              padding: 8px 6px;
+              line-height: 1.3;
+
+              &.col-rubrique {
+                min-width: 250px;
+                max-width: 350px;
+              }
+
+              &.periodic-col {
+                min-width: 100px;
+                background-color: darken($green-header, 5%);
+              }
+
+              &.summary-col {
+                min-width: 120px;
+                background-color: darken($green-header, 8%);
+                font-weight: 800;
+              }
+            }
+
+            &.subheader th {
+              background-color: darken($green-header, 5%);
+              font-size: 9px;
+            }
+          }
+
+          &.gray-header {
+            background-color: $gray-header;
+            font-weight: 700;
+            font-size: 11px;
+
+            th {
+              padding: 10px 8px;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+
+          &.engagement-total-row {
+            background-color: $green-header;
+            font-weight: 700;
+            font-size: 11px;
+            color: #000;
+
+            td {
+              border-top: 2px solid #000;
+              border-bottom: 2px solid #000;
+              padding-top: 8px;
+              padding-bottom: 8px;
+
+              &.total-label-cell {
+                text-align: left;
+                padding-left: 20px;
+                font-style: italic;
+              }
+
+              &.amount-cell {
+                background-color: lighten($green-header, 5%);
+                font-size: 12px;
+              }
+            }
+          }
+
+          &:hover {
+            background-color: rgba($primary-color, 0.05);
+          }
+
+          &.total-row {
+            background-color: #FFD966;
+            font-weight: 700;
+
+            td {
+              border-top: 2px solid #000;
+              border-bottom: 2px solid #000;
+            }
+          }
+
+          &.category-row {
+            background-color: $yellow-row;
+            font-weight: 700;
+          }
+
+          &.subcategory-row {
+            background-color: lighten($yellow-row, 20%);
+            font-weight: 600;
+          }
+
+          &.yellow-row {
+            background-color: $yellow-row;
+            font-weight: 600;
+          }
+
+          &.section-row {
+            font-weight: 700;
+
+            .compte-cell {
+              text-align: center;
+              font-weight: 700;
+            }
+          }
+
+          // ===== DÉBUT DES MODIFICATIONS =====
+
+          // NOUVEAU STYLE: Pour la ligne de titre "2 DEPENSES D'INVESTISSEMENT"
+          &.recap-title-row {
+            background-color: #BFBFBF; // Fond gris moyen
+            font-weight: 700;
+            font-size: 11px;
+            text-align: left;
+
+            td {
+              padding-left: 8px !important;
+              color: #000;
+            }
+          }
+
+          // NOUVEAU STYLE: Pour le total de section (ex: "TOTAL RECETTES D'INVESTISSEMENT")
+          &.recap-section-total {
+            background-color: #D9D9D9; // Fond gris clair
+            font-weight: 700;
+          }
+
+          // ===== FIN DES MODIFICATIONS =====
+
+
+          &.category-header-row {
+            background-color: #000;
+            color: white;
+            font-weight: 700;
+
+            td {
+              color: white;
+              font-weight: 700;
+            }
+
+            .classe-cell {
+              text-align: center;
+              font-size: 14px;
+              font-weight: 800;
+            }
+          }
+
+          &.subtotal-row {
+            border-top: 2px solid #000;
+            background-color: $yellow-row;
+            font-weight: 700;
+            font-size: 12px;
+          }
+
+          &.total-final-row {
+            border-top: 3px solid #000;
+            border-bottom: 3px solid #000;
+            background-color: $yellow-row;
+            font-weight: 800;
+            font-size: 12px;
+          }
+
+          &.engagement-row {
+            &.even-row {
+              background-color: #F2F2F2;
+            }
+          }
+        }
+
+        td {
+          &.text-left {
+            text-align: left;
+            padding-left: 12px;
+          }
+
+          &.text-center {
+            text-align: center;
+          }
+
+          &.number-cell {
+            text-align: right;
+            font-family: 'Consolas', 'Courier New', monospace;
+            padding-right: 10px;
+            font-weight: 500;
+
+            &.amount-cell {
+              background-color: lighten($green-header, 10%);
+            }
+          }
+
+          &.percent-cell {
+            text-align: center;
+            font-weight: 600;
+            color: $primary-color;
+
+            &.yellow-percent {
+              background-color: $yellow-row;
+            }
+          }
+
+          &.periodic-cell {
+            background-color: rgba($blue-accent, 0.05);
+            color: black !important;
+          }
+
+          &.blue-cell {
+            background-color: lighten($blue-accent, 35%);
+            color: black !important;
+
+          }
+
+          &.highlight-cell {
+            background-color: lighten($green-header, 5%);
+            font-weight: 700;
+          }
+
+          &.indent-1 {
+            padding-left: 30px !important;
+          }
+
+          &.compte-cell {
+            text-align: center;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    // Tableau d'engagement spécifique
+    .engagement-table {
+      tbody {
+        td {
+          font-size: 10px;
+        }
+      }
+    }
+
+    // Tableau récap
+    &.recap-container {
+      margin-bottom: 30px;
+
+      .table-wrapper {
+        max-height: none;
+      }
+    }
+
+    .recap-table {
+      .cumul-header {
+        background-color: darken($green-header, 10%);
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .col-classe { width: 50px; }
+      .col-compte { width: 60px; }
+      .col-sous-compte { width: 80px; }
+      .col-rubrique { min-width: 350px; }
+      .col-budget { width: 120px; }
+      .col-realisation { width: 130px; }
+      .col-taux { width: 80px; }
+      .col-reste { width: 120px; }
+      .col-budget-2025 { width: 120px; }
+      .col-trimestre { width: 110px; min-width: 110px; }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .financial-report {
+    .report-header-section {
+      .filters-actions-row {
+        flex-direction: column;
+
+        .filters-group {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .action-buttons {
+          width: 100%;
+          justify-content: flex-start;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .financial-report {
+    padding: 12px;
+
+    .report-header-section {
+      padding: 16px;
+
+      .header-info {
+        h2 {
+          font-size: 18px;
+        }
+      }
+
+      .filters-actions-row {
+        .filters-group {
+          flex-direction: column;
+
+          .custom-select-wrapper {
+            width: 100%;
+
+            .custom-select {
+              width: 100%;
+            }
+          }
+        }
+
+        .action-buttons {
+          flex-direction: column;
+
+          .custom-btn {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    .custom-tabs {
+      .tabs-header {
+        .tab-button {
+          padding: 12px 16px;
+          font-size: 12px;
+
+          .tab-icon {
+            font-size: 16px;
+          }
+        }
+      }
+
+      .tabs-content {
+        .tab-pane {
+          padding: 16px;
+        }
+      }
+    }
+
+    .excel-table {
+      font-size: 9px;
+
+      th,
+      td {
+        padding: 4px 6px;
+      }
+    }
+  }
+}
+
+// Style pour l'impression
+@media print {
+  .financial-report {
+    .report-header-section {
+      .filters-actions-row {
+        display: none !important;
+      }
+    }
+
+    .custom-tabs {
+      .tabs-header {
+        display: none !important;
+      }
+    }
+
+    .excel-table {
+      font-size: 9px;
+
+      th,
+      td {
+        padding: 4px 6px;
+      }
+    }
+
+    .tab-pane {
+      padding: 10px;
+    }
+
+    .excel-table-container {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    color: white;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 8px;
+  text-align: center;
+
+  .retry-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}

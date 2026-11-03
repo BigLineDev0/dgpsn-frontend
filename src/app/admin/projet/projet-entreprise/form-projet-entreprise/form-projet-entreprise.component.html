@@ -1,0 +1,40 @@
+<section>
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label class="form-label">Entreprise<small style="color: red;">*</small></label>
+            <ng-select [items]="entreprises"
+                       bindLabel="denomination"
+                       bindValue="id"
+                       placeholder="selectionner une Entreprise" formControlName="entrepriseId">
+            </ng-select>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label class="form-label">Role<small style="color: red;">*</small></label>
+            <ng-select [items]="role"
+                       bindLabel="libelle"
+                       bindValue="id"
+                       placeholder="selectionner Role" formControlName="roleEntrepriseId">
+            </ng-select>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label class="form-label">Status<small style="color: red;">*</small></label>
+            <ng-select [items]="statut"
+                       bindLabel="libelle"
+                       bindValue="id"
+                       placeholder="selectionner status" formControlName="flagId">
+            </ng-select>
+        </div>
+      </div><!-- Row -->
+      <div class="col-md-12  col-sm-12 mb-3">
+        <label class="form-label">Commentaire</label>
+        <textarea class="col-12" formControlName="coment" placeholder="Commentaire ....." [rows]="5"></textarea>
+      <div *ngIf="form.get('coment')?.invalid && form.get('coment')?.touched" class="text-danger"> Ce champ est obligatoire.
+      </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+    </div>
+  </section>

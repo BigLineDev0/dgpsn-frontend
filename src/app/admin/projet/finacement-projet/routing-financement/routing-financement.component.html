@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb ">
+            <li class="breadcrumb-item active"routerLink="/projet"><a>Gestion projet</a></li>
+            <li class="breadcrumb-item active" routerLink="/projet"><a>Liste projets</a></li>
+           <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+        </ol>
+    </nav>
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <a class="me-4"  ngbTooltip="Montant global"  #tooltip1="ngbTooltip" 
+        [ngClass]="activeUrl('budget-config', tooltip1)" routerLink="/projet/budget-config"
+        routerLinkActive="active-link">
+            <i class="feather icon-credit-card icon-md"></i>
+
+        </a>
+        <a class="me-4 d-block" ngbTooltip="Source Financement"  #tooltip2="ngbTooltip" 
+        [ngClass]="activeUrl('source-config', tooltip2)" routerLink="/projet/source-config"
+        routerLinkActive="active-link">
+            <i class="feather icon-disc icon-md"></i>
+        </a>
+        <a class="me-4" ngbTooltip="Besoins financement"  #tooltip3="ngbTooltip"
+        [ngClass]="activeUrl('besoin-config', tooltip3)" routerLink="/projet/besoin-config"
+        routerLinkActive="active-link">
+            <i class="feather icon-dollar-sign icon-md"></i>
+        </a>
+        <a class="me-4" ngbTooltip="Mobilisation" [ngClass]="activeUrl('mobilisation-config', tooltip5)" #tooltip5="ngbTooltip" 
+        routerLink="/projet/mobilisation-config"
+        routerLinkActive="active-link">
+            <i class="feather icon-minimize icon-md"></i>
+        </a>
+      
+        <a class="me-4" ngbTooltip="Execution"  #tooltip6="ngbTooltip" [ngClass]="activeUrl('execution-config', tooltip6)" routerLink="/projet/execution-config">
+            <i class="feather icon-shuffle icon-md"
+            routerLinkActive="active-link"></i>
+        </a>
+      
+        <a class="me-4" ngbTooltip="Documents" #tooltip8="ngbTooltip" [ngClass]="activeUrl('document-config', tooltip8)"
+        routerLink="/projet/document-config">
+            <i class="feather icon-folder icon-md"></i>
+        </a>
+    </div>
+</div>

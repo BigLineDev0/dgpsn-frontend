@@ -1,0 +1,67 @@
+<div class="grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body m-0 p-3">
+      <div>
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-6 row text-center">
+            <div class="col-6 mb-3">
+              <label class="form-label">Periode <span class="text-danger">*</span></label>
+              <ng-select [items]="periodes"
+                         bindLabel="libelle"
+                         bindValue="id"
+                         placeholder="Selectionner...">
+              </ng-select>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Annee <span class="text-danger">*</span></label>
+              <ng-select [items]="annees"
+                         bindLabel="libelle"
+                         bindValue="id"
+                         placeholder="Selectionner...">
+              </ng-select>
+            </div>
+          </div>
+          <div class="col-3"></div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <form (ngSubmit)="onSubmit()">
+              <table class="table table-bordered mb-3">
+                <thead>
+                <tr>
+                  <th class="text-start fw-boldests p-2">Critère</th>
+                  <th class="text-start fw-boldests p-2">Infos</th>
+                  <th class="text-start fw-boldests p-2">Note</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let critere of criteres">
+                  <td class="ms-2 align-middle">
+                    <span class="ms-2">{{ critere?.nom }}</span>
+                  </td>
+                  <td class="ms-2 text-center align-middle">
+                    <mat-icon class="text-primary icon-lg cursor-pointer" (click)="openInfos(infosModal,'lg',critere)">info</mat-icon>
+                  </td>
+                  <td><input class="form-control form-control-lg mb-0" type="number" min="0" max="20" placeholder="Note sur 20" /></td>
+                </tr>
+                </tbody>
+              </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer mt-3">
+  <button type="button submit" class="btn btn-primary">Enregistrer</button>
+</div>
+
+<ng-template #infosModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Information : {{critere?.nom}}</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-infos-acteur-modal-projet></app-infos-acteur-modal-projet>
+  </div>
+</ng-template>

@@ -1,0 +1,8 @@
+
+
+export enum REFERENTIEL_TYPE {
+    FONCTION = "FONCTION",
+    TYPE_STRUCTURE = "TYPE_STRUCTURE",
+
+}
+

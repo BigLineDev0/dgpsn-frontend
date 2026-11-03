@@ -1,0 +1,474 @@
+$dgpsn-green: #49854F;
+$dgpsn-green-light: #e8f5e9;
+$dgpsn-green-dark: #2e5c3e;
+
+.fiche-synthese-container {
+  padding: 10px 5px;
+  color: black;
+  background: #f8f9fa;
+
+  // En-tête principal style
+  .header-section {
+    .header-main {
+      display: flex;
+      justify-content: space-between;
+      border: 5px solid $dgpsn-green !important;
+      padding: 10px;
+      background: white;
+      align-items: center;
+
+      .span-logo {
+        width: 10%;
+        margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        text-align: center;
+        justify-content: center;
+
+        span {
+          margin: 2px;
+          font-weight: bold;
+          //color: $dgpsn-green-dark;
+          color: black;
+        }
+      }
+    }
+  }
+
+  // Style des sections détails
+  .detail {
+    border: 2px solid $dgpsn-green !important;
+    background: white;
+    margin-bottom: 15px;
+
+    .detail-header {
+      background-color: $dgpsn-green !important;
+      padding: 8px 15px;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      span {
+        display: flex;
+        align-items: center;
+      }
+
+      i {
+        font-size: 18px;
+      }
+    }
+
+    .detail-body {
+      padding: 15px;
+      color: black;
+    }
+  }
+
+  // KPI Cards Recettes et Dépenses
+  .kpi-card {
+    border: 3px solid $dgpsn-green;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(73, 133, 79, 0.2);
+    }
+
+    .kpi-header {
+      padding: 12px 15px;
+
+      h5 {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+
+        i {
+          font-size: 20px;
+        }
+      }
+    }
+
+    .kpi-body {
+      padding: 15px;
+      font-size: 14px;
+
+      strong {
+        font-size: 15px;
+      }
+    }
+
+    &.kpi-recettes {
+      border-color: #28a745;
+    }
+
+    &.kpi-depenses {
+      border-color: #dc3545;
+    }
+  }
+
+  // Tables
+  .table {
+    margin-bottom: 0;
+    font-size: 14px;
+
+    thead {
+      th {
+        font-weight: 600;
+        padding: 10px;
+        font-size: 13px;
+        border-bottom: 2px solid $dgpsn-green;
+      }
+
+      &.table-success th {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #155724;
+      }
+
+      &.table-danger th {
+        background-color: rgba(220, 53, 69, 0.15);
+        color: #721c24;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: rgba(73, 133, 79, 0.05);
+        }
+
+        td {
+          padding: 10px;
+          vertical-align: middle;
+        }
+      }
+
+      .table-success {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-top: 2px solid #28a745;
+        border-bottom: 2px solid #28a745;
+
+        td {
+          font-size: 15px;
+        }
+      }
+
+      .table-danger {
+        background-color: rgba(220, 53, 69, 0.1);
+        border-top: 2px solid #dc3545;
+        border-bottom: 2px solid #dc3545;
+
+        td {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  .table-secondary {
+    background-color: #e9ecef;
+  }
+
+  .bg-success-light {
+    background-color: rgba(40, 167, 69, 0.1);
+  }
+
+  .bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  // Programme Cards
+  .programme-card {
+    background: white;
+    border: 2px solid $dgpsn-green;
+    border-radius: 8px;
+    padding: 15px;
+    height: 100%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(73, 133, 79, 0.2);
+    }
+
+    .programme-title {
+      color: $dgpsn-green-dark;
+      font-weight: 600;
+      margin-bottom: 15px;
+      min-height: 48px;
+      font-size: 14px;
+    }
+
+    .programme-stats {
+      .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .stat-label {
+          font-size: 13px;
+          color: #6c757d;
+        }
+
+        .stat-value {
+          font-weight: 600;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  // Observations
+  .observation-block {
+    background: $dgpsn-green-light;
+    border-left: 4px solid $dgpsn-green;
+    padding: 15px;
+    border-radius: 4px;
+
+    h6 {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+
+      i {
+        font-size: 18px;
+      }
+    }
+
+    .custom-list {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #333;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  // Badges
+  .badge {
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  // Progress bars
+  .progress {
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #e9ecef;
+
+    .progress-bar {
+      transition: width 0.6s ease;
+    }
+  }
+
+  // Buttons
+  .btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 14px;
+
+    &.btn-outline-success {
+      border-color: $dgpsn-green;
+      color: $dgpsn-green;
+
+      &:hover {
+        background-color: $dgpsn-green;
+        border-color: $dgpsn-green;
+        color: white;
+      }
+    }
+  }
+
+  // Form controls
+  .form-select,
+  .form-control {
+    border-radius: 6px;
+    border-color: #ced4da;
+    font-size: 14px;
+
+    &:focus {
+      border-color: $dgpsn-green;
+      box-shadow: 0 0 0 0.2rem rgba(73, 133, 79, 0.25);
+    }
+  }
+
+  .form-label {
+    color: $dgpsn-green-dark;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  // Footer
+  .footer-section {
+    border-top: 2px solid $dgpsn-green;
+    padding-top: 15px;
+    margin-top: 20px;
+  }
+
+  // Graphiques Chart.js
+  .chart-container {
+    height: 350px;
+    padding: 20px;
+    position: relative;
+
+    canvas {
+      max-height: 100%;
+    }
+  }
+
+  .chart-container-small {
+    height: 300px;
+    padding: 20px;
+    position: relative;
+
+    canvas {
+      max-height: 100%;
+    }
+  }
+
+  // Progress bars dans les tableaux
+  .progress {
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #e9ecef;
+
+    .progress-bar {
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 12px;
+    }
+  }
+
+  // Text utilities
+  .text-success {
+    color: #28a745 !important;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .text-primary {
+    color: #007bff !important;
+  }
+
+  .text-warning {
+    color: #ffc107 !important;
+  }
+}
+
+// Impression
+@media print {
+  .fiche-synthese-container {
+    padding: 10px;
+    background: white;
+
+    .btn {
+      display: none !important;
+    }
+
+    .detail {
+      page-break-inside: avoid;
+      margin-bottom: 10px;
+      box-shadow: none;
+    }
+
+    .kpi-card {
+      box-shadow: none;
+      page-break-inside: avoid;
+    }
+
+    // Charts pour impression
+    .chart-container,
+    .chart-container-small {
+      page-break-inside: avoid;
+      height: 300px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .fiche-synthese-container {
+    padding: 5px;
+
+    .header-section {
+      .header-main {
+        flex-direction: column;
+
+        .span-logo {
+          width: 30%;
+          margin: 10px auto;
+        }
+
+        .info {
+          width: 100%;
+          margin: 10px 0;
+        }
+      }
+    }
+
+    .detail {
+      .detail-body {
+        padding: 10px;
+      }
+    }
+
+    .kpi-card {
+      margin-bottom: 15px;
+    }
+
+    .table-responsive {
+      font-size: 12px;
+    }
+
+    // Charts responsive
+    .chart-container {
+      height: 300px;
+      padding: 10px;
+    }
+
+    .chart-container-small {
+      height: 250px;
+      padding: 10px;
+    }
+  }
+}

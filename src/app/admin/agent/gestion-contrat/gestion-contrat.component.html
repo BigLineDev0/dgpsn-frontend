@@ -1,0 +1,341 @@
+<app-agent-routing *ngIf="curentRoute === '/admin/acces/agent/contrat'" />
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div></div>
+  <div>
+    <h6 class="text-center text-primary">Gestion des contrats</h6>
+  </div>
+  <div class="mt-2 d-flex">
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary d-flex gap-2 align-items-center"
+      (click)="openBasicModal(basicModal)"
+    >
+      <i class="feather icon-plus-circle"></i> Nouveau contrat
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <section class="table-container mat-elevation-z8" tabindex="0">
+    <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+    <table mat-table [dataSource]="datasource" *ngIf="!loadingIndicator">
+      <ng-container matColumnDef="typeContrat">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width: 150px">
+          Type de contrat
+        </th>
+        <td mat-cell *matCellDef="let contrat">{{ contrat?.typeContrat?.libelle }}</td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width: 200px">
+          Description
+        </th>
+        <td mat-cell *matCellDef="let contrat">{{ contrat?.description }}</td>
+      </ng-container>
+      <ng-container matColumnDef="dateDebut">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width: 120px">
+          Date début
+        </th>
+        <td mat-cell *matCellDef="let contrat" class="text-center">
+          {{ contrat?.dateDebut | date: 'dd-MM-yyyy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="dateFin">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width: 120px">
+          Date fin
+        </th>
+        <td mat-cell *matCellDef="let contrat" class="text-center">
+          {{ contrat?.dateFin | date: 'dd-MM-yyyy' }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="statut">
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width: 120px">
+          Statut
+        </th>
+        <td mat-cell *matCellDef="let contrat" class="text-center">
+          <div class="position-relative d-inline-block">
+            <span
+              class="badge cursor-pointer rounded-pill text-black"
+              [ngClass]="contrat.isActive ? 'success-custom' : 'danger-custom'"
+              [matMenuTriggerFor]="statusMenu"
+              (click)="$event.stopPropagation()"
+            >
+              {{ contrat.isActive ? 'Actif' : 'Inactif' }}
+            </span>
+            <mat-menu class="bg-white" #statusMenu="matMenu">
+              <button
+                mat-menu-item
+                (click)="toggleContratStatus(contrat)"
+                [class.active]="contrat.isActive"
+              >
+                <mat-icon class="text-success">check_circle</mat-icon>
+                <span>Marquer comme Actif</span>
+              </button>
+              <button
+                mat-menu-item
+                (click)="toggleContratStatus(contrat)"
+                [class.active]="!contrat.isActive"
+              >
+                <mat-icon class="text-danger">cancel</mat-icon>
+                <span>Marquer comme Inactif</span>
+              </button>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width: 120px">
+          Actions
+        </th>
+        <td mat-cell *matCellDef="let contrat" class="text-center bg-white">
+          <div class="text-center d-inline-block bg-white">
+            <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+              <mat-icon class="text-muted align-middle">more_vert</mat-icon>
+            </span>
+            <mat-menu #menu="matMenu">
+              <a
+                ngbDropdownItem
+                class="d-flex justify-content-between align-items-center"
+                (click)="openBasicModal(modalUpdate, contrat)"
+              >
+                <span class="me-2">Modifier</span>
+                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+              </a>
+              <a
+                ngbDropdownItem
+                class="d-flex justify-content-between align-items-center"
+                (click)="deleteContrat(contrat.id!)"
+              >
+                <span class="me-2">Supprimer</span>
+                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+              </a>
+            </mat-menu>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </section>
+</div>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter un contrat</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="saveContrat()" #contratForm="ngForm">
+      <div class="mb-3">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <label class="form-label">Type de contrat</label>
+            <ng-select
+              [items]="typeContrat()"
+              bindLabel="label"
+              bindValue="value"
+              [(ngModel)]="contrat.typeContratId"
+              name="typeContratId"
+              required
+              placeholder="Sélectionnez un type de contrat"
+            ></ng-select>
+            <div
+              *ngIf="contratForm.controls['typeContratId']?.invalid && contratForm.controls['typeContratId']?.touched"
+              class="text-danger"
+            >
+              Le type de contrat est requis
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-check form-switch mt-4 pt-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="actifSwitch"
+                [(ngModel)]="contrat.isActive"
+                name="isActive"
+              />
+              <label class="form-check-label" for="actifSwitch">Actif</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="contrat.description"
+          name="description"
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de début</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="contrat.dateDebut"
+            name="dateDebut"
+            required
+          />
+          <div
+            *ngIf="contratForm.controls['dateDebut']?.invalid && contratForm.controls['dateDebut']?.touched"
+            class="text-danger"
+          >
+            La date de début est requise
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de fin</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="contrat.dateFin"
+            name="dateFin"
+          />
+        </div>
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.close()">
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="contratForm.invalid"
+        >
+          Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier le contrat</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="updateContrat()" #updateForm="ngForm">
+      <div class="mb-3">
+        <label class="form-label">Type de contrat</label>
+        <ng-select
+          [items]="typeContrat()"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="contratToUpdate.typeContratId"
+          name="typeContratId"
+          required
+          placeholder="Sélectionnez un type de contrat"
+        ></ng-select>
+        <div
+          *ngIf="updateForm.controls['typeContratId']?.invalid && updateForm.controls['typeContratId']?.touched"
+          class="text-danger"
+        >
+          Le type de contrat est requis
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          [(ngModel)]="contratToUpdate.description"
+          name="description"
+          rows="3"
+        ></textarea>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de début</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="contratToUpdate.dateDebut"
+            name="dateDebut"
+            required
+          />
+          <div
+            *ngIf="updateForm.controls['dateDebut']?.invalid && updateForm.controls['dateDebut']?.touched"
+            class="text-danger"
+          >
+            La date de début est requise
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de fin</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="contratToUpdate.dateFin"
+            name="dateFin"
+          />
+        </div>
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.close()">
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="updateForm.invalid"
+        >
+          Mettre à jour
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher un contrat</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <form (ngSubmit)="searchContrats()">
+      <div class="mb-3">
+        <label class="form-label">Type de contrat</label>
+        <ng-select
+          [items]="typeContrat()"
+          bindLabel="label"
+          bindValue="value"
+          [(ngModel)]="searchCriteria.typeContrat"
+          name="typeContrat"
+          placeholder="Tous les types de contrats"
+        ></ng-select>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de début</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="searchCriteria.dateDebut"
+            name="dateDebut"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date de fin</label>
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="searchCriteria.dateFin"
+            name="dateFin"
+          />
+        </div>
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.close()">
+          Annuler
+        </button>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

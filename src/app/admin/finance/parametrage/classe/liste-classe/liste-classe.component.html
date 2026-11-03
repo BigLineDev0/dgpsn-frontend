@@ -1,0 +1,204 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px" *ngIf="backdrumpDisplay">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Référentiel</a></li>
+      <li class="breadcrumb-item text-primary" aria-current="page">Classes</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex justify-content-end align-items-baseline mt-3 mb-3">
+    <div class="mt-2 d-flex">
+      <button ngbTooltip="Télécharger" type="button" class="btn btn-light text-dark btn-icon me-2" aria-label="Télécharger">
+        <i class="feather icon-download"></i>
+      </button>
+      <button ngbTooltip="Importer" type="button" class="btn btn-light text-dark btn-icon me-2" aria-label="Importer">
+        <i class="feather icon-upload"></i>
+      </button>
+    </div>
+    <button (click)="openDialog(basicModal, 'lg')" type="button" class="btn btn-primary">
+      Nouvelle Classe
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <!-- Filtres inline -->
+    <div class="card mb-2">
+      <div class="card-body py-2">
+        <form [formGroup]="filterForm">
+          <div class="row g-2 align-items-end">
+            <div class="col-md-5">
+              <label class="form-label mb-1">Code Classe</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                placeholder="Rechercher par code (ex: 7)" 
+                formControlName="code"
+              />
+            </div>
+            <div class="col-md-5">
+              <label class="form-label mb-1">Libellé</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm" 
+                placeholder="Rechercher par libellé" 
+                formControlName="libelle"
+              />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+              <button 
+                type="button" 
+                class="btn btn-primary btn-sm w-100"
+                (click)="applyFilters()"
+              >
+                <i class="feather icon-search me-1"></i> Filtrer
+              </button>
+              <button 
+                type="button" 
+                class="btn btn-outline-secondary btn-sm w-100"
+                (click)="resetFilters()"
+              >
+                Réinitialiser
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tableau des classes -->
+    <section class="table-container mat-elevation-z8" tabindex="0" style="background-color: #f9fafb">
+      <app-spinner *ngIf="loading" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="datasource?.content" *ngIf="!loading">
+        <!-- Colonne Code -->
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width: 100px">
+            Code
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+        </ng-container>
+
+        <!-- Colonne Libellé -->
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width: 200px">
+            Libellé
+          </th>
+          <td mat-cell *matCellDef="let element" class="">
+            <span>{{ element.libelle }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Colonne Commentaire -->
+        <ng-container matColumnDef="commentaire">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width: 250px">
+            Commentaire
+          </th>
+          <td mat-cell *matCellDef="let element" class="">
+            <span>{{ element.commentaire || '-' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Colonne Actions -->
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:150px;">
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let element" class="text-center bg-white">
+            <div class="d-flex align-items-center justify-content-center">
+              <!-- Voir les comptes -->
+              <!-- <a 
+                role="button" 
+                ngbTooltip="Voir les comptes" 
+                placement="top" 
+                class="d-flex align-items-center me-3" 
+                container="body" 
+                (click)="navigateRoute('/admin/acces/finance/parametres/classe/' + element.id + '/compte')"
+              >
+                <mat-icon color="primary" class="icon-md">insights</mat-icon>
+              </a> -->
+              <a 
+                role="button" 
+                ngbTooltip="Voir les comptes" 
+                placement="top" 
+                class="d-flex align-items-center me-3" 
+                container="body" 
+                (click)="navigateToComptes(element.id)"
+              >
+                <mat-icon color="primary" class="icon-md">insights</mat-icon>
+              </a>
+
+              <!-- Menu d'actions -->
+              <div [matMenuTriggerFor]="menu" class="cursor-pointer d-flex align-items-center" matRipple>
+                <mat-icon class="text-muted" style="font-size: 1.5rem; width: 24px; height: 24px">
+                  more_vert
+                </mat-icon>
+              </div>
+
+              <mat-menu #menu="matMenu">
+                <!-- Modifier -->
+                <a 
+                  ngbDropdownItem 
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="openDialog(basicModal, 'lg', element)"
+                >
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <!-- Supprimer -->
+                <a 
+                  ngbDropdownItem 
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="deleteClasse(element.id)"
+                >
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-danger icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <!-- Message si aucune classe -->
+      <span *ngIf="datasource?.totalElements == 0" class="paginate text-danger mt-2">
+        Aucune classe enregistrée
+      </span>
+
+      <!-- Pagination -->
+      <div class="paginate">
+        <ngb-pagination 
+          [collectionSize]="datasource?.totalElements" 
+          [page]="pageOptions.page + 1"
+          [pageSize]="pageOptions.size" 
+          [maxSize]="5" 
+          (pageChange)="paginate($event)" 
+          size="sm"
+          [rotate]="true"
+          [ellipses]="true" 
+          [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Modal Ajout/Modification -->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      {{ classeToUpdate ? 'Modifier la classe' : 'Ajouter une classe' }}
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-add-classe 
+      [classeToUpdate]="classeToUpdate" 
+      (submit)="close()">
+    </app-add-classe>
+  </div>
+</ng-template>

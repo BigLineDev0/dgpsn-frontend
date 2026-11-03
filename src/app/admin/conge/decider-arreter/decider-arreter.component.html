@@ -1,0 +1,489 @@
+<!-- Arreter Conger Maternite -->
+<!-- <section *ngIf="deciderMarterniter && conge?.typeConge.name == 'MATERNITE'" style="font-size:17px">
+    <div class="card-body" #content>
+        <div class="row ">
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center "><b><u>REPUBLIQUE DU SENEGAL </u></b><br>
+                    <span><b><u>Un peuple - Un But - Une Foi</u></b></span><br>
+                    <span class="mt-1 mb-1"><b><u>MINISTERE DES FINANCES ET DU BUDGET</u></b></span><br>
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center">DECISION Nº {{conge?.numeroDecision}}ACCORDANT UN<br>
+                    <span>CONGE DE MATERNITER DE 14 SEMAINES A</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">MADAME {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} DES DOUANES,</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">MATRICULE DE SOLDE {{conge?.agent?.matricule}}</span><br>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12 d-flex flex-column align-items-center">
+                <h4 class="mt-3 text-center">LE MINISTRE DES FINANCES ET DU BUDGET,</h4><br>
+            </div>
+               <div class="col-12">
+                <div class="text-justify">
+                    <p><strong>Vu</strong> la Constitution,</p>
+                    <p><strong>Vu</strong> la loi n° 69-64 du 30 octobre 1969 relative au Statut du Personnel des
+                        Douanes, modifiée ;</p>
+                    <p><strong>Vu</strong> la loi n° 61-33 du 15 juin 1961 relative au Statut général des
+                        fonctionnaires, modifiée;
+                    </p>
+                    <p>
+                    <p><strong>Vu</strong> la loi n° 80-44 du 25 août 1980 accordant le paiement de l'intégralité des
+                        jours de repos obligatoires pendant la grossesse et après l'accouchement;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 63-0116 du 19 février 1963 relatif au régime des congés,
+                        permissions et autorisations d'absence des fonctionnaires;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 69-1373 du 10 décembre 1969 fixant les modalités d'application
+                        de la loi n° 69- 64 du 30 octobre 1969 relative au Statut du Personnel des Douanes, modifié ;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2024-921 du 02 avril 2024 portant nomination du Premier Ministre
+                        ;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2024-939 du 05 avril 2024 portant nomination des ministres et
+                        secrétaires d'Etat et fixant la composition du Gouvernement;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2024-940 du 05 avril 2024 portant répartition des services de
+                        l'Etat et du contrôle des établissements publics, des sociétés nationales et des sociétés à
+                        participation publique entre la Présidence de la République, la Primature et les ministères;
+                    </p>
+                    <p>
+                        <strong>Vu</strong> le certificat de grossesse en date du ______ fixant au _____, la
+                        date présumée d'accouchement;
+                    </p>
+                    <p>
+                         <strong>Vu</strong> la demande de l'intéressée,
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <h4 class="mt-3">DECIDE</h4>
+            </div>
+            <div class="col-12 text-justify">
+                <p><strong>Article 1-:</strong> Un congé de maternité de {{dureeEnLettres}} ({{conge.duree}}) semaines est accordé à {{sexe}}
+                    {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} des Douanes, matricule de solde {{conge?.agent?.matricule}}, en service au {{conge?.agent?.unite?.name}}.
+                </p>
+                <p><strong>Article 2- :</strong> L'intéressée percevra l'intégralité de son salaire pendant la période
+                    de congé.
+                </p>
+                <p><strong>Article 3 :</strong> Ce congé de maternité prendra fin huit (08) semaines après la date
+                    d'accouchement.
+                    Les dates de départ et de reprise de service devront obligatoirement être communiquées à la
+                    Direction des Ressources humaines par son chef de service.
+                </p>
+                <p><strong>Article 4 :</strong> La présente décision qui prendra effet à la diligence du chef de service
+                    sera enregistrée, publiée et communiquée partout où besoin sera.
+                </p>
+            </div>
+            <div class="col-12 text-justify">
+                <h6 class="mt-3 "><b><u>AMPLIATIONS</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <p>02 MFB/IF;</p>
+                <p>10 DGD/DPL/BP;</p>
+                <p>03 DS;</p>
+                <p>01 ARCHIVE.</p>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row mt-4 mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end align-items-center">
+                <div>
+                    <button class="btn btn-outline-secondary me-2" (click)="generatePdf()">
+                        <i class="fas fa-file-pdf"></i> Télécharger PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> -->
+<!-- Arreter Conger Maternite -->
+
+<!-- Arreter Conger Administratif -->
+<!-- <section *ngIf="deciderAdministratif && conge?.typeConge.name == 'ADMINISTRATIF'" style="font-size:17px">
+    <div class="card-body" #content>
+        <div class="row ">
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center "><b><u>REPUBLIQUE DU SENEGAL </u></b><br>
+                    <span><b><u>Un peuple - Un But - Une Foi</u></b></span><br>
+                    <span class="mt-1 mb-1"><b><u>MINISTERE DES FINANCES ET DU BUDGET</u></b></span><br>
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center">DECISION Nº {{conge?.numeroDecision}} ACCORDANT UN<br>
+                    <span>CONGE ADMINISTRATIF DE {{conge?.duree}} JOURS A</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">{{sexe}} {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} DES DOUANES,</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">MATRICULE DE SOLDE {{conge?.agent?.matricule}}</span><br>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12 d-flex flex-column align-items-center">
+                <h4 class="mt-3 text-center">LE MINISTRE DES FINANCES ET DU BUDGET,</h4><br>
+            </div>
+    
+            <div class="col-12">
+                <div class="text-justify">
+                    <p><strong>Vu</strong> la Constitution,</p>
+                    <p><strong>Vu</strong> le décret n° 63-116 du 19 février 1963 relatif au régime des congés ;
+                    </p>
+                    <p><strong>Vu</strong> la loi n° 69-64 du 30 octobre 1969 relative au Statut du Personnel des Douanes, modifiée;
+                    </p>
+                    <p>
+                    <p><strong>Vu</strong> le décret n° 2024-703 du 06 mars 2024 portant nomination du Premier Ministre;
+
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2024-705 du 06 mars 2024 portant nomination des ministres et fixant la composition du Gouvernement;
+
+                    </p>
+                    <p><strong>Vu</strong> l'arrêté nº 028284 du 11 novembre 2022 portant délégation de signature à Monsieur Abdourahmane DIEYE, Directeur général des Douanes;
+                    </p>
+                    <p><strong>Vu</strong> l'arrêté nº 05660/MEFP/DGD/DPL/BP du 07 avril 2017 portant nomination de l'intéressé;
+
+                    </p>
+                    <p><strong>Vu</strong> la requête de l'intéressé en date du {{conge?.dateDemande |date: 'dd-MM-yyyy'}} avec avis favorable du Chef de service.
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <h4 class="mt-3">DECIDE</h4>
+            </div>
+            <div class="col-12 text-justify">
+                <p><strong>Article premier -:</strong>  Un congé administratif de {{conge?.duree}} jours est accordé à {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} des Douanes, matricule de solde {{conge?.agent?.matricule}}, en service au {{conge?.agent?.unite?.name}}, qui compte plus de 33 mois de service ininterrompu au {{conge?.dateDebut |date: 'dd-MM-yyyy'}}, date présumée de son départ.
+                </p>
+                <p><strong>Article 2 -:</strong> A l'expiration de son congé, l'intéressé rejoindra son poste d'affectation. Les dates de départ et de reprise de service doivent obligatoirement être communiquées à la Direction des Ressources humaines par son Chef de service.
+                </p>
+                <p><strong>Article 3 -:</strong> La présente décision qui prend effet à la diligence du Chef de service, sera enregistrée, publiée et communiquée partout où besoin sera.
+                    Pour le Ministre des Finances et du Budget et par délégation, le Directeur général des Douanes
+                </p>
+            </div>
+            <div class="col-12 text-center mt-6">
+                <h6 class="mt-3 "><b><u>Pour le Ministre des Finances et du Budget et Par délégation,
+                        le Directeur général des Douanes
+                </u></b></h6>
+            </div>
+            <div class="col-12 text-center fs-2 mt-3">
+                <h6 class="mt-3 fs-5 text-black"><b>{{signataire}}</b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <h6 class="mt-3 "><b><u>AMPLIATIONS</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <p>02 MFB/IF;</p>
+                <p>10 DGD/DPL/BP;</p>
+                <p>03 DS;</p>
+                <p>01 ARCHIVE.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end align-items-center">
+                <div>
+                    <button class="btn btn-outline-secondary me-2" (click)="generatePdf()">
+                        <i class="fas fa-file-pdf"></i> Télécharger PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+</section> -->
+
+<!-- Arreter Conger Administratif -->
+<!-- Arreter Conger longue duree -->
+<!-- <section *ngIf="deciderautres  && conge?.typeConge.name == 'AUTRES'" style="font-size:17px">
+    <div class="card-body" #content>
+        <div class="row ">
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center "><b><u>REPUBLIQUE DU SENEGAL </u></b><br>
+                    <span><b><u>Un peuple - Un But - Une Foi</u></b></span><br>
+                    <span class="mt-1 mb-1"><b><u>MINISTERE DES FINANCES ET DU BUDGET</u></b></span><br>
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center">DECISION Nº________ACCORDANT UN<br>
+                    <span>CONGE LONGUE DUREE DE {{conge?.duree}} ANS A</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">{{sexe}} {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} DES DOUANES,</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">MATRICULE DE SOLDE {{conge?.agent?.matricule}}</span><br>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12 d-flex flex-column align-items-center">
+                <h4 class="mt-3 text-center">LE MINISTRE DES FINANCES ET DU BUDGET,</h4><br>
+            </div>
+    
+            <div class="col-12">
+                <div class="text-justify">
+                    <p><strong>Vu</strong> la Constitution,</p>
+                    <p><strong>Vu</strong> le décret n° 63-116 du 19 février 1963 relatif au régime des congés ;
+                    </p>
+                    <p><strong>Vu</strong> la loi n° 69-64 du 30 octobre 1969 relative au Statut du Personnel des Douanes, modifiée;
+                    </p>
+                    <p>
+                    <p><strong>Vu</strong> le décret n° 2024-703 du 06 mars 2024 portant nomination du Premier Ministre;
+
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2024-705 du 06 mars 2024 portant nomination des ministres et fixant la composition du Gouvernement;
+
+                    </p>
+                    <p><strong>Vu</strong> l'arrêté nº 028284 du 11 novembre 2022 portant délégation de signature à Monsieur Abdourahmane DIEYE, Directeur général des Douanes;
+                    </p>
+                    <p><strong>Vu</strong> l'arrêté nº 05660/MEFP/DGD/DPL/BP du 07 avril 2017 portant nomination de l'intéressé;
+
+                    </p>
+                    <p><strong>Vu</strong> la requête de l'intéressé en date du {{conge?.dateDemande|date: 'dd-MM-yyyy'}} avec avis favorable du Chef de service.
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <h4 class="mt-3">DECIDE</h4>
+            </div>
+            <div class="col-12 text-justify">
+                <p><strong>Article premier -:</strong>  Un congé longue durée de {{conge?.duree}} ans est accordé à {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} des Douanes, matricule de solde {{conge?.agent?.matricule}}, en service au {{conge?.agent?.unite?.name}}., qui compte plus de 33 mois de service ininterrompu au {{conge?.dateDebut}}, date présumée de son départ.
+                </p>
+                <p><strong>Article 2 -:</strong> A l'expiration de son congé, l'intéressé rejoindra son poste d'affectation. Les dates de départ et de reprise de service doivent obligatoirement être communiquées à la Direction des Ressources humaines par son Chef de service.
+                </p>
+                <p><strong>Article 3 -:</strong> La présente décision qui prend effet à la diligence du Chef de service, sera enregistrée, publiée et communiquée partout où besoin sera.
+                    Pour le Ministre des Finances et du Budget et par délégation, le Directeur général des Douanes
+                </p>
+            </div>
+            <div class="col-12 text-center mt-6">
+                <h6 class="mt-3 "><b><u>Pour le Ministre des Finances et du Budget et Par délégation,
+                        le Directeur général des Douanes
+                </u></b></h6>
+            </div>
+            <div class="col-12 text-center fs-2 mt-3">
+                <h6 class="mt-3 fs-5"><b><u>{{conge?.agent?.prenom}} {{conge?.agent?.nom}}</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <h6 class="mt-3 "><b><u>AMPLIATIONS</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <p>02 MFB/IF;</p>
+                <p>10 DGD/DPL/BP;</p>
+                <p>03 DS;</p>
+                <p>01 ARCHIVE.</p>
+            </div>
+        </div>
+    </div>
+
+</section> -->
+
+
+<!-- Arreter Conger Administratif -->
+<!-- Arreter Conger Maladie -->
+<!-- <section *ngIf="deciderMaladie && conge?.typeConge.name=='MALADIE'" style="font-size:17px">
+    <div class="card-body" #content>
+        <div class="row ">
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center "><b><u>REPUBLIQUE DU SENEGAL </u></b><br>
+                    <span><b><u>Un peuple - Un But - Une Foi</u></b></span><br>
+                    <span class="mt-1 mb-1"><b><u>MINISTERE DES FINANCES ET DU BUDGET</u></b></span><br>
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center">DECISION Nº________ACCORDANT UN<br>
+                <span style="text-transform: uppercase;">CONGE {{conge?.typeConge?.name}} DE {{conge?.duree}} JOURS A</span><br>
+                <span class="mt-1 mb-1" style="text-transform: uppercase;">{{sexe}} {{conge?.agent?.prenom}}  {{conge?.agent?.nom}},PREPOSE DES DOUANES,</span><br>
+                <span class="mt-1 mb-1" style="text-transform: uppercase;">MATRICULE DE SOLDE  {{conge?.agent?.matricule}}</span><br>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12 d-flex flex-column align-items-center">
+                <h4 class="mt-3 text-center">
+                    LE MINISTRE DELEGUE AUPRES <br>
+                        DU MINISTRE DE L'ECONOMIE, DES FINANCES ET DU PLAN<br>
+                             CHARGE DU BUDGET,
+                </h4><br>
+            </div>
+    
+            <div class="col-12">
+                <div class="text-justify">
+                    <p><strong>Vu</strong> la Constitution,</p>
+                    <p><strong>Vu</strong> 
+                        
+                      la loi n° 69-64 du 30 octobre 1969 relative au Statut du Personnel des Douanes, modifiée par la loi n°79-54 du 25 juin 1979;
+
+                    </p>
+                    <p><strong>Vu</strong> 
+                         le décret n° 63-116 du 19 févier 1963 relatif au régime des congés;
+                    </p>
+                    <p>
+                    <p><strong>Vu</strong> 
+                        le décret n° 2014-845 du 06 juillet 2014 portant nomination du Premier Ministre;
+                    </p>
+                    <p><strong>Vu</strong>
+                         le décret n° 2024-705 du 06 mars 2024 portant nomination des ministres et fixant la composition du Gouvernement;
+                    </p>
+                    <p><strong>Vu</strong> le décret n° 2014-853 du 09 juillet 2014 portant répartition des services de l'Etat et du contrôle des établissements publics, des sociétés nationales et des sociétés à participation publique
+                        entre la Présidence de la République, la Primature et les Ministères;
+                        
+                    <p><strong>Vu</strong>
+                        l'arrêté n°11603/MEF/MDB du 18 juillet 2014 portant délégation de signature à Monsieur Mamadou SARR, Directeur de Cabinet;
+
+                    </p>
+                    <p><strong>Vu</strong>
+                        le certificat médical du Professeur ______ du _______; 
+                    </p>
+                    <p><strong>Vu</strong>
+                        la requête de l'intéressé en date du {{conge?.dateDemande}} après avis favorable du chef de service.
+                    </p>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <h4 class="mt-3">DECIDE</h4>
+            </div>
+            <div class="col-12 text-justify">
+                <p><strong>Article premier -:</strong>  Un congé de Maladie de {{conge?.duree}} jours est accordé à Monsieur {{conge?.agent?.prenom}}  {{conge?.agent?.nom}}, Agent de Constatation des Douanes, matricule de solde 679.706/E, en service au Bureau des Hydrocarbures, qui compte plus de 33 mois de service ininterrompu au  {{conge?.dateDebut}}, date présumée de son départ.
+                </p>
+                <p><strong>Article 2 -:</strong> A l'expiration de son congé, l'intéressé rejoindra son poste d'affectation. Les dates de départ et de reprise de service doivent obligatoirement être communiquées à la Direction des Ressources humaines par son Chef de service.
+                </p>
+                <p><strong>Article 3 -:</strong> La présente décision qui prend effet à la diligence du Chef de service, sera enregistrée, publiée et communiquée partout où besoin sera.
+                    Pour le Ministre des Finances et du Budget et par délégation, le Directeur général des Douanes
+                </p>
+            </div>
+           
+            <div class="col-12 text-justify">
+                <h6 class="mt-3 "><b><u>AMPLIATIONS</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <p>02 MFB/IF;</p>
+                <p>10 DGD/DPL/BP;</p>
+                <p>03 DS;</p>
+                <p>01 ARCHIVE.</p>
+            </div>
+        </div>
+    </div>
+</section> -->
+
+<!-- <section *ngIf="arreter" style="font-size:17px">
+    <div class="card-body" #content>
+        <div class="row ">
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center "><b><u>REPUBLIQUE DU SENEGAL </u></b><br>
+                    <span><b><u>Un peuple - Un But - Une Foi</u></b></span><br>
+                    <span class="mt-1 mb-1"><b><u>MINISTERE DES FINANCES ET DU BUDGET</u></b></span><br>
+                </p>
+            </div>
+            <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+                <p class="mt-3 text-center">Arrêté n° __accordant une disponibilité <br>
+                    <span>d'un (01) an, non renouvelable, à Monsieur</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">{{conge?.agent?.prenom}} {{conge?.agent?.nom}}, {{conge?.agent?.echelon?.grade?.corps?.libelle}} des Douanes,</span><br>
+                    <span class="mt-1 mb-1" style="text-transform: uppercase;">matricule de solde {{conge?.agent?.matricule}}.</span><br>
+                </p>
+            </div>
+            <div class="col-md-12 col-sm-12 d-flex flex-column align-items-center">
+                <h4 class="mt-3 text-center">
+                    LE MINISTRE DES FINANCES ET DU BUDGET,
+                </h4><br>
+            </div>
+    
+            <div class="col-12">
+                <div class="text-justify">
+                    <p><strong>Vu</strong> la Constitution,</p>
+                    <p><strong>Vu</strong> 
+                        la loi n° 69-64 du 30 octobre 1969 relative au statut du Personnel des Douanes, modifiée par la loi n°79-54 du 25 juin 1979;
+
+                    </p>
+                    <p><strong>Vu</strong> 
+                     le décret n° 69-1373 du 10 décembre 1969 fixant les modalités d'application de la loi n° 69-64
+                        du 30 octobre 1969 relative au statut du Personnel des Douanes, modifié ;
+
+                    </p>
+                    <p>
+                    <p><strong>Vu</strong> 
+                        la demande de l'intéressé en date du {{formattedDateDemande}};
+                        Sur la note de présentation du Directeur général des Douanes,
+                      </p>
+                </div>
+            </div>
+            <div class="col-12 text-center">
+                <h4 class="mt-3">ARRETE :</h4>
+            </div>
+            <div class="col-12 text-justify">
+                <p><strong>Article premier -:</strong> 
+                    Monsieur {{conge?.agent?.prenom}} {{conge?.agent?.nom}}, Agent de {{conge?.agent?.echelon?.grade?.corps?.libelle}} des Douanes, matricule de solde {{conge?.matricule}}, en service au {{conge?.agent?.unite?.name}} de la Direction générale des Douanes, est mis en position de disponibilité pour une durée d'un (01) an, non renouvelable, sur sa demande et pour convenances personnelles.
+                </p>
+                <p><strong>Article 2 -:</strong> 
+                    Dans cette position, Monsieur  {{conge?.agent?.nom}} n'aura droit à aucune rémunération ou indemnité et cesse de bénéficier de ses droits à l'avancement et à la retraite.
+                </p>
+                <p><strong>Article 3 -:</strong> 
+                    Deux mois avant l'expiration de la disponibilité, Monsieur {{conge?.agent?.nom}} devra solliciter sa réintégration dans son corps d'origine, faute de quoi il sera considere comme démissionne
+                </p>
+                <p><strong>Article 4 -:</strong> 
+                    Le présent arrêté, qui prend effet à compter de sa date de signature, sera enregistré, publié et communiqué partout où besoin sera.                </p>
+            </div>
+           
+            <div class="col-12 text-justify">
+                <h6 class="mt-3 "><b><u>AMPLIATIONS</u></b></h6>
+            </div>
+            <div class="col-12 text-justify">
+                <p>02 MFB/IF;</p>
+                <p>10 DGD/DPL/BP;</p>
+                <p>03 DS;</p>
+                <p>01 ARCHIVE.</p>
+            </div>
+        </div>
+    </div>
+   <div class="row mt-4 mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end align-items-center">
+                <div>
+                    <button class="btn btn-outline-secondary me-2" (click)="generatePdf()">
+                        <i class="fas fa-file-pdf"></i> Télécharger PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+<!-- </section>  -->
+<!-- Arreter Conger Arreter -->
+<!-- <button class="download-button" *ngIf="deciderAdministratif && conge?.typeConge.name == 'ADMINISTRATIF'">
+    <div class="docs">
+        <mat-icon class="text-white icon-xl">download</mat-icon>Télécharger</div>
+    <div class="download">
+      <img ngbTooltip="Pdf" placement="bottom" (click)="generatePdf()" src="assets/icone/adobe-pdf-icon.svg" height="24" width="24" alt="" class="me-4">
+      <img ngbTooltip="Word" placement="bottom" (click)="generateWord()" src="assets/icone/icon-word.svg" height="24" width="24" alt="">
+    </div>
+  </button> -->
+  <div class="mt-2 modal-footer" *ngIf="typeConge == 'ADMINISTRATIF'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+    <!-- <button type="button" ngbTooltip="PDF" class="btn btn-primary">
+      <img placement="bottom" src="assets/icone/adobe-pdf-icon.svg" height="50" width="50" alt="">
+    </button> -->
+  </div>
+
+  <div class="mt-2 modal-footer" *ngIf="deciderMarterniter && conge?.typeConge.name == 'MATERNITE'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+    <!-- <button type="button" ngbTooltip="PDF" class="btn btn-primary">
+      <img placement="bottom" src="assets/icone/adobe-pdf-icon.svg" height="50" width="50" alt="">
+    </button> -->
+  </div>
+
+  <div class="mt-2 modal-footer" *ngIf="deciderMaladie && conge?.typeConge.name=='MALADIE'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+    <!-- <button type="button" ngbTooltip="PDF" class="btn btn-primary">
+      <img placement="bottom" src="assets/icone/adobe-pdf-icon.svg" height="50" width="50" alt="">
+    </button> -->
+  </div>
+
+  <div class="mt-2 modal-footer" *ngIf="deciderautres  && conge?.typeConge.name == 'AUTRES'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+    <!-- <button type="button" ngbTooltip="PDF" class="btn btn-primary">
+      <img placement="bottom" src="assets/icone/adobe-pdf-icon.svg" height="50" width="50" alt="">
+    </button> -->
+  </div>
+  
+  <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner"></div> 
+    Generation PDF en cours...
+  </div>

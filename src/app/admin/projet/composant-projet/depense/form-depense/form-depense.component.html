@@ -1,0 +1,145 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-4">
+                <label for="colFormLabelLg" class="form-label">Budget </label>
+                <ng-select placeholder="budget" 
+                    formControlName="budgetId">
+                    <ng-option *ngFor="let type of  budgets" [value]="type?.id">
+                        {{ type?.label}}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-4">
+                <label for="colFormLabelLg" class="form-label">Ligne budgétaire</label>
+                <ng-select placeholder="Ligne budgétaire" (change)="onTypeChange($event)"
+                    formControlName="categorieDepenseId">
+                    <ng-option *ngFor="let type of typecategory" [value]="type?.id">
+                        {{ type?.libelle}}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label for="colFormLabelLg" class="form-label">Categories Dépenses</label>
+                <ng-select placeholder="Categories Dépenses" formControlName="typeDepenseId">
+                    <ng-option *ngFor="let type of typedepense" [value]="type?.id">
+                        {{ type?.libelle }}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-12">
+                <label class="form-label">Libelle </label>
+                <input type="text" class="form-control" placeholder="Libelle" formControlName="label">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Date </label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+            </div>
+            <div class="mb-3 col-md-6">
+                <label class="form-label">Montant</label>
+                <input type="number" class="form-control" placeholder="Montant depense" formControlName="unitAmount"
+                    (input)="showDepense()">
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Montant unitaire </label>
+                <input type="number" class="form-control" placeholder="Montant unitaire" formControlName="unitAmount"
+                    (input)="showDepense()">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Quantité</label>
+                <input type="number" class="form-control" placeholder="Quantité" formControlName="quantity"
+                    (input)="showDepense()">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Total</label>
+                <input type="number" readonly="" class="form-control" placeholder="Totale"
+                    formControlName="totalAmount">
+            </div>
+        </div> -->
+        <!-- </div>
+        </div>
+        </div> -->
+        <div class="mb-3">
+            <label for="comment" class="form-label">Commentaire</label>
+            <div>
+                <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="mb-3 col-4">
+                <label for="colFormLabelLg" class="form-label">Budget </label>
+                <ng-select placeholder="budget" 
+                    formControlName="budgetId">
+                    <ng-option *ngFor="let type of  budgets" [value]="type?.id">
+                        {{type?.label}}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-4">
+                <label for="colFormLabelLg" class="form-label">Categories</label>
+                <ng-select placeholder="Categories" (change)="onTypeChange($event)"
+                    formControlName="categorieDepenseId">
+                    <ng-option *ngFor="let type of typecategory" [value]="type?.id">
+                        {{ type?.libelle }}
+                    </ng-option>
+                </ng-select>
+            </div> -->
+            <!-- <div class="mb-3 col-md-4">
+                <label for="colFormLabelLg" class="form-label">Types Dépenses</label>
+                <ng-select placeholder="Types Requete" formControlName="typeDepenseId">
+                    <ng-option *ngFor="let type of typedepense" value="{{type.id}}">
+                        {{ type?.libelle }}
+                    </ng-option>
+                </ng-select>
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Date </label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Montant</label>
+                <input type="number" class="form-control" placeholder="Montant depense" formControlName="unitAmount">
+            </div>
+        </div>
+        <div class="row">
+           
+            <!-- <div class="mb-3 col-md-4">
+                <label class="form-label">Quantité</label>
+                <input type="number" class="form-control" placeholder="Quantité" formControlName="quantity">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Total</label>
+                <input type="number" class="form-control" placeholder="Totale" formControlName="totalAmount">
+            </div> -->
+            <!-- <div class="col-md-1 mb-3">
+              <div class="example-button-container mt-30" *ngIf="depenseList.length > 1">
+            <i class="feather icon-trash-2 icon-md text-danger"  (click)="removeLignSchemen(i)"></i>
+
+              </div>
+          </div> -->
+        </div>
+        <!-- </div>
+      </div>
+      </div> -->
+        <!-- <div class="mb-3">
+        <label for="comment" class="form-label">Commentaire</label>
+       <div>
+            <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+       </div>
+    </div> -->
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

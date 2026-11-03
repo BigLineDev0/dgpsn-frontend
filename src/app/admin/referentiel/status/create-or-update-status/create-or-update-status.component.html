@@ -1,0 +1,81 @@
+<section *ngIf="!isSearch">   
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+      <small *ngIf="code.invalid && (code.dirty || code.touched)" class="block p-error">
+        <div *ngIf="code.errors?.['required']">Code is required</div>
+        <div *ngIf="code.errors?.['code']">Code should be valid</div>
+      </small>
+    </div>
+    <div class="mb-3">
+      <label for="libelle" class="form-label">Libellé<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+      <small *ngIf="libelle.invalid && (libelle.dirty || libelle.touched)" class="block p-error">
+        <div *ngIf="libelle.errors?.['required']">Code is required</div>
+        <div *ngIf="libelle.errors?.['libelle']">Code should be valid</div>
+      </small>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="statusType" class="form-label">Status Type<small style="color: red;">*</small></label>
+          <ng-select 
+                     bindLabel="name"
+                     placeholder="statusTypes"
+                     formControlName="statusType"
+                  >
+                  <ng-option *ngFor="let option of statutTypes" [value]="option.name">{{ option.name }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+
+</section>
+<section *ngIf="isSearch">   
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+      <small *ngIf="code.invalid && (code.dirty || code.touched)" class="block p-error">
+        <div *ngIf="code.errors?.['required']">Code is required</div>
+        <div *ngIf="code.errors?.['code']">Code should be valid</div>
+      </small>
+    </div>
+    <div class="mb-3">
+      <label for="libelle" class="form-label">Libellé<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle">
+      <small *ngIf="libelle.invalid && (libelle.dirty || libelle.touched)" class="block p-error">
+        <div *ngIf="libelle.errors?.['required']">Code is required</div>
+        <div *ngIf="libelle.errors?.['libelle']">Code should be valid</div>
+      </small>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="statusType" class="form-label">Status Type<small style="color: red;">*</small></label>
+          <ng-select 
+                     bindLabel="name"
+                     placeholder="statusTypes"
+                     formControlName="statusType"
+                  >
+                  <ng-option *ngFor="let option of statutTypes" [value]="option.name">{{ option.name }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+
+</section>

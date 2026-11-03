@@ -1,0 +1,62 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Indicateur <small style="color: red;">*</small></label>
+      <ng-select [items]="indicators"
+                 bindLabel="libelle"
+                 bindValue="id"
+                 placeholder="Indicateur"
+                 formControlName="indicatorId">
+      </ng-select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Périodicité <small style="color: red;">*</small></label>
+      <ng-select [items]="periodicities"
+                 bindLabel="libelle"
+                 bindValue="name"
+                 placeholder="Périodicité"
+                 formControlName="periodicity">
+      </ng-select>
+    </div>
+    <div>
+      <label for="valeurCiblee" class="form-label">Valeur cible</label>
+      <input type="number" class="form-control form-control-lg" id="valeurCiblee" placeholder="ValeurCible" formControlName="targetValue">
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-4">
+        <label class="form-label">Indicateur</label>
+        <ng-select [items]="indicators"
+                   bindLabel="libelle"
+                   bindValue="id"
+                   placeholder="Indicateur"
+                   formControlName="indicatorId">
+        </ng-select>
+      </div>
+      <div class="mb-3 col-4">
+        <label class="form-label">Périodicité</label>
+        <ng-select [items]="periodicities"
+                   bindLabel="libelle"
+                   bindValue="id"
+                   placeholder="Périodicité"
+                   formControlName="periodicityId">
+        </ng-select>
+      </div>
+      <div class="col-4">
+        <label for="valeurCible" class="form-label">Valeur cible</label>
+        <input type="number" class="form-control" id="valeurCible" placeholder="ValeurCible" formControlName="targetValue">
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+      </div>
+    </div>
+  </form>
+</section>

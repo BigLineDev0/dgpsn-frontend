@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+@use "bootstrap/scss/bootstrap.scss";
+@use "aos/dist/aos.css";
+@use "@fortawesome/fontawesome-free/css/all.min.css";
+@use "assets/css/plugins/mobile.css";
+@use "slick-carousel/slick/slick.css";
+@use "slick-carousel/slick/slick-theme.css";
+@use 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
+@use './assets/scss/main.scss';
+@import "@ng-select/ng-select/themes/default.theme.css";
+
+/* You can add global styles to this file, and also import other style files */
+
+
+// Global icon font
+@import "../public/fonts/feather/style.css";
+
+
+// 3rd party plugins
+// @import "highlight.js/styles/atom-one-light.css";
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
+@import 'ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
+// @import "animate.css/animate.min.css"; // used in ngx-owl-carousel-o
+// @import "@ng-select/ng-select/themes/default.theme.css";
+@import "metismenujs/style";
+// @import "dropzone/dist/min/dropzone.min.css";
+// @import "quill/dist/quill.snow.css";
+// @import "@rg-software/angular-archwizard/styles/archwizard";
+// @import "@siemens/ngx-datatable/index";
+// @import "@siemens/ngx-datatable/themes/bootstrap";
+// @import "@siemens/ngx-datatable/assets/icons";
+
+
+// NobleUI styles for LTR layout
+@import "./styles/styles.scss";
+@import "./styles/_table.scss";
+
+// NobleUI styles for RTL layout. Replace the above style with this CSS file to enable RTL styles
+// @import "./styles/rtl-css/styles.rtl.css";
+
+.mat-row, .mat-cell {
+  overflow: visible !important;
+}
+.step-menu, .mat-menu-panel {
+  overflow: visible !important;
+  z-index: 10000 !important;
+}

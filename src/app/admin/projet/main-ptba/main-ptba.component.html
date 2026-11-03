@@ -1,0 +1,294 @@
+<div class="ptba-container">
+    <!-- ÉTAT DE CHARGEMENT -->
+    <div *ngIf="isLoading" class="status-message loading">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <!-- MESSAGE D'ERREUR -->
+    <div *ngIf="errorMessage" class="status-message error">
+        <div class="error-icon">⚠️</div>
+        <p>{{ errorMessage }}</p>
+        <button class="btn-retry" (click)="loadPtbaWithParams()">Réessayer</button>
+    </div>
+
+    <!-- 🆕 MESSAGE SI AUCUNE DONNÉE -->
+    <div *ngIf="!isLoading && !errorMessage && filteredActivities.length === 0 && allActivities.length === 0" class="status-message empty">
+        <div class="empty-icon">📭</div>
+        <p>Aucune donnée disponible pour cette sélection.</p>
+        <p class="empty-subtitle">Veuillez sélectionner une autre année ou un autre budget.</p>
+    </div>
+
+    <ng-container *ngIf="!isLoading && !errorMessage && allActivities.length > 0">
+        <!-- 🆕 En-tête avec informations -->
+<!--        <div class="ptba-info-header">-->
+<!--            <div class="info-item">-->
+<!--                <span class="info-label">Projet/Budget :</span>-->
+<!--                <span class="info-value">{{ projetName }}</span>-->
+<!--            </div>-->
+<!--            <div class="info-item">-->
+<!--                <span class="info-label">Année :</span>-->
+<!--                <span class="info-value">{{ annee }}</span>-->
+<!--            </div>-->
+<!--            <div class="info-item">-->
+<!--                <span class="info-label">Total activités :</span>-->
+<!--                <span class="info-value">{{ allActivities.length }}</span>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!-- Section Filtres -->
+        <div class="filters-section">
+            <h2 class="filters-title">Filtres</h2>
+
+            <div class="filters-grid">
+                <!-- Recherche textuelle -->
+                <div class="filter-group full-width">
+                    <label for="search">Recherche</label>
+                    <input
+                            type="text"
+                            id="search"
+                            class="filter-input"
+                            [(ngModel)]="filters.searchText"
+                            (ngModelChange)="applyFilters()"
+                            placeholder="Rechercher dans les activités, objectifs ou tâches..."
+                    />
+                </div>
+
+                <!-- Trimestre -->
+                <div class="filter-group">
+                    <label for="trimestre">Trimestre</label>
+                    <select
+                            id="trimestre"
+                            class="filter-select"
+                            [(ngModel)]="filters.trimestre"
+                            (ngModelChange)="applyFilters()"
+                    >
+                        <option *ngFor="let trim of trimestres" [value]="trim.value">
+                            {{ trim.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Mois -->
+                <div class="filter-group">
+                    <label for="mois">Mois</label>
+                    <select
+                            id="mois"
+                            class="filter-select"
+                            [(ngModel)]="filters.mois"
+                            (ngModelChange)="applyFilters()"
+                    >
+                        <option *ngFor="let m of mois" [value]="m.value">
+                            {{ m.label }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Action -->
+                <div class="filter-group">
+                    <label for="action">Action</label>
+                    <select
+                            id="action"
+                            class="filter-select"
+                            [(ngModel)]="filters.action"
+                            (ngModelChange)="applyFilters()"
+                    >
+                        <option *ngFor="let action of actions" [value]="action">
+                            {{ action }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Acteur Responsable -->
+                <div class="filter-group">
+                    <label for="acteur">Acteur Responsable</label>
+                    <select
+                            id="acteur"
+                            class="filter-select"
+                            [(ngModel)]="filters.acteurResponsable"
+                            (ngModelChange)="applyFilters()"
+                    >
+                        <option *ngFor="let acteur of acteurs" [value]="acteur">
+                            {{ acteur }}
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Source de Financement -->
+                <div class="filter-group">
+                    <label for="source">Source de Financement</label>
+                    <select
+                            id="source"
+                            class="filter-select"
+                            [(ngModel)]="filters.sourceFinancement"
+                            (ngModelChange)="applyFilters()"
+                    >
+                        <option *ngFor="let source of sourcesFinancement" [value]="source">
+                            {{ source }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn-reset" (click)="resetFilters()">
+                    🔄 Réinitialiser les filtres
+                </button>
+                <div class="results-count">
+                    <strong>{{ filteredActivities.length }}</strong> activité(s) trouvée(s)
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des résultats -->
+        <div class="table-section">
+            <div class="table-header-info">
+                <h2>Activités du PTBA</h2>
+                <div class="total-cout">
+                    <span>Coût Total:</span>
+                    <strong>{{ formatCurrency(getTotalCout()) }}</strong>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="ptba-table">
+                    <thead>
+                    <tr>
+                        <th class="col-expand"></th>
+                        <th class="col-id">Code</th>
+                        <th class="col-activite">Activité</th>
+                        <th class="col-acteur">Acteur Responsable</th>
+                        <th class="col-trimestre">T1</th>
+                        <th class="col-trimestre">T2</th>
+                        <th class="col-trimestre">T3</th>
+                        <th class="col-trimestre">T4</th>
+                        <th class="col-cout">Coût (FCFA)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let activity of filteredActivities">
+                        <!-- Ligne principale -->
+                        <tr class="main-row" [class.expanded]="isRowExpanded(activity.id)">
+                            <td class="col-expand">
+                                <button class="btn-expand" (click)="toggleRow(activity.id)">
+                                    {{ isRowExpanded(activity.id) ? '▼' : '▶' }}
+                                </button>
+                            </td>
+                            <td class="col-id">{{ activity.id }}</td>
+                            <td class="col-activite">
+                                <div class="activity-name">{{ activity.activite }}</div>
+                            </td>
+                            <td class="col-acteur">{{ activity.acteurResponsable || '-' }}</td>
+                            <td class="col-trimestre">
+                                <span *ngIf="getMonthsForTrimester(activity, 1).length > 0" class="trimestre-badge">
+                                  ✓
+                                </span>
+                            </td>
+                            <td class="col-trimestre">
+                                <span *ngIf="getMonthsForTrimester(activity, 2).length > 0" class="trimestre-badge">
+                                  ✓
+                                </span>
+                            </td>
+                            <td class="col-trimestre">
+                                <span *ngIf="getMonthsForTrimester(activity, 3).length > 0" class="trimestre-badge">
+                                  ✓
+                                </span>
+                            </td>
+                            <td class="col-trimestre">
+                                <span *ngIf="getMonthsForTrimester(activity, 4).length > 0" class="trimestre-badge">
+                                  ✓
+                                </span>
+                            </td>
+                            <td class="col-cout">{{ formatCurrency(activity.coutCFA) }}</td>
+                        </tr>
+
+                        <!-- Ligne détaillée (expandable) -->
+                        <tr *ngIf="isRowExpanded(activity.id)" class="detail-row">
+                            <td colspan="9">
+                                <div class="detail-content">
+                                    <div class="detail-grid">
+                                        <div class="detail-item">
+                                            <strong>Objectif:</strong>
+                                            <p>{{ activity.objectif || '-' }}</p>
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Action:</strong>
+                                            <p>{{ activity.action || '-' }}</p>
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Indicateurs/Cibles:</strong>
+                                            <p>{{ activity.indicateurs || '-' }}</p>
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Tâches:</strong>
+                                            <p>{{ activity.taches || '-' }}</p>
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Acteur Impliqué:</strong>
+                                            <p>{{ activity.acteurImplique || '-' }}</p>
+                                        </div>
+                                        <div class="detail-item">
+                                            <strong>Observations:</strong>
+                                            <p>{{ activity.observations || 'Aucune observation' }}</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Détail des trimestres -->
+                                    <div class="trimestres-detail" *ngIf="hasAnyTrimestre(activity)">
+                                        <h4>Planification par trimestre:</h4>
+                                        <div class="trimestres-grid">
+                                            <div class="trimestre-detail"
+                                                 *ngIf="getMonthsForTrimester(activity, 1).length > 0">
+                                                <strong>Trimestre 1:</strong>
+                                                <span class="months-list">{{ getMonthsForTrimester(activity, 1).join(', ') }}</span>
+                                            </div>
+                                            <div class="trimestre-detail"
+                                                 *ngIf="getMonthsForTrimester(activity, 2).length > 0">
+                                                <strong>Trimestre 2:</strong>
+                                                <span class="months-list">{{ getMonthsForTrimester(activity, 2).join(', ') }}</span>
+                                            </div>
+                                            <div class="trimestre-detail"
+                                                 *ngIf="getMonthsForTrimester(activity, 3).length > 0">
+                                                <strong>Trimestre 3:</strong>
+                                                <span class="months-list">{{ getMonthsForTrimester(activity, 3).join(', ') }}</span>
+                                            </div>
+                                            <div class="trimestre-detail"
+                                                 *ngIf="getMonthsForTrimester(activity, 4).length > 0">
+                                                <strong>Trimestre 4:</strong>
+                                                <span class="months-list">{{ getMonthsForTrimester(activity, 4).join(', ') }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sources de financement -->
+                                    <div class="sources-financement" *ngIf="activity.sourcesFinancement?.sources && (activity.sourcesFinancement.sources | keyvalue).length > 0">
+                                        <h4>Sources de financement:</h4>
+                                        <div class="sources-grid">
+                                            <div class="source-item"
+                                                 *ngFor="let source of activity.sourcesFinancement?.sources | keyvalue">
+                                                <span class="source-name">{{ source.key }}:</span>
+                                                <span class="source-amount">{{ formatCurrency(source.value) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <!-- Message si aucun résultat -->
+                    <tr *ngIf="filteredActivities.length === 0">
+                        <td colspan="9" class="no-results">
+                            <div class="no-results-content">
+                                <p>Aucune activité ne correspond aux critères de recherche.</p>
+                                <button class="btn-reset" (click)="resetFilters()">Réinitialiser les filtres</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-container>
+</div>

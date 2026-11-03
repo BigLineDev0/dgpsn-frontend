@@ -1,0 +1,114 @@
+<app-routing-config-projet  [addButtontitle]="'Nouveau composant'" [pageTitle]="'Composant'"></app-routing-config-projet>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="Projet">{{projetLibelle}}</h6>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+<!--    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Import">-->
+<!--      <i class="feather icon-arrow-up-circle"></i>-->
+<!--    </button>-->
+<!--    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">-->
+<!--      <i class="feather icon-download"></i>-->
+<!--    </button>-->
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Ajouter Composant
+    </button>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="composants" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">Code</th>
+          <td mat-cell *matCellDef="let composant">{{composant?.code}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:300px;"> Libelle </th>
+          <td mat-cell *matCellDef="let composant" class="text-center"> {{composant?.libelle}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Actions </th>
+          <td mat-cell *matCellDef="let composant" class="text-center">
+            <div class="text-center d-inline-block">
+                <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                  <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                </span>
+
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(modalUpdate, composant)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteComposant(composant.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+                        [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+                        [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Add Actor-->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Composant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-param-composant (submit)="close($event)" [projetId]="projetId"
+                         [isSearch]="false"></app-form-param-composant>
+  </div>
+</ng-template>
+<!--End Add Acteur-->
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher Composant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-param-composant (search)="doSearch($event)" [projetId]="projetId" [isSearch]="true"></app-form-param-composant>
+  </div>
+</ng-template>
+<!--Update Acteur-->
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification Composant</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-param-composant (submit)="close($event)" [projetId]="projetId"
+                         [composantProjectToUpdate]="composantProjectToUpdate" [isSearch]="false"></app-form-param-composant>
+  </div>
+</ng-template>
+<!--End Add Acteur-->

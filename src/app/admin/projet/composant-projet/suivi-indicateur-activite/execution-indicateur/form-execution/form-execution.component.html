@@ -1,0 +1,90 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="mb-3">
+            <label for="libelle" class="form-label">Libellé</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+                   formControlName="libelle">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Annee</label>
+                <ng-select placeholder="annee" formControlName="annee">
+                    <ng-option *ngFor="let annee of annee" [value]="annee?.year">
+                        {{ annee?.year }}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label class="form-label">date debut</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startingDate">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">date fin</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endingDate">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3  col-md-6">
+                <label class="form-label">Montant previsionel</label>
+                <input type="number" class="form-control" placeholder="montant" formControlName="estimatedAmount">
+            </div>
+            <div class="mb-3  col-md-6">
+                <label class="form-label">Montant reel</label>
+                <input type="number" class="form-control" placeholder="montant" formControlName="actualAmount">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="comment" class="form-label">Commentaire</label>
+            <div>
+                <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="mb-3">
+            <label for="libelle" class="form-label">Libellé</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+                   formControlName="libelle">
+        </div>
+        <div class="row">
+            <div class="mb-3 col-md-4">
+                <label class="form-label">Annee</label>
+                <ng-select placeholder="annee" formControlName="annee">
+                    <ng-option *ngFor="let annee of annee" [value]="annee?.year">
+                        {{ annee?.year }}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <div class="mb-3 col-md-4">
+                <label class="form-label">date debut</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startingDate">
+            </div>
+            <div class="mb-3 col-md-4">
+                <label class="form-label">date fin</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endingDate">
+            </div>
+        </div>
+        <div class="row">
+            <div class="mb-3  col-md-6">
+                <label class="form-label">Montant previsionel</label>
+                <input type="number" class="form-control" placeholder="montant" formControlName="estimatedAmount">
+            </div>
+            <div class="mb-3  col-md-6">
+                <label class="form-label">Montant reel</label>
+                <input type="number" class="form-control" placeholder="montant" formControlName="actualAmount">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer mt-2">
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

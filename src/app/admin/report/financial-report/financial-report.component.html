@@ -1,0 +1,333 @@
+    <div class="financial-report">
+        <!-- Indicateur de chargement -->
+        <div *ngIf="isLoading" class="loading-overlay">
+            <div class="spinner"></div>
+            <p>Chargement du rapport financier...</p>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div *ngIf="errorMessage" class="error-message">
+            <p>{{ errorMessage }}</p>
+            <button (click)="loadFinancialReport()" class="retry-btn">Réessayer</button>
+        </div>
+
+        <!-- En-tête avec informations et filtres -->
+        <div class="report-header-section">
+            <div class="filters-actions-row">
+                <!-- Filtres centrés -->
+                <div class="filters-group">
+                    <div class="custom-select-wrapper">
+                        <label>Année</label>
+                        <select [(ngModel)]="selectedYear" (change)="onYearChange()" class="custom-select">
+                            <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+                        </select>
+                    </div>
+
+
+                    <div class="custom-select-wrapper">
+                        <label>Vue</label>
+                        <select [(ngModel)]="selectedPeriodType" (change)="onPeriodTypeChange()" class="custom-select">
+                            <option value="mensuel">Mensuel</option>
+                            <option value="trimestriel">Trimestriel</option>
+                            <option value="annuel">Annuel</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Actions à droite -->
+                <div class="action-buttons">
+                    <button class="custom-btn btn-export" (click)="exportToExcel()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Exporter</span>
+                    </button>
+
+                    <button class="custom-btn btn-print" (click)="printReport()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        <span>Imprimer</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglets personnalisés -->
+        <div class="custom-tabs">
+            <div class="tabs-header">
+                <button
+                        *ngFor="let tab of [
+              {index: 0, label: 'Recettes Fonctionnement', icon: '💰'},
+              {index: 1, label: 'Dépenses Fonctionnement', icon: '📊'},
+              {index: 2, label: 'Investissements', icon: '🏗️'},
+              {index: 3, label: 'Engagements', icon: '📝'},
+              {index: 4, label: 'Récapitulatif', icon: '📈'}
+            ]"
+                        class="tab-button"
+                        [class.active]="selectedTabIndex === tab.index"
+                        (click)="selectedTabIndex = tab.index">
+                    <span class="tab-icon">{{tab.icon}}</span>
+                    <span class="tab-label">{{tab.label}}</span>
+                </button>
+            </div>
+
+            <div class="tabs-content">
+                <!-- ONGLET 1: RECETTES FONCTIONNEMENT -->
+                <div class="tab-pane" *ngIf="selectedTabIndex === 0">
+                    <div class="report-title-section">
+                        <h3 class="main-title">RECETTES DE FONCTIONNEMENT - {{ selectedYear }}</h3>
+                        <p class="period-indicator">Vue: {{ selectedPeriodType === 'mensuel' ? 'Mensuelle' : selectedPeriodType === 'trimestriel' ? 'Trimestrielle' : 'Annuelle' }}</p>
+                    </div>
+
+                    <div class="excel-table-container">
+                        <div class="table-title">TOTAL RECETTES DE FONCTIONNEMENT</div>
+
+                        <div class="table-wrapper">
+                            <table class="excel-table">
+                                <thead>
+                                <tr class="header-row green-header">
+                                    <th *ngFor="let col of fixedColumns" [style.width]="col.width" [class.col-rubrique]="col.key === 'rubrique'">
+                                        {{ col.label }}
+                                    </th>
+                                    <th *ngFor="let col of periodicColumns" [style.width]="col.width" class="periodic-col">
+                                        {{ col.label }}
+                                    </th>
+                                    <th *ngFor="let col of summaryColumns" [style.width]="col.width" class="summary-col">
+                                        {{ col.label }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let row of recettesFonctionnementData" [ngClass]="getRowClass(row)">
+                                    <td *ngFor="let col of fixedColumns"
+                                        [class.text-left]="col.key === 'rubrique'"
+                                        [class.text-center]="col.key !== 'rubrique'"
+                                        [class.number-cell]="col.type === 'number'">
+                                        {{ formatValue(getCellValue(row, col.key), col.type) }}
+                                    </td>
+                                    <td *ngFor="let col of periodicColumns" class="number-cell periodic-cell">
+                                        {{ formatValue(getCellValue(row, col.key), col.type) }}
+                                    </td>
+                                    <td *ngFor="let col of summaryColumns"
+                                        [class.number-cell]="col.type === 'number'"
+                                        [class.percent-cell]="col.type === 'percent'">
+                                        {{ formatValue(getCellValue(row, col.key), col.type) }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ONGLET 2: DEPENSES FONCTIONNEMENT -->
+                <div class="tab-pane" *ngIf="selectedTabIndex === 1">
+                    <div class="report-title-section">
+                        <h3 class="main-title">DEPENSES DE FONCTIONNEMENT - {{ selectedYear }}</h3>
+                        <p class="period-indicator">Vue: {{ selectedPeriodType === 'mensuel' ? 'Mensuelle' : selectedPeriodType === 'trimestriel' ? 'Trimestrielle' : 'Annuelle' }}</p>
+                    </div>
+
+                    <div class="excel-table-container">
+                        <div class="table-title black-title">6 | DEPENSES DE FONCTIONNEMENT DES ACTIVITES ORDINAIRES (AO)</div>
+
+                        <div class="table-wrapper">
+                            <table class="excel-table">
+                                <thead>
+                                <tr class="header-row green-header">
+                                    <th *ngFor="let col of allColumns"
+                                        [style.width]="col.width"
+                                        [class.col-rubrique]="col.key === 'rubrique'"
+                                        [class.periodic-col]="col.isPeriodic"
+                                        [class.summary-col]="!col.isFixed && !col.isPeriodic">
+                                        {{ col.label }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let row of depensesFonctionnementData" [ngClass]="getRowClass(row)">
+                                    <td *ngFor="let col of allColumns"
+                                        [class.text-left]="col.key === 'rubrique'"
+                                        [class.text-center]="col.key !== 'rubrique' && col.type === 'text'"
+                                        [class.number-cell]="col.type === 'number'"
+                                        [class.percent-cell]="col.type === 'percent'"
+                                        [class.periodic-cell]="col.isPeriodic">
+                                        {{ formatValue(getCellValue(row, col.key), col.type) }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ONGLET 3: INVESTISSEMENTS -->
+                <div class="tab-pane" *ngIf="selectedTabIndex === 2">
+                    <div class="report-title-section">
+                        <h3 class="main-title">DEPENSES D'INVESTISSEMENTS - {{ selectedYear }}</h3>
+                        <p class="period-indicator">Vue: {{ selectedPeriodType === 'mensuel' ? 'Mensuelle' : selectedPeriodType === 'trimestriel' ? 'Trimestrielle' : 'Annuelle' }}</p>
+                    </div>
+
+                    <div class="excel-table-container">
+                        <div class="table-title">SITUATION D'EXECUTION DES INVESTISSEMENTS</div>
+
+                        <div class="table-wrapper">
+                            <table class="excel-table">
+                                <thead>
+                                <tr class="header-row green-header">
+                                    <th *ngFor="let col of allColumns"
+                                        [style.width]="col.width"
+                                        [class.col-rubrique]="col.key === 'rubrique'"
+                                        [class.periodic-col]="col.isPeriodic">
+                                        {{ col.label }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let row of investissementData" [ngClass]="getRowClass(row)">
+                                    <td *ngFor="let col of allColumns"
+                                        [class.text-left]="col.key === 'rubrique'"
+                                        [class.text-center]="col.key !== 'rubrique' && col.type === 'text'"
+                                        [class.number-cell]="col.type === 'number'"
+                                        [class.percent-cell]="col.type === 'percent'"
+                                        [class.periodic-cell]="col.isPeriodic">
+                                        {{ formatValue(getCellValue(row, col.key), col.type) }}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ONGLET 4: ENGAGEMENTS -->
+                <div class="tab-pane" *ngIf="selectedTabIndex === 3">
+                    <div class="report-title-section">
+                        <h3 class="main-title">LISTE DES BONS D'ENGAGEMENT - {{ selectedYear }}</h3>
+                        <p class="engagement-count">{{ engagements.length }} engagements</p>
+                    </div>
+
+                    <div class="excel-table-container">
+                        <div class="table-wrapper">
+                            <table class="excel-table engagement-table">
+                                <thead>
+                                <tr class="header-row gray-header">
+                                    <th *ngFor="let col of engagementColumns">{{ col.label }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- Boucle sur `engagementsWithTotals` et affichage conditionnel -->
+                                <ng-container *ngFor="let row of engagementsWithTotals; let i = index">
+                                    <!-- Ligne de total mensuel -->
+                                    <tr *ngIf="row.isTotal" class="engagement-total-row">
+                                        <!-- Fusionne les 4 premières cellules -->
+                                        <td [attr.colspan]="4"></td>
+                                        <!-- Cellule pour le libellé -->
+                                        <td class="total-label-cell">
+<!--                                            <strong>{{ row.totalLabel }}</strong>-->
+                                        </td>
+                                        <!-- Cellule pour le montant -->
+                                        <td class="number-cell amount-cell">
+                                            <strong>{{ formatNumber(row.montants) }}</strong>
+                                        </td>
+                                        <!-- Fusionne les 4 dernières cellules -->
+                                        <td [attr.colspan]="4"></td>
+                                    </tr>
+
+                                    <!-- Ligne d'engagement normale -->
+                                    <tr *ngIf="!row.isTotal"
+                                        class="engagement-row"
+                                        [class.even-row]="i % 2 === 0">
+                                        <td class="text-center">{{ row.numBon }}</td>
+                                        <td class="text-center">{{ formatDate(row.dateEngagement) }}</td>
+                                        <td class="text-center">{{ row.numBE }}</td>
+                                        <td class="text-center">{{ row.numMandat }}</td>
+                                        <td class="text-left">{{ row.factureEtat }}</td>
+                                        <td class="number-cell amount-cell">{{ formatNumber(row.montants) }}</td>
+                                        <td class="text-left">{{ row.fournisseurBeneficiaire }}</td>
+                                        <td class="text-center">{{ row.servicesDGPSN }}</td>
+                                        <td class="text-center">{{ row.compte }}</td>
+                                        <td class="text-center">{{ formatDate(row.date) }}</td>
+                                    </tr>
+                                </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ONGLET 5: RÉCAPITULATIF -->
+                <div class="tab-pane" *ngIf="selectedTabIndex === 4">
+                    <div class="report-title-section">
+                        <h3 class="main-title">BUDGET D'INVESTISSEMENT - {{ selectedYear }}</h3>
+                    </div>
+
+                    <div class="excel-table-container recap-container">
+                        <div class="table-wrapper">
+                            <table class="excel-table recap-table">
+                                <thead>
+                                <!-- Première ligne d'en-tête -->
+                                <tr class="header-row green-header">
+                                    <!-- Les 9 premières colonnes s'étendent sur 2 lignes -->
+                                    <th *ngFor="let col of recapColumns.slice(0, 9)"
+                                        rowspan="2"
+                                        [style.width]="col.width"
+                                        [class.col-rubrique]="col.key === 'rubrique'">
+                                        {{ col.label }}
+                                    </th>
+                                    <!-- Titre pour les cumuls qui s'étend sur 4 colonnes -->
+                                    <th colspan="4" class="cumul-header">CUMULS TRIMESTRIELS</th>
+                                </tr>
+                                <!-- Deuxième ligne d'en-tête pour les trimestres -->
+                                <tr class="header-row green-header subheader">
+                                    <th *ngFor="let col of recapColumns.slice(9)" [style.width]="col.width" class="col-trimestre">
+                                        {{ col.label }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <ng-container *ngFor="let row of recapInvestissementData">
+
+                                    <!-- CAS 1: Si la ligne est un titre de section (ex: "2 DEPENSES D'INVESTISSEMENT") -->
+                                    <tr *ngIf="row.isTitle" [ngClass]="getRecapRowClass(row)">
+                                        <!-- Cette cellule s'étend sur toute la largeur du tableau -->
+                                        <td [attr.colspan]="recapColumns.length">
+                                            <strong>{{ row.rubrique }}</strong>
+                                        </td>
+                                    </tr>
+
+                                    <!-- CAS 2: Si la ligne est une ligne de données ou de total normale -->
+                                    <tr *ngIf="!row.isTitle" [ngClass]="getRecapRowClass(row)">
+                                        <!-- Colonnes fixes -->
+                                        <td class="text-center">{{ row.classe || '' }}</td>
+                                        <td [class.text-center]="row.compte">{{ row.compte || '' }}</td>
+                                        <td [class.text-center]="row.sousCompte">{{ row.sousCompte || '' }}</td>
+                                        <td class="text-left" [class.indent-1]="isIndentedRow(row)">
+                                            <strong *ngIf="row.isCategory || row.isTotal">{{ row.rubrique }}</strong>
+                                            <span *ngIf="!row.isCategory && !row.isTotal">{{ row.rubrique }}</span>
+                                        </td>
+                                        <!-- Utilisation des NOUVELLES propriétés -->
+                                        <td class="number-cell">{{ formatNumber(row.budgetInitial) }}</td>
+                                        <td class="number-cell">{{ formatNumber(row.realisationsCumulees) }}</td>
+                                        <td class="percent-cell">{{ formatPercent(row.tauxExecution) }}</td>
+                                        <td class="number-cell">{{ formatNumber(row.resteARealiser) }}</td>
+                                        <td class="number-cell">{{ formatNumber(row.budgetModifie) }}</td>
+
+                                        <!-- Colonnes trimestrielles (inchangées) -->
+                                        <td *ngFor="let col of recapColumns.slice(9)" class="number-cell blue-cell">
+                                            {{ formatNumber(getCellValue(row, col.key)) }}
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

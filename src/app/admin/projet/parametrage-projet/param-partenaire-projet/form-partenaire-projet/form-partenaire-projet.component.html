@@ -1,0 +1,52 @@
+<section *ngIf="!isResearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Partie prenante <small style="color: red;">*</small></label>
+      <ng-select [items]="partenaires"
+                 bindLabel="nom"
+                 bindValue="id"
+                 placeholder="Partenaires"
+                 formControlName="structureId">
+      </ng-select>
+    </div>
+<!--    <div>-->
+<!--      <label class="form-label">Rôle</label>-->
+<!--      <ng-select [items]="roles"-->
+<!--                 bindLabel="libelle"-->
+<!--                 bindValue="id"-->
+<!--                 placeholder="Rôles">-->
+<!--      </ng-select>-->
+<!--    </div>-->
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+  </div>
+</section>
+
+<section *ngIf="isResearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label class="form-label">Partenaires</label>
+      <ng-select [items]="partenaires"
+                 bindLabel="nom"
+                 bindValue="id"
+                 placeholder="Partenaires"
+                 formControlName="structureId">
+      </ng-select>
+    </div>
+<!--    <div>-->
+<!--      <label class="form-label">Rôle</label>-->
+<!--      <ng-select [items]="roles"-->
+<!--                 bindLabel="libelle"-->
+<!--                 bindValue="id"-->
+<!--                 placeholder="Rôles"-->
+<!--                 formControlName="role">-->
+<!--      </ng-select>-->
+<!--    </div>-->
+  </form>
+  <div class="modal-footer mt-3">
+    <!-- <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button> -->
+    <button type="button" class="btn btn-primary" (click)="doResearch()">{{label}}</button>
+  </div>
+</section>

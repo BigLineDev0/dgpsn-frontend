@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h5 class="modal-title">Détails de l'alerte</h5>
+  <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+</div>
+
+<div class="modal-body">
+  <div class="alert-details">
+    <div class="mb-3 d-flex align-items-center gap-2">
+      <h4 class="mb-1" style="font-size: 1rem;">{{alert.name}}</h4>
+      <span class="badge" [ngClass]="getPriorityClass(alert.priority.name)">
+        {{alert.priority.name | lowercase}}
+      </span>
+    </div>
+
+    <div class="mb-3">
+      <h6 class="text-muted">Description</h6>
+      <p class="mb-0">{{alert.description}}</p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <h6 class="text-muted">Date</h6>
+        <p class="mb-0">
+          <i class="feather icon-clock me-2"></i>
+          {{alert.date | date: 'dd/MM/yyyy HH:mm'}}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <h6 class="text-muted">Destinataires</h6>
+        <div class="d-flex flex-wrap gap-2">
+          <span *ngFor="let profile of alert.profiles" class="badge bg-light text-dark">
+            {{profile.libelle}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="onClose()">Fermer</button>
+  <button type="button" class="btn btn-primary">Marquer comme lue</button>
+</div>

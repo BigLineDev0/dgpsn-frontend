@@ -1,0 +1,228 @@
+<!--<nav class="sidebar">-->
+<!--  <div class="sidebar-header">-->
+<!--    &lt;!&ndash; Logo &ndash;&gt;-->
+<!--    <a routerLink="/" class="sidebar-brand">-->
+<!--      <img src="assets/img/logo/logo-dgpsn.jpg" style="width: 160px; height: auto;" alt="">-->
+<!--    </a>-->
+
+<!--    &lt;!&ndash; Toggler &ndash;&gt;-->
+<!--    <div class="sidebar-toggler" #sidebarToggler (click)="toggleSidebar($event)">-->
+<!--      <span></span>-->
+<!--      <span></span>-->
+<!--      <span></span>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="sidebar-body" (mouseenter)="operSidebarFolded()" (mouseleave)="closeSidebarFolded()">-->
+<!--    <ng-scrollbar orientation="vertical" appearance="compact" >-->
+<!--      <ul class="sidebar-nav metismenu" id="sidebar-menu" #sidebarMenu>-->
+<!--        @for (item of menuItems; track item.label) {-->
+<!--          &lt;!&ndash; Titre de section &ndash;&gt;-->
+<!--          @if (item.isTitle) {-->
+<!--            <li class="nav-item nav-category" *afHasAnyAuthority=item.permissions>{{ item.label }}</li>-->
+<!--          } -->
+<!--          @else {-->
+<!--            <li class="nav-item" [ngClass]="{'mm-active': item.expanded && hasItems(item)}">-->
+<!--              -->
+<!--              &lt;!&ndash; Si item a des sous-éléments &ndash;&gt;-->
+<!--              @if (hasItems(item)) {-->
+<!--                <a -->
+<!--                  class="nav-link d-flex align-items-center"-->
+<!--                  href="javascript:void(0);" -->
+<!--                  (click)="toggleSubmenu($event, item)" -->
+<!--                  [attr.aria-expanded]="item.expanded ? 'true' : 'false'">-->
+<!--                  <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon></i>-->
+<!--                  <span class="link-title">{{ item.label }}</span>-->
+<!--                  <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>-->
+<!--                </a>-->
+
+<!--                &lt;!&ndash; Sous-menu &ndash;&gt;-->
+<!--                <ul class="sidebar-nav sub-menu nav-second-level"-->
+<!--                  [ngClass]="{'mm-show': item.expanded}"-->
+<!--                  [style.display]="item.expanded ? 'block' : 'none'">-->
+<!--                  -->
+<!--                  @for (subitem of item.subItems; track subitem.label) {-->
+<!--                    <li class="nav-item">-->
+<!--                      &lt;!&ndash; Si sous-item a encore des enfants &ndash;&gt;-->
+<!--                      @if (hasItems(subitem)) {-->
+<!--                        <a -->
+<!--                          class="nav-link side-nav-link-a-ref"-->
+<!--                          href="javascript:void(0);" -->
+<!--                          (click)="toggleSubmenu($event, subitem)" -->
+<!--                          [attr.aria-expanded]="subitem.expanded ? 'true' : 'false'">-->
+<!--                          <span class="link-title">{{ subitem.label }}</span>-->
+<!--                          <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>-->
+<!--                        </a>-->
+
+<!--                        &lt;!&ndash; Niveau 3 &ndash;&gt;-->
+<!--                        <ul -->
+<!--                          class="sidebar-nav sub-menu nav-third-level"-->
+<!--                          [ngClass]="{'mm-show': subitem.expanded}"-->
+<!--                          [style.display]="subitem.expanded ? 'block' : 'none'">-->
+<!--                          -->
+<!--                          @for (subSubitem of subitem.subItems; track subSubitem.label) {-->
+<!--                            <li class="nav-item">-->
+<!--                              <a -->
+<!--                                class="nav-link nav-link-ref" -->
+<!--                                [routerLink]="subSubitem.link"-->
+<!--                                routerLinkActive="active"-->
+<!--                                [routerLinkActiveOptions]="{ exact: false }">-->
+<!--                                <span class="link-title">{{ subSubitem.label }}</span>-->
+<!--                              </a>-->
+<!--                            </li>-->
+<!--                          }-->
+<!--                        </ul>-->
+<!--                      } -->
+<!--                      &lt;!&ndash; sinon lien simple &ndash;&gt;-->
+<!--                      @else {-->
+<!--                        <a -->
+<!--                          class="nav-link nav-link-ref" -->
+<!--                          [routerLink]="subitem.link"-->
+<!--                          routerLinkActive="active"-->
+<!--                          [routerLinkActiveOptions]="{ exact: false }">-->
+<!--                          <span class="link-title">{{ subitem.label }}</span>-->
+<!--                        </a>-->
+<!--                      }-->
+<!--                    </li>-->
+<!--                  }-->
+<!--                </ul>-->
+<!--              }-->
+
+<!--              &lt;!&ndash; Si item sans sous-menu &ndash;&gt;-->
+<!--              @else {-->
+<!--                <a -->
+<!--                  class="nav-link nav-link-ref d-flex align-items-center"-->
+<!--                  [routerLink]="item.link"-->
+<!--                  routerLinkActive="active"-->
+<!--                  [routerLinkActiveOptions]="{ exact: false }">-->
+<!--                  <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon></i>-->
+<!--                  <span class="link-title">{{ item.label }}</span>-->
+<!--                  @if (item.badge) {-->
+<!--                    <span class="badge bg-{{item.badge.variant}}">{{item.badge.text}}</span>-->
+<!--                  }-->
+<!--                </a>-->
+<!--              }-->
+<!--            </li>-->
+<!--          }-->
+<!--        }-->
+<!--      </ul>-->
+<!--    </ng-scrollbar>-->
+<!--  </div>-->
+<!--</nav>-->
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <!-- Logo -->
+        <a routerLink="/" class="sidebar-brand">
+            <img src="assets/img/logo/logo-dgpsn.jpg" style="width: 160px; height: auto;" alt="">
+        </a>
+
+        <!-- Toggler -->
+        <div class="sidebar-toggler" #sidebarToggler (click)="toggleSidebar($event)">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="sidebar-body" (mouseenter)="operSidebarFolded()" (mouseleave)="closeSidebarFolded()">
+        <ng-scrollbar orientation="vertical" appearance="compact" >
+            <ul class="sidebar-nav metismenu" id="sidebar-menu" #sidebarMenu>
+                @for (item of menuItems; track item.label) {
+                    <!-- Titre de section -->
+                    @if (item.isTitle) {
+                        <li class="nav-item nav-category" *afHasAnyAuthority="item.permissions  || []">{{ item.label }}</li>
+                    }
+                    @else {
+                        <!-- Menu principal avec permission -->
+                        <li class="nav-item"
+                            [ngClass]="{'mm-active': item.expanded && hasItems(item)}"
+                            *afHasAnyAuthority="item.permissions  || []">
+
+                            <!-- Si item a des sous-éléments -->
+                            @if (hasItems(item)) {
+                                <a
+                                        class="nav-link d-flex align-items-center"
+                                        href="javascript:void(0);"
+                                        (click)="toggleSubmenu($event, item)"
+                                        [attr.aria-expanded]="item.expanded ? 'true' : 'false'">
+                                    <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon></i>
+                                    <span class="link-title">{{ item.label }}</span>
+                                    <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>
+                                </a>
+
+                                <!-- Sous-menu -->
+                                <ul class="sidebar-nav sub-menu nav-second-level"
+                                    [ngClass]="{'mm-show': item.expanded}"
+                                    [style.display]="item.expanded ? 'block' : 'none'">
+
+                                    @for (subitem of item.subItems; track subitem.label) {
+                                        <!-- Sous-menu avec permission -->
+                                        <li class="nav-item" *afHasAnyAuthority="subitem.permissions || []">
+                                            <!-- Si sous-item a encore des enfants -->
+                                            @if (hasItems(subitem)) {
+                                                <a
+                                                        class="nav-link side-nav-link-a-ref"
+                                                        href="javascript:void(0);"
+                                                        (click)="toggleSubmenu($event, subitem)"
+                                                        [attr.aria-expanded]="subitem.expanded ? 'true' : 'false'">
+                                                    <span class="link-title">{{ subitem.label }}</span>
+                                                    <span class="link-arrow" data-feather="chevron-down" appFeatherIcon></span>
+                                                </a>
+
+                                                <!-- Niveau 3 -->
+                                                <ul
+                                                        class="sidebar-nav sub-menu nav-third-level"
+                                                        [ngClass]="{'mm-show': subitem.expanded}"
+                                                        [style.display]="subitem.expanded ? 'block' : 'none'">
+
+                                                    @for (subSubitem of subitem.subItems; track subSubitem.label) {
+                                                        <!-- Sous-sous-menu avec permission -->
+                                                        <li class="nav-item" *afHasAnyAuthority="subSubitem.permissions  || []">
+                                                            <a
+                                                                    class="nav-link nav-link-ref"
+                                                                    [routerLink]="subSubitem.link"
+                                                                    routerLinkActive="active"
+                                                                    [routerLinkActiveOptions]="{ exact: false }">
+                                                                <span class="link-title">{{ subSubitem.label }}</span>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                            <!-- sinon lien simple -->
+                                            @else {
+                                                <a
+                                                        class="nav-link nav-link-ref"
+                                                        [routerLink]="subitem.link"
+                                                        routerLinkActive="active"
+                                                        [routerLinkActiveOptions]="{ exact: false }">
+                                                    <span class="link-title">{{ subitem.label }}</span>
+                                                </a>
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            }
+
+                            <!-- Si item sans sous-menu -->
+                            @else {
+                                <a
+                                        class="nav-link nav-link-ref d-flex align-items-center"
+                                        [routerLink]="item.link"
+                                        routerLinkActive="active"
+                                        [routerLinkActiveOptions]="{ exact: false }">
+                                    <i class="link-icon" [attr.data-feather]="item.icon" appFeatherIcon></i>
+                                    <span class="link-title">{{ item.label }}</span>
+                                    @if (item.badge) {
+                                        <span class="badge bg-{{item.badge.variant}}">{{item.badge.text}}</span>
+                                    }
+                                </a>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+        </ng-scrollbar>
+    </div>
+</nav>

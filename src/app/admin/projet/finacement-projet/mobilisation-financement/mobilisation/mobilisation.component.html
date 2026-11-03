@@ -1,0 +1,161 @@
+
+<app-routing-financement  [pageTitle]="'Mobilisation'"></app-routing-financement>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="{{projetLibelle}}">{{projetLibelle }}</h6>
+  </div>
+
+  <div>
+    <!-- <button type="button" ngbTooltip="Comparer avec la source principale" class="btn btn-secondary btn-icon me-2" (click)="chargerFichier()">
+      <i class="feather icon-refresh-cw"></i>
+    </button>
+    <button type="button" ngbTooltip="Source principale" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(sourceModal)">
+      <i class="feather icon-server"></i>
+    </button> -->
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouvelle Mobilisation
+    </button>
+  </div>
+
+  </div>
+
+<div class="row">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+        <!-- is only used before getting data to the api-->
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+        <!-- is only used before getting data to the api-->
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+            <ng-container matColumnDef="libelle">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;">Libelle</th>
+                <td mat-cell *matCellDef="let mobilisation"> {{mobilisation?.libelle}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="annee">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Annee</th>
+                <td mat-cell *matCellDef="let mobilisation" class="text-center">
+                    <!-- <span>{{mobilisation.agent?.tel}}</span><span>{{mobilisation.predicatedDate | date: 'dd-MM-yyyy'}}
+            </span> -->
+                    {{mobilisation?.annee}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="startingDate">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;"> Date Debut </th>
+                <td mat-cell *matCellDef="let mobilisation" class="text-center">
+                    {{mobilisation?.startingDate|date: 'dd-MM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endingDate">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;"> Date Fin </th>
+                <td mat-cell *matCellDef="let mobilisation" class="text-center">
+                    {{mobilisation?.endingDate  | date: 'dd-MM-yyyy'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="estimatedAmount">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Montant Previsionnel</th>
+                <td mat-cell *matCellDef="let mobilisation; let i = index" class="text-center">
+                    {{mobilisation?.estimatedAmount}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorPrevue">{{sourceComparaison[i].montantPrevue}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actualAmount">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Montant Reel</th>
+                <td mat-cell *matCellDef="let mobilisation; let i = index" class="text-center">
+                    {{mobilisation?.actualAmount}} <br> <span *ngIf="comparaison" [class]="sourceComparaison[i].colorReel">{{sourceComparaison[i].montantReel}}</span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="comment">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:500px;"> Commentaire
+                </th>
+                <td mat-cell *matCellDef="let mobilisation"> {{mobilisation.comment}} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;">
+                    Actions </th>
+                <td mat-cell *matCellDef="let mobilisation" class="text-center">
+                    <div class="text-center d-inline-block">
+                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                            <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+                        </span>
+                        <mat-menu #menu="matMenu">
+                            <!-- *afHasAnyAuthority="update" -->
+                            <a  ngbDropdownItem
+                                class="d-flex justify-content-between align-items-center"
+                                (click)="openBasicModal(modalUpdate, mobilisation)">
+                                <span class="me-2">Modifier</span>
+                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                            </a>
+                            <a  ngbDropdownItem
+                                class="d-flex justify-content-between align-items-center"
+                                (click)="deleteMobilisation(mobilisation.id)">
+                                <span class="me-2">Supprimer</span>
+                                <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                            </a>
+                        </mat-menu>
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+            <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+        <div class="paginate">
+            <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                [ellipses]="true" [boundaryLinks]="true">
+            </ngb-pagination>
+        </div>
+    </section>
+</div>
+
+<!--Add date importantes-->
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajout Mobilisation</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-mobilisation [label]="'Enregistrer'" (submit)="close($event)"
+            [isSearch]="false"></app-form-mobilisation>
+    </div>
+</ng-template>
+<!--End date importantes-->
+
+<!--Update date importantes-->
+<ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modification Mobilisation</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-mobilisation [label]="'Modifier'" (submit)="close($event)" [mobilisationToUpdate]="mobilisationToUpdate"
+            [isSearch]="false"></app-form-mobilisation>
+    </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Rechercher Mobilisation</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-mobilisation [label]="'Enregistrer'" (submit)="close($event)" [managementUnitId]="managementUnitId" [isSearch]="true"></app-form-mobilisation>
+    </div>
+  </ng-template>
+
+<ng-template #sourceModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Source de données</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-source-de-donnees (submit)="close($event)"></app-source-de-donnees>
+  </div>
+</ng-template>

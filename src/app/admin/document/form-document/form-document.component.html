@@ -1,0 +1,161 @@
+<section *ngIf="!issearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 mb-3">
+                <label class="form-label">Catégorie</label>
+                <ng-select placeholder="Catégorie" formControlName="category" (change)="refreshLinked()" [readonly]="desableCategorie">
+                    <ng-option *ngFor="let item of categories" [value]="item?.name">
+                        {{item?.label}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3" *ngIf="category=='PROJECT'">
+                <label class="form-label">Projet</label>
+                <ng-select placeholder="Projet" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3" *ngIf="category=='ACTIVITY'">
+                <label class="form-label">Activité</label>
+                <ng-select placeholder="Activité" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3" *ngIf="category=='PROGRAMME'">
+                <label class="form-label">Programme</label>
+                <ng-select placeholder="Programme" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+
+            <div class="col-md-6 col-sm-12 mb-3" *ngIf="category=='ENTREPRISE'" >
+                <label class="form-label">Entreprise</label>
+                <ng-select placeholder="Entreprise" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.denomination}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-3 col-sm-12 b-3">
+                <label class="form-label">Auteur</label>
+                <input type="text" class="form-control" placeholder="auteur" formControlName="author">
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Type document<small style="color: red;">*</small></label>
+                <ng-select [items]="typeDocmnts" bindLabel="typeDocument.libelle" bindValue="typeDocument.id"
+                           placeholder="selectionner un type de document" formControlName="documentTypeId"
+                           (change)="selectionChange($event)">
+                </ng-select>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="mb-3">
+                    <label class="form-label">Libellé<small style="color: red;">*</small></label>
+                    <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+                </div>
+            </div><!-- Col -->
+
+        </div><!-- Row -->
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Pièce jointe</label>
+                <input type="file" class="form-control" (change)="fileChange($event)" style="width: 90%;"
+                       accept=".pdf, .doc, .docx, .xlsx, .xls">
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+    </div>
+</section>
+<section *ngIf="issearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-md-5 col-sm-12 mb-3">
+                <label class="form-label">Catégorie</label>
+                <ng-select placeholder="Catégorie" formControlName="category" (change)="refreshLinked()" [readonly]="desableCategorie">
+                    <ng-option *ngFor="let item of categories" [value]="item?.name">
+                        {{item?.label}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-7 col-sm-12 mb-3" *ngIf="category=='PROJECT'">
+                <label class="form-label">Projet</label>
+                <ng-select placeholder="Projet" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+            <div class="col-md-7 col-sm-12 mb-3" *ngIf="category=='ACTIVITY'">
+                <label class="form-label">Activité</label>
+                <ng-select placeholder="Activité" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+
+            <div class="col-md-7 col-sm-12 mb-3" *ngIf="category=='PROGRAMME'">
+                <label class="form-label">Programme</label>
+                <ng-select placeholder="Programme" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.name}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+
+            <div class="col-md-7 col-sm-12 mb-3" *ngIf="category=='ENTREPRISE'" >
+                <label class="form-label">Entreprise</label>
+                <ng-select placeholder="Entreprise" formControlName="categoryId" [readonly]="desableCategoryId">
+                    <ng-option *ngFor="let item of linkedObjects" [value]="item?.id">
+                        {{item?.denomination}}
+                    </ng-option>
+
+                </ng-select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Type document<small style="color: red;">*</small></label>
+                <ng-select [items]="typeDocmnts" bindLabel="typeDocument.libelle" bindValue="typeDocument.id"
+                           placeholder="selectionner un type de document" formControlName="documentTypeId"
+                           (change)="selectionChange($event)">
+                </ng-select>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="mb-3">
+                    <label class="form-label">Libellé<small style="color: red;">*</small></label>
+                    <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+                </div>
+            </div><!-- Col -->
+
+        </div><!-- Row -->
+
+    </form>
+    <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button> -->
+        <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+    </div>
+</section>

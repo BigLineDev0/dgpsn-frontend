@@ -1,0 +1,97 @@
+.sidebar-body {
+  background-color: #4f6c52;
+  color: white;
+}
+
+.sidebar {
+  .sidebar-nav {
+    list-style: none;
+    padding: 0;
+
+
+    &.sub-menu {
+      padding-left: 50px;
+      display: none;
+    }
+
+    &.sub-menu.mm-show {
+      display: block;
+    }
+
+    .nav-item {
+      &.mm-active {
+        >.nav-link {
+          font-weight: bold;
+          color: white;
+        }
+      }
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+
+      .link-icon {
+        margin-right: 10px;
+        margin-top: 14px;
+      }
+
+      .link-title {
+        flex-grow: 1;
+        // color: #EFB808;
+        color: #FFF039;
+        font-size: 14px;
+        margin-top: 14px;
+
+     
+
+      }
+
+      .link-arrow {
+        transition: transform 0.3s;
+      }
+
+      &.mm-active {
+        .link-arrow {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .badge {
+      margin-left: 10px;
+    }
+  }
+
+  .nav-category {
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+  }
+
+  .nav-item.nav-category {
+    color: white !important;
+    font-size: 12px;
+    margin-top: 12px !important;
+  }
+}
+
+
+/* Couleur du lien actif */
+.nav-link.active .link-title {
+  color: #EFB808 !important;
+  font-weight: bold;
+}
+
+/* Optionnel : effet doux */
+.link-title {
+  transition: color 0.2s ease;
+}
+
+// /* Pour bien isoler visuellement l’actif */
+// .nav-link.active {
+//   // background-color: rgba(255, 0, 0, 0.1);
+//   // border-left: 3px solid #EFB808;
+// }

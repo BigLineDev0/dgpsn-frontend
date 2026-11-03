@@ -1,0 +1,213 @@
+<section *ngIf="!isSearch">
+
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-sm-12 col-md-8 mb-3" *ngIf="!this.templateToUpdate">
+                <label class="form-label">Type alerte</label>
+                <ng-select [items]="allTypeAlertes" bindLabel="description" bindValue="name" placeholder="Type alerte"
+                    formControlName="typeAlerte" (change)="loadTags($event)">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 col-md-8 mb-3" *ngIf="this.templateToUpdate">
+                <label class="form-label">Type alerte</label>
+                <input type="text" readonly class="form-control" placeholder="Type d'alerte"
+                    formControlName="description">
+            </div>
+            <div class="col-sm-8 col-md-4 mb-3">
+                <label class="form-label">Priorité</label>
+                <ng-select [items]="priorites" bindLabel="description" bindValue="name" placeholder="Priorité"
+                    formControlName="priority">
+                </ng-select>
+            </div>
+
+            <div class="col-sm-6 col-md-3 mb-3">
+                <label class="form-label">Delais</label>
+                <input type="number" class="form-control" id="delais" placeholder="Delais en jour"
+                    formControlName="deadlines">
+            </div>
+
+            <!-- <div class="col-sm-12 mb-3">
+                <div class="form-check form-switch d-inline-block d-inline-block-right-space">
+                    <label for="mail" class="form-label">Envoyer par mail</label>
+                    <input type="checkbox" class="form-check-input" id="mail" formControlName="sendMail">
+                </div>
+
+                <div class="form-check form-switch d-inline-block">
+                    <label for="sms" class="form-label">Envoyer par sms</label>
+                    <input type="checkbox" class="form-check-input" id="sms" formControlName="sendSms">
+                </div>
+            </div> -->
+
+            <!-- <div style="display: flex; justify-content: end;" class="mb-2"><a (click)="addModel()"><i
+                        data-feather="plus" appFeatherIcon class="icon-sm me-2"></i></a></div> -->
+            <ng-container *ngFor="let model of models; let i = index">
+                <div class="col-sm-12 col-md-12 mb-4" style="border: 1px solid black">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5" style="height: 100px;">
+                            <!-- <label class="form-label">Profils</label>
+                            <ng-select [multiple]=true [closeOnSelect]="false" [searchable]="true" placeholder="Profil"
+                                formControlName="profileIds" (change)="getSelectedProfiles(i)">
+                                <ng-option *ngFor="let profile of profils" [value]="profile">{{profile.libelle}}</ng-option>
+                            </ng-select> -->
+                            <div class="card flex justify-content-center">
+                                <button type="button" class="btn btn-primary mt-2"
+                                    (click)="openModalProfile(modalProfile,i)">Selectionner profils</button>
+                            </div>
+
+                            <div class="table-responsive" style="height: 250px;">
+                                <ng-container>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 70%;">libellé</th>
+                                                    <th style="width: 30%;">Utilisateurs</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let profil of model.profiles">
+                                                    <!-- <td class="">
+                                                        {{ profil?.libelle }}
+                                                    </td> -->
+                                                    <td>
+                                                        <p ngbTooltip="{{profil.libelle}}" *ngIf="profil.libelle?.length > 50; else templateName">
+                                                          {{profil.libelle | textFormatter: 'split:50'}}
+                                                        </p>
+                                                        <ng-template #templateName>
+                                                          <p ngbTooltip="{{profil.libelle}}">
+                                                            {{profil.libelle}}
+                                                          </p>
+                                                        </ng-template>
+                                                      </td>
+                                                    <td class="">
+                                                        <a class="me-2 cursor-pointer" id="" role="button"
+                                                            ngbTooltip="Configurer les utilisateurs" placement="left"
+                                                            (click)="openBasicModal(modalUser,profil)">
+                                                            <i class="icon-lg pb-3px text-primary" data-feather="users"
+                                                                appFeatherIcon></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-7">
+                            <quill-editor formControlName="message" placeholder="Saisissez le Text"
+                                [modules]="quillConfig" (onSelectionChanged)="onSelectionChanged($event)"
+                                (onContentChanged)="onContentChanged($event)">
+                            </quill-editor>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="chips"style="display: flex; padding: 10px; justify-content: start; flex-wrap: wrap;">
+                                    <ng-container *ngFor="let tag of tags">
+                                        <span class="badge bg-secondary cursor-pointer mb-2 me-2"
+                                            (click)="addTag(tag.name)">{{tag.name}}</span>
+                                    </ng-container>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div style="display: flex; justify-content: end;" class="mb-2"><a (click)="remove(i)"><i
+                                    data-feather="trash" appFeatherIcon class="icon-sm me-2"></i></a></div> -->
+
+                    </div>
+                </div>
+
+            </ng-container>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="create()">{{label}}</button>
+    </div>
+</section>
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+
+            <div class="col-sm-12 mb-3">
+                <label class="form-label">Type alerte</label>
+                <ng-select [items]="allTypeAlertes" bindLabel="description" bindValue="name" placeholder="type alerte"
+                    formControlName="typeAlerte">
+                </ng-select>
+            </div>
+            <div class="col-sm-12 col-md-6 mb-3">
+                <label class="form-label">Profil</label>
+                <ng-select [items]="profils" [multiple]=true bindLabel="libelle" bindValue="id" placeholder="Profil"
+                    formControlName="profileIds">
+                </ng-select>
+            </div>
+
+            <div class="col-sm-6 col-md-6 mb-3">
+                <label class="form-label">Priorité</label>
+                <ng-select [items]="priorites" bindLabel="description" bindValue="name" placeholder="Priorité"
+                    formControlName="priority">
+                </ng-select>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+            </div>
+        </div>
+    </form>
+
+</section>
+
+<ng-template #modalUser let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Utilisateurs</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-user-alert [users]="users"></app-user-alert>
+    </div>
+</ng-template>
+<!-- <ng-template #modalProfile let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Profils</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body"> -->
+        <!-- <div class="card flex justify-content-center"> -->
+        <!-- <p-listbox [options]="profils" [(ngModel)]="selectedItems" optionLabel="libelle" [style]="{ width: 'rem' }"
+            [filter]="true" [multiple]="true" [checkbox]="true" [showToggleAll]="false" [metaKeySelection]="false"
+            [showToggleAll]="true" (onSelectAllChange)="onSelectAllChange($event)" (onChange)="onChange($event)"
+            [listStyle]="{ 'max-height': '220px'}"></p-listbox> -->
+        <!-- </div> -->
+    <!-- </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('by: close icon')">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" (click)="modal.close('by: close icon')">Valider</button>
+    </div>
+</ng-template> -->
+
+<ng-template #modalProfile let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Profils</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <mat-form-field appearance="outline" style="width: 100%; margin-bottom: 10px;">
+            <mat-label>Rechercher</mat-label>
+            <input matInput #filterInput placeholder="Filtrer les profils">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-selection-list [(ngModel)]="selectedItems" style="max-height: 220px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px;">
+            <mat-list-option 
+                *ngFor="let profil of profils" 
+                [value]="profil" 
+                checkboxPosition="before"
+                [hidden]="filterInput.value && !profil.libelle.toLowerCase().includes(filterInput.value.toLowerCase())">
+                {{ profil.libelle }}
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('by: close icon')">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save(); modal.close('by: close icon')">Valider</button>
+    </div>
+</ng-template>

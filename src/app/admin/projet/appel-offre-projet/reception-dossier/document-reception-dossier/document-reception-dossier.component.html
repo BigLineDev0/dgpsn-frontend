@@ -1,0 +1,87 @@
+<section>
+  <form>
+    <div class="row">
+      <div class="mb-3 col-3">
+        <label class="form-label">Type de document <small style="color: red;">*</small></label>
+        <ng-select [items]="type"
+                   bindLabel="libelle"
+                   bindValue="id"
+                   placeholder="Type de document">
+        </ng-select>
+      </div>
+      <div class="mb-3 col-2">
+        <label class="form-label">Code<small style="color: red;">*</small></label>
+        <input type="text" class="form-control" placeholder="Code">
+      </div>
+      <div class="mb-3 col-3">
+        <label class="form-label">Libelle<small style="color: red;">*</small></label>
+        <input type="text" class="form-control" placeholder="Libelle">
+      </div>
+      <div class="mb-3 col-3">
+        <label class="form-label">Document<small style="color: red;">*</small></label>
+        <!--          <dropzone [config]="config" [message]="'Cliquez ou faites glisser les documents ici pour les ajouter'"></dropzone>-->
+        <input type="file" [formEnctype]="" class="form-control" (change)="fileChange($event)" style="width: 90%;" accept=".pdf, .doc, .docx, .xlsx, .xls">
+
+      </div>
+      <div class="col-1 mb-3 mt-4">
+        <div class="d-flex justify-content-end">
+          <!--              <button type="reset" class="btn btn-secondary">Reset</button>-->
+          <button type="button" class="btn btn-primary">Ajouter</button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+</section>
+
+
+<hr>
+
+<h5 class="mb-3">Liste des documents</h5>
+<div class="table-responsive">
+  <table class="table table-striped text-center">
+    <thead>
+    <th>Code</th>
+    <th>Libelle</th>
+    <th>Type</th>
+    <th>Ajouter le</th>
+    <th>Document</th>
+    <th>Supprimer</th>
+    <th>Modifier</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let doc of documents">
+      <td>{{doc?.code}}</td>
+      <td>{{doc?.libelle}}
+      <td>{{doc?.type}}</td>
+      <td>{{doc?.dateAjout}}</td>
+      <td>
+        <a ngbTooltip="Ouvrir" ngbDropdownItem class="d-flex align-items-center">
+          <i data-feather="file" appFeatherIcon class="icon-sm me-2"></i>
+          <!--          <span class="">Voir</span>-->
+        </a>
+      </td>
+
+      <td>
+        <a ngbDropdownItem class="d-flex align-items-center">
+          <i data-feather="trash" appFeatherIcon class="icon-sm me-2"></i>
+          <span class="">Supprimer</span>
+        </a>
+      </td>
+      <td>
+        <a ngbDropdownItem class="d-flex align-items-center">
+          <i data-feather="edit" appFeatherIcon class="icon-sm me-2"></i>
+          <span class="">Modifier</span>
+        </a>
+      </td>
+
+    </tr>
+
+    <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+                    [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+                    [boundaryLinks]="true">
+    </ngb-pagination>
+    </tbody>
+  </table>
+</div>

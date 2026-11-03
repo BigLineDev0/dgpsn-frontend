@@ -1,0 +1,121 @@
+<div class="col-12">
+    <div>
+      <h2 ><span>Detail Structure</span></h2>
+      <hr />
+      <dl class="row-md">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+            <div class="col-sm-4">
+              <dt class="text-center"><span><h5 class="card-title">Code</h5></span></dt>
+              <dd class="text-center">
+                <span>{{structureToDetail?.code}}</span>
+              </dd>
+            </div>
+            <div class="col-sm-4">
+              <dt class="text-center"><span><h5 class="card-title">Nom</h5></span></dt>
+                <dd class="text-center">
+                  <span>{{structureToDetail?.nom}}</span>
+                </dd>
+            </div>
+            <div class="col-sm-4">
+              <dt class="text-center"><span><h5 class="card-title">Type structure</h5></span></dt>
+              <dd class="text-center">
+                <span>{{structureToDetail?.typeStructure}}</span>
+              </dd>
+            </div> 
+          </div>
+          </div>
+        </div>  
+        <hr>
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <dt class="text-center"><span><h5 class="card-title">Telephone</h5></span></dt>
+                <dd class="text-center">
+                      <span>{{structureToDetail?.telephone}}</span>
+                </dd>
+              </div>
+              <div class="col-sm-3">
+                <dt class="text-center"><span><h5 class="card-title">Fax</h5></span></dt>
+                <dd class="text-center">
+                  <span>{{structureToDetail?.fax}}</span>
+                </dd>
+              </div> 
+              <div class="col-sm-3">
+                <dt class="text-center"><span><h5 class="card-title">Email</h5></span></dt>
+                <dd class="text-center">
+                  <span>{{structureToDetail?.email}}</span>
+                </dd>
+              </div>
+              <div class="col-sm-3">
+                <dt class="text-center"><span><h5 class="card-title">Pays</h5></span></dt>
+                <dd class="text-center">
+                  <span>{{structureToDetail?.country.libelle}}</span>
+                </dd>
+              </div> 
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div class="card">
+           <div class="card-body">
+            <div class="row">        
+            <div class="col-sm-4">
+              <dt class="text-center"><span><h5 class="card-title">Ville</h5></span></dt>
+              <dd class="text-center">
+                <span>{{structureToDetail?.city}}</span>
+              </dd>
+            </div>
+            <div class="col-sm-4">
+              <dt class="text-center"><span><h5 class="card-title">Addresse</h5></span></dt>
+                <dd class="text-center">
+                 <span>{{structureToDetail?.address}}</span>
+                </dd>
+            </div>
+                <div class="col-sm-4">
+                    <dt class="text-center"><span><h5 class="card-title">Site web</h5></span>
+                    </dt>
+                    <dd class="text-center">
+                    <span>{{structureToDetail?.webSite}}</span>
+                    </dd>
+                </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="card">
+            <div class="card-body">
+             <div class="row">        
+                 <div class="col-sm-4">
+                     <dt class="text-center"><span><h5 class="card-title">Responsable</h5></span>
+                     </dt>
+                     <dd class="text-center">
+                     <span>{{structureToDetail?.responsable}}</span>
+                     </dd>
+                 </div>
+                 <div class="col-sm-4">
+                     <dt class="text-center"><span><h5 class="card-title">Date debut cooperation</h5></span>
+                     </dt>
+                     <dd class="text-center">
+                     <span>{{structureToDetail?.sartDateCooperation}}</span>
+                     </dd>
+                 </div>
+                 <div class="col-sm-4">
+                     <dt class="text-center"><span><h5 class="card-title">Mecanisme d'intervention</h5></span>
+                     </dt>
+                     <dd class="text-center">
+                     <span>{{structureToDetail?.mechanismOfIntervention}}</span>
+                     </dd>
+                 </div>
+             </div>
+           </div>
+         </div>
+        <hr />
+      </dl>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      </div>
+    </div>
+</div>

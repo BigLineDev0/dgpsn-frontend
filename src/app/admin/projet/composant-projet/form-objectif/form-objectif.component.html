@@ -1,0 +1,44 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row mb-2">
+            <div class="col-md-6 col-sm-12">
+                <label class="form-label">Code <small style="color: red;">*</small></label>
+                <input type="text" class="form-control" formControlName="code" placeholder="Ex: Objectif 1">
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <label class="form-label">Libellé <small style="color: red;">*</small></label>
+                <input type="text" class="form-control" formControlName="libelle"
+                       placeholder="Ex: Animation des instances de coordination de la SNPS">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12 col-sm-12">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" formControlName="description" rows="3"
+                          placeholder="Description détaillée de l'objectif"></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row mb-2">
+            <div class="col-md-6 col-sm-12">
+                <label class="form-label">Code</label>
+                <input type="text" class="form-control" formControlName="code">
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <label class="form-label">Libellé</label>
+                <input type="text" class="form-control" formControlName="libelle">
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section>

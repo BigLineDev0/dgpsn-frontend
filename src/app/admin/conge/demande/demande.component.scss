@@ -1,0 +1,141 @@
+// .pdf-content {
+//     font-family: Arial, sans-serif;
+//     font-size: 12px;
+//     line-height: 1.5;
+//     /* Ajoutez d'autres styles CSS si nécessaire pour le positionnement et la mise en page */
+// }
+
+// .print-button {
+//     position: fixed;
+//     bottom: 50%;
+//     right: 60px;
+//     z-index: 1000;
+//     font-size: 16px;
+//     margin-right:25px;
+//     margin-bottom:10px;
+//   }
+//   .print-buttonW {
+//     position: fixed;
+//     bottom: 50%;
+//     right: 120px;
+//     z-index: 1000;
+//     font-size: 16px;
+//     margin-right:65px;
+//     margin-bottom:10px;
+//   }
+  
+//   .a4-container{
+//     padding  :15px 135px 15px 135px;
+//   }
+  
+//   .download-button {
+//     border-width: 0;
+//     color: white;
+//     font-size: 15px;
+//     font-weight: 600;
+//     border-radius: 4px;
+//     position: fixed;
+//     bottom: 50%;
+//     right: 60px;
+//     z-index: 1000;
+//     margin-right:25px;
+//     margin-bottom:10px;
+//   }
+  
+//   .download-button .docs {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//     gap: 10px;
+//     min-height: 40px;
+//     padding: 0 10px;
+//     border-radius: 4px;
+//     z-index: 1;
+//     background-color: #242a35;
+//     border: solid 1px #e8e8e82d;
+//     transition: all .5s cubic-bezier(0.77, 0, 0.175, 1);
+//   }
+  
+//   .download-button:hover {
+//     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+//   }
+  
+//   .download {
+//     position: absolute;
+//     inset: 0;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     max-width: 90%;
+//     margin: 0 auto;
+//     z-index: -1;
+//     border-radius: 4px;
+//     transform: translateY(0%);
+//     background-color: #01e056;
+//     border: solid 1px #01e0572d;
+//     transition: all .5s cubic-bezier(0.77, 0, 0.175, 1);
+//   }
+  
+//   .download-button:hover .download {
+//     transform: translateY(100%)
+//   }
+  
+//   .download-button {
+//     padding-right:0;
+//     padding-left:0;}
+  
+//   .download svg polyline,.download svg line {
+//     animation: docs 1s infinite;
+//   }
+  
+//   @keyframes docs {
+//     0% {
+//       transform: translateY(0%);
+//     }
+  
+//     50% {
+//       transform: translateY(-15%);
+//     }
+  
+//     100% {
+//       transform: translateY(0%);
+//     }
+//   }
+  
+// .loading-indicator {
+//   position: fixed;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%, -50%);
+//   background-color: rgba(0, 0, 0, 0.8);
+//   color: #fff;
+//   padding: 20px;
+//   border-radius: 10px;
+//   z-index: 1000;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
+
+// .spinner {
+//   border: 4px solid rgba(0, 0, 0, 0.1);
+//   border-left-color: #fff;
+//   border-radius: 50%;
+//   width: 24px;
+//   height: 24px;
+//   margin-right: 10px;
+//   animation: spin 1s linear infinite;
+// }
+
+// @keyframes spin {
+//   to { transform: rotate(360deg); }
+// }
+.modal-footer {
+  display: flex;
+  justify-content: center;
+
+  .buttons-footer {
+      display: flex;
+      justify-content: center;
+  }
+}

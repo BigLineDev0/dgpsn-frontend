@@ -1,0 +1,241 @@
+<div class="detail-courrier-container">
+  <!-- En-tête -->
+  <div class="header-section mb-4">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h4 class="text-primary mb-2">
+          <mat-icon class="align-middle me-2">mail</mat-icon>
+          Courrier Départ - {{ courrier?.reference }}
+        </h4>
+        <p class="text-muted mb-0">Détails complets du courrier</p>
+      </div>
+      <button
+        mat-icon-button
+        class="close-btn"
+        (click)="onClose()"
+        matTooltip="Fermer"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Colonne gauche - Informations principales -->
+    <div class="col-lg-6">
+      <!-- Carte Informations générales -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">info</mat-icon>
+            Informations Générales
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Référence:</strong>
+              <span class="text-primary fw-bold">{{
+                courrier?.reference || "Non spécifié"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Destinataire:</strong>
+              <span>{{ courrier?.destinataire || "Non spécifié" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Objet:</strong>
+              <span class="fw-semibold">{{
+                courrier?.objet || "Non spécifié"
+              }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Type de courrier:</strong>
+              <span>{{ courrier?.typeCourrier || "Non spécifié" }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Carte Dates -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">event</mat-icon>
+            Dates
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Date de départ:</strong>
+              <span>{{ formatDate(courrier?.dateDepart) }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Date d'envoi:</strong>
+              <span>{{ formatDate(courrier?.dateEnvoi) }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Date de préparation:</strong>
+              <span>{{
+                formatDate(courrier?.datePreparation) || "Non spécifié"
+              }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Colonne droite - Statut et métadonnées -->
+    <div class="col-lg-6">
+      <!-- Carte Statut et Urgence -->
+      <mat-card class="mb-4">
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">assessment</mat-icon>
+            Statut et Métadonnées
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="info-grid">
+            <div class="info-item">
+              <strong>Statut:</strong>
+              <span
+                [class]="getStatutClass(courrier?.statut?.libelle)"
+                class="badge"
+              >
+                {{ courrier?.statut?.libelle || "Non spécifié" }}
+              </span>
+            </div>
+            <div class="info-item">
+              <strong>Niveau d'urgence:</strong>
+              <span [class]="getUrgenceClass(courrier?.urgence)" class="badge">
+                {{ courrier?.urgence?.libelle || "NORMALE" }}
+              </span>
+            </div>
+            <div class="info-item">
+              <strong>Mode d'envoi:</strong>
+              <span>{{ courrier?.modeEnvoi?.libbelle || "Standard" }}</span>
+            </div>
+            <div class="info-item">
+              <strong>Numéro de suivi:</strong>
+              <span class="text-muted">{{
+                courrier?.numeroSuivi || "Non attribué"
+              }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Carte Documents joints -->
+      <mat-card
+        class="mb-4"
+        *ngIf="courrier?.documents && courrier.documents.length > 0"
+      >
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">attachment</mat-icon>
+            Documents Joints
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="documents-list">
+            <div
+              *ngFor="let doc of courrier.documents"
+              class="document-item d-flex align-items-center justify-content-between p-2 border rounded mb-2"
+            >
+              <div class="d-flex align-items-center">
+                <mat-icon class="text-muted me-2">description</mat-icon>
+                <span>{{ doc.nom }}</span>
+              </div>
+              <button mat-icon-button color="primary" matTooltip="Télécharger">
+                <mat-icon>download</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Description détaillée -->
+  <div class="row" *ngIf="courrier?.description">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">subject</mat-icon>
+            Description Détaillée
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0" style="white-space: pre-line">
+            {{ courrier?.description }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Instructions d'envoi -->
+  <div class="row" *ngIf="courrier?.instructions">
+    <div class="col-12 mt-4">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">local_shipping</mat-icon>
+            Instructions d'Envoi
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0 text-muted" style="white-space: pre-line">
+            {{ courrier?.instructions }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Notes supplémentaires -->
+  <div class="row" *ngIf="courrier?.notes">
+    <div class="col-12 mt-4">
+      <mat-card>
+        <mat-card-header class="bg-light">
+          <mat-card-title class="d-flex align-items-center">
+            <mat-icon class="me-2">note</mat-icon>
+            Notes Additionnelles
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p class="mb-0 text-muted" style="white-space: pre-line">
+            {{ courrier?.notes }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-end gap-2">
+        <button mat-stroked-button color="secondary" (click)="onClose()">
+          <mat-icon class="me-2">close</mat-icon>
+          Fermer
+        </button>
+        <!-- <button mat-raised-button color="primary" (click)="genererAccuse()">
+          <mat-icon class="me-2">assignment_turned_in</mat-icon>
+          Générer Accusé
+        </button> -->
+        <!-- <button mat-raised-button color="accent" (click)="suivreEnvoi()">
+          <mat-icon class="me-2">track_changes</mat-icon>
+          Suivre l'Envoi
+        </button> -->
+        <button mat-raised-button color="warn" (click)="imprimer()">
+          <mat-icon class="me-2">print</mat-icon>
+          Imprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

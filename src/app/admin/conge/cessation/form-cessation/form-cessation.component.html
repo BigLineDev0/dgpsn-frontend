@@ -1,0 +1,77 @@
+<!-- <section *ngIf="isSearch">
+
+   
+        <div class="modal-footer mt-3">
+            <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section> -->
+
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Nombre de Jour Demandé <small style="color: red;">*</small></label>
+                <input type="number" class="form-control form-control-lg" formControlName="nombreDeJoursdemande" 
+                      [disabled]="true" 
+                       max="30" 
+                       maxlength="2" 
+                       (input)="onInputDuration()"/>
+            </div>
+            <div class="col-md-6 col-sm-12 mb-3">
+                <label class="form-label">Date Cessation de service <small style="color: red;">*</small></label>
+                <input type="date" class="form-control form-control-lg" formControlName="dateCessation" [disabled]="true"/>
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3" #content >
+                <label class="form-label">Objet demande:</label>
+                <quill-editor formControlName="description" [styles]="{ height: '120px', 
+                 'max-height': '300px', 'overflow-y': 'auto' }"
+                  placeholder="Rédigez votre demande">
+                    <div quill-editor-toolbar>
+                        <span class="ql-formats">
+                            <select class="ql-font"></select>
+                            <select class="ql-size"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-align" value="left"></button>
+                            <button class="ql-align" value="center"></button>
+                            <button class="ql-align" value="right"></button>
+                            <button class="ql-align" value="justify"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+                        </span>
+                    </div>
+                </quill-editor>
+            </div>
+            <div class="col-md-12 col-sm-12 mb-3">
+                <label class="form-label">Adressé A:</label>
+                <input type="text" class="form-control form-control-lg" formControlName="libelle" />
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+            <!--        <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">-->
+            <button type="button" class="btn btn-primary" [disabled]="!form.valid" (click)="save()">Enregistrer</button>
+        </div>
+    </form>
+</section>
+<ng-template #matriculeModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Selectionner Matricule</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+    <!-- <app-agent-matricule  [modal]="modal"></app-agent-matricule> -->
+    </div>
+  </ng-template>

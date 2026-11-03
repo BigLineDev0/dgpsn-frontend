@@ -1,0 +1,111 @@
+<section *ngIf="!isSearch">
+    <form [formGroup]="form">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Trimestre <small style="color: red;">*</small></label>
+                <select class="form-select" formControlName="trimestre" (change)="onTrimestreChange()">
+                    <option [value]="null" disabled>Sélectionner un trimestre</option>
+                    <option [value]="1">Trimestre 1 (Janvier - Mars)</option>
+                    <option [value]="2">Trimestre 2 (Avril - Juin)</option>
+                    <option [value]="3">Trimestre 3 (Juillet - Septembre)</option>
+                    <option [value]="4">Trimestre 4 (Octobre - Décembre)</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Mois <small style="color: red;">*</small></label>
+                <select class="form-select" formControlName="mois">
+                    <option [value]="null" disabled>Sélectionner un mois</option>
+                    <option *ngFor="let mois of moisDisponibles" [value]="mois.value">{{mois.label}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Date Début <small style="color: red;">*</small></label>
+                <input type="date" class="form-control" formControlName="dateDebut">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Date Fin <small style="color: red;">*</small></label>
+                <input type="date" class="form-control" formControlName="dateFin">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Statut</label>
+                <select class="form-select" formControlName="statut">
+                    <option value="PLANIFIE">Planifié</option>
+                    <option value="EN_COURS">En cours</option>
+                    <option value="TERMINE">Terminé</option>
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Semaines (optionnel)</label>
+                <ng-select
+                        [items]="semainesDisponibles"
+                        formControlName="semaines"
+                        [multiple]="true"
+                        bindLabel="label"
+                        bindValue="value"
+                        placeholder="Sélectionner les semaines">
+                </ng-select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <label class="form-label">Commentaire</label>
+                <textarea class="form-control" formControlName="commentaire" rows="3"
+                          placeholder="Détails de la planification..."></textarea>
+            </div>
+        </div>
+    </form>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">{{label}}</button>
+    </div>
+</section>
+
+<section *ngIf="isSearch">
+    <form [formGroup]="form">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Trimestre</label>
+                <select class="form-select" formControlName="trimestre">
+                    <option [value]="null">Tous</option>
+                    <option [value]="1">Trimestre 1</option>
+                    <option [value]="2">Trimestre 2</option>
+                    <option [value]="3">Trimestre 3</option>
+                    <option [value]="4">Trimestre 4</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Mois</label>
+                <select class="form-select" formControlName="mois">
+                    <option [value]="null">Tous</option>
+                    <option *ngFor="let mois of allMois" [value]="mois.value">{{mois.label}}</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Statut</label>
+                <select class="form-select" formControlName="statut">
+                    <option [value]="null">Tous</option>
+                    <option value="PLANIFIE">Planifié</option>
+                    <option value="EN_COURS">En cours</option>
+                    <option value="TERMINE">Terminé</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">Rechercher</button>
+        </div>
+    </form>
+</section>

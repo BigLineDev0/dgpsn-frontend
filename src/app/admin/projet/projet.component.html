@@ -1,0 +1,391 @@
+<!-- <app-routing-config-program [url]="'projet'" *ngIf="toProgram" [addButtontitle]="'Nouveau projet'"></app-routing-config-program> -->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav *ngIf="!toProgram" class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb ">
+      <li class="breadcrumb-item active"><a>Gestion projet</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Liste projet</li>
+    </ol>
+  </nav>
+  <div *ngIf="toProgram" class="card p-0">
+    <div class="card-body p-2">
+      <h5 class="badge text-secondary me-1 cursor-pointer" ngbTooltip="{{libelleProgramme}}">{{libelleProgramme}}</h5>
+    </div>
+  </div>
+  <!--  <div *ngIf="toProgram"></div>-->
+
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <!-- *afHasAnyAuthority="import" -->
+    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Import"
+      (click)="openBasicModal(importModal)">
+      <i class="feather icon-arrow-up-circle"></i>
+    </button>
+    <!--    <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export"-->
+    <!--    *afHasAnyAuthority=export>-->
+    <!--      <i class="feather icon-download"></i>-->
+    <!--    </button>-->
+    <!--  *afHasAnyAuthority="export" -->
+    <div ngbDropdown style="display:inline-block">
+      <button type="button" class="btn btn-warning btn-icon me-2 ps-4 pe-4" ngbTooltip="Export" id="dropdownBasic1"
+        ngbDropdownToggle>
+        <i class="feather icon-download "></i>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+        <button ngbDropdownItem (click)="exportExcel()">Excel</button>
+        <button ngbDropdownItem (click)="exportPdf()">PDF</button>
+      </div>
+    </div>
+    <!-- *afHasAnyAuthority="add" -->
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouveau projet
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="projets" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="programme">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:400px;"> programme </th>
+
+          <!--          <td mat-cell *matCellDef="let projet" class="text-left"> {{projet?.code}} </td>-->
+
+          <td mat-cell *matCellDef="let projet" class="text-left"> {{projet?.parent?.name}} </td>
+
+        </ng-container>
+
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:400px;"> Projet </th>
+          <td mat-cell *matCellDef="let projet" class="text-left">
+            {{projet?.name}}
+            <!-- <i popoverTitle="Statut du projet" [ngbPopover]="popTemplate" [placement]="'right'"
+               class="feather icon-alert-circle cursor-pointer"
+               [ngClass]="projet?.statut === 'red' ? 'text-danger' : 'text-success'">
+            </i>&nbsp;&nbsp;&nbsp;
+            <ng-template #popTemplate>
+              <div class="row">
+                <div class="col-8">
+                  <span class="fw-bold" *ngIf="projet?.statut=='green'">Tous les paramétrages ont été faits</span>
+                  <span class="fw-bold" *ngIf="projet?.statut=='red'">Liste des paramétrages manquants</span>
+                </div>
+                <div class="col-4 d-flex justify-content-end">
+                  <strong>Statut</strong> :
+                  <span class="text-success bg-success ms-3 mt-2 p-2 top-0 start-100 translate-middle border border-light rounded-circle"
+                        *ngIf="projet?.statut === 'green'"></span>
+                  <span class="text-danger bg-danger ms-3 mt-2 p-2 top-0 start-100 translate-middle border border-light rounded-circle"
+                        *ngIf="projet?.statut === 'red'"></span>
+                </div>
+              </div>
+              <div *ngIf="projet?.statut === 'green'">
+                <ul>
+                  <li *ngFor="let missing of projet?.missingElements">
+                    {{ missing?.value }} ({{missing?.nombre}})
+                  </li>
+                </ul>
+              </div>
+
+              <div *ngIf="projet?.statut === 'red'">
+                <ul>
+                  <ng-container *ngFor="let missing of projet?.missingElements">
+                    <li *ngIf="missing?.nombre == 0">
+                      <span>{{ missing?.value }} est manquant</span>
+                    </li>
+                  </ng-container>
+                </ul>
+                <span class="fw-bold">Liste des paramètres configurés</span>
+                <ul>
+                  <ng-container *ngFor="let missing of projet?.missingElements">
+                    <li *ngIf="missing?.nombre > 0">
+                      <span>{{ missing?.value }} ({{missing?.nombre}})</span>
+                    </li>
+                  </ng-container>
+                </ul>
+              </div>
+
+            </ng-template> -->
+
+          </td>
+
+
+
+        </ng-container>
+
+        <ng-container matColumnDef="structure">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text" style="min-width:300px;"> Structure
+            responsable </th>
+          <td mat-cell *matCellDef="let projet" class="text-left">
+            <span *ngFor="let item of projet.ministerTutelles">{{item?.structure?.code}} | </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="tauxExecution">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Taux
+            d'exécution </th>
+          <td mat-cell *matCellDef="let projet" class="text-center">
+            <span *ngIf="projet?.tauxAvancement === 'NAN'"> --- </span>
+            <span *ngIf="projet?.tauxAvancement !== 'NAN'">
+              <p><ngb-progressbar [value]="projet?.tauxAvancement" [showValue]="true"></ngb-progressbar></p>
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDebut">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Date de
+            début prévue</th>
+          <td mat-cell *matCellDef="let projet" class="text-center"> {{projet?.expectedStartDate | date: 'dd/MM/yyyy'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateDebutReel">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Date de
+            fin prévue</th>
+          <td mat-cell *matCellDef="let projet" class="text-center"> {{projet?.expectedEndDate | date: 'dd/MM/yyyy'}}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="budget">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:250px;"> Budget
+            (FCFA) </th>
+          <td mat-cell *matCellDef="let projet" class="text-center"> {{projet?.equivalence |
+            currency:'XOF':'symbol':'4.0-0'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="monnaie">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Monnaie
+          </th>
+          <td mat-cell *matCellDef="let projet" class="text-center"> {{projet?.monnaie }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Etat
+            d'exécution </th>
+          <td mat-cell *matCellDef="let projet" class="text-center">
+            <span *ngIf="!projet?.disorganized"
+              [class]="getColor(projet.status?.code)">{{projet.status?.libelle}}</span>
+            <span *ngIf="projet?.disorganized" [class]="getColor('BROUILLON')">Brouillon</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:250px;"> Actions
+          </th>
+          <td mat-cell *matCellDef="let projet" class="text-center bg-white">
+            <!-- *afHasAnyAuthority=parametre -->
+            <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"
+              ngbTooltip="Paramétrage" placement="left"
+              (click)="openConfigProject(projet.id, projet.ugp, projet?.name)">
+              <mat-icon class="icon-lg pb-3px text-primary">settings</mat-icon>
+            </a>
+            <!-- <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"
+              ngbTooltip="Avancement détaillé" placement="left"
+              (click)="openAvancementDetailles(projet.id, projet.name)" *afHasAnyAuthority=avancement>
+              <mat-icon class="icon-lg text-success pb-3px">content_paste</mat-icon>
+            </a> -->
+<!--            <a class="me-2" role="button"-->
+<!--              ngbTooltip="PTBA" placement="left"-->
+<!--              (click)="openUrl('/admin/acces/projet/ptba', projet)">-->
+<!--              <mat-icon class="icon-lg text-primary pb-3px">manage_search</mat-icon>-->
+<!--            </a>-->
+<!--            <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"-->
+<!--               ngbTooltip="Financement" placement="left" (click)="openAction(projet.id, projet.name,'ptba/objectifs')">-->
+<!--                &lt;!&ndash;              ngbTooltip="Financement" placement="left" (click)="openAction(projet.id, projet.name,'composant')">&ndash;&gt;-->
+<!--                <mat-icon class="icon-lg text-orange pb-3px">attach_money</mat-icon>-->
+<!--            </a>-->
+            <!-- <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"
+              ngbTooltip="Suivi des activités" placement="left" (click)="openSuiviActivite(projet.id, projet.name)">
+              <mat-icon class="icon-lg text-warning pb-3px">auto_graph</mat-icon>
+            </a> -->
+            <!-- *afHasAnyAuthority=activite"  *afHasAnyAuthority=financement" -->
+            <!-- <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"
+              ngbTooltip="Financement" placement="left" (click)="openAction(projet.id, projet.name,'budget-config')">
+             <mat-icon class="icon-lg text-primary pb-3px">attach_money</mat-icon>
+          </a>  *afHasAnyAuthority=offre-->
+            <a class="me-2" role="button" ngbTooltip="Appels d'offres" placement="left"
+              (click)="openAction(projet.id, projet.name,'appel-offre/plan-de-passation')">
+              <mat-icon class="icon-lg text-danger pb-3px">campaign</mat-icon>
+            </a>
+            <!--            <a class="me-2" role="button" ngbTooltip="ESG" placement="left" (click)="openActionEsg('MainEsg')"-->
+            <!--            *afHasAnyAuthority=esg>-->
+            <!--              <mat-icon class="icon-lg text-success pb-3px">eco</mat-icon>-->
+            <!--            </a>-->
+            <!-- <a class="me-2" role="button" ngbTooltip="Entreprise" placement="left" (click)="openBasicModal(projetEntrepriseModal, projet)"
+            *afHasAnyAuthority=entreprise>
+              <mat-icon class="icon-lg text-secondary pb-3px">work</mat-icon>
+            </a> -->
+            <!-- <a [ngStyle]="{'display': disabled(projet?.disorganized)}" class="me-2" role="button"
+              ngbTooltip="Fiche de synthèse" placement="left" (click)="openFicheModal(ficheModal, projet.id)"
+              *afHasAnyAuthority=fiche>
+              <mat-icon class="icon-lg text-dark pb-3px">help_outline</mat-icon>
+            </a> -->
+            <!-- <a [ngStyle]="{'display': disabled(projet?.disorganized)}"
+               class="me-2" role="button" ngbTooltip="Tableau de bord" placement="left"
+               (click)="openFicheModal(tdbModal, projet)" *afHasAnyAuthority=tdb>
+              <mat-icon class="icon-lg text-primary pb-3px">bar_chart</mat-icon>
+            </a> -->
+
+            <div class="text-center d-inline-block">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <mat-icon class="icon-lg text-muted">more_vert</mat-icon>
+              </span>
+
+              <mat-menu #menu="matMenu" class="bg-white">
+                <!-- <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(consulterModal, projet)">
+                  <span class="me-2">Consulter</span>
+                  <mat-icon class="text-primary icon-lg">visibility</mat-icon>
+                </a> -->
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                  (click)="openBasicModal(updateModal, projet)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center"
+                  (click)="deleteProject(projet.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <span *ngIf="dataSource?.totalElements == 0" class="paginate text-danger mt-4">Les critères de recherche tels
+        qu'énoncés ne correspondent à aucun projet</span>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="dataSource?.totalElements" [page]="pageOptions.page+1"
+          [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+          [ellipses]="true" [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Add projet-->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-projets [toProgram]="toProgram" [label]="'Enregistrer'" (submit)="close($event)"
+      [isSearch]="false"></app-form-projets>
+  </div>
+</ng-template>
+<ng-template #consulterModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Consulter Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-projets [readProject]="true" [isSearch]="false" (submit)="close($event)"
+      [projectToUpdate]="projectToUpdate" [isSearch]="false"></app-form-projets>
+  </div>
+</ng-template>
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-projets (search)="doSearch($event)" [isSearch]="true"></app-form-projets>
+  </div>
+</ng-template>
+<!--End Add projet-->
+
+<!--Edit projet-->
+<ng-template #updateModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-projets [toProgram]="toProgram" [isSearch]="false" [label]="'Modifier'" (submit)="close($event)"
+      [projectToUpdate]="projectToUpdate" [isSearch]="false"></app-form-projets>
+  </div>
+</ng-template>
+<!--End Edit projet-->
+
+<!--fiche synthese projet-->
+<ng-template #ficheModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Fiche de synthèse Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-fiche-synthese [projetId]="projectId"></app-fiche-synthese> -->
+
+  </div>
+</ng-template>
+
+<!-- end fiche synthese projet-->
+
+<!--Import project-->
+<ng-template #importModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Importation projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Fichier</label>
+          <input type="file" class="form-control" (change)="fileChange($event)" accept=".xlsx, .xls">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close(true)">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="{}">Enregistrer</button>
+    </div>
+  </div>
+
+</ng-template>
+<!--End Import project-->
+
+<!--Upload image projet-->
+<ng-template #uploadImageModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter Image</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-upload-image-projet (submit)="close($event)" [projetId]="uploadProjetId"></app-upload-image-projet>
+  </div>
+</ng-template>
+
+
+<ng-template #projetEntrepriseModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter Entreprise</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-list-projet-entreprise [projectId]="projectId" [projectToUpdate]="projectToUpdate"></app-list-projet-entreprise> -->
+  </div>
+</ng-template>
+
+
+<ng-template #tdbModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Tableau de Bord Projet</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-main-projet-specifique [project]="tableauBordProjet"></app-main-projet-specifique> -->
+  </div>
+</ng-template>
+<!--End Upload image projet-->

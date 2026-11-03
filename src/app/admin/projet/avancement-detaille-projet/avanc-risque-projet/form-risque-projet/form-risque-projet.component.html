@@ -1,0 +1,138 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé <small style="color: red;">*</small></label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <input type="text" class="form-control" placeholder="description" formControlName="description">
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Nature</label>
+          <ng-select [items]="natures" bindLabel="libelle" bindValue="id" placeholder="nature" formControlName="natureId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Rapporté par</label>
+          <input type="text" class="form-control" placeholder="Rapporté par" formControlName="author">
+        </div>
+      </div><!-- Col -->
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date identification</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="identificationDate">
+
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Probabilité</label>
+          <input type="number" class="form-control" placeholder="probabilité" formControlName="probability">
+        </div>
+      </div><!-- Col -->
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Statut</label>
+          <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut" formControlName="statusId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Impact financier</label>
+          <ng-select [items]="criticity" bindLabel="description" bindValue="name" placeholder="impact sur le financement"
+                     formControlName="financialImpact" (change)="getWinancialWeight($event)">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Impact délai</label>
+          <ng-select [items]="criticity" bindLabel="description" bindValue="name" placeholder="impact sur le delai"
+                     formControlName="delayImpact" (change)="getDelayWeight($event)">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Criticité: <span>{{criticite}}</span></label>
+          <p><ngb-progressbar type="danger" [value]="value" [showValue]="true"></ngb-progressbar></p>
+        </div>
+      </div>
+    </div>
+
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Libellé</label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date identification</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="identificationDate">
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Statut</label>
+          <ng-select [items]="statuts"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="statut" formControlName="statusId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Nature</label>
+          <ng-select [items]="natures"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="nature" formControlName="natureId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+  </form>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+  </div>
+</section>
+

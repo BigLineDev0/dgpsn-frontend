@@ -1,0 +1,41 @@
+<form [formGroup]="form">
+    <div class="row">
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label for="user" class="form-label">Utilisateur</label>
+            <input type="text" class="form-control" id="user" placeholder="Utilisateur" formControlName="user">
+        </div>
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label for="typeAction" class="form-label">Type d'action</label>
+            <input type="text" class="form-control" id="typeAction" placeholder="Type d'action" formControlName="actionType">
+        </div>
+        <div class="col-md-4 col-sm-12 mb-3">
+            <label for="ip" class="form-label">Login</label>
+            <input type="text" class="form-control" id="ip" placeholder="login" formControlName="login">
+        </div>
+       
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-md-4 mb-3">
+            <label *ngIf="isComprise" class="form-label">Date début</label>
+            <label *ngIf="!isComprise" class="form-label">Date</label>
+          <input type="date" class="form-control"  formControlName="creationDate">
+        </div>
+        <div class="col-sm-8 col-md-4 mb-3">
+          <label class="form-label">Critère recherche</label>
+          <ng-select [items]="criteres"
+                     bindLabel="label"
+                     bindValue="value"
+                     placeholder="Critère"
+                     formControlName="critere" (change)="getCritere()">
+          </ng-select>
+        </div>
+        <div class="col-sm-8 col-md-4 mb-3" *ngIf="isComprise">
+          <label class="form-label">Date fin </label>
+          <input type="date" class="form-control"  formControlName="endDate">
+        </div>
+      </div>
+  </form>
+  <div class="modal-footer mt-3">
+    <!-- <button type="button" class="btn btn-secondary me-2" (click)="false">Fermer</button> -->
+    <button type="button" class="btn btn-primary" (click)="doSearch()">{{label}}</button>
+</div>

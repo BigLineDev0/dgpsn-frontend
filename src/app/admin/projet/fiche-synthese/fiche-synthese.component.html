@@ -1,0 +1,645 @@
+<div class="row">
+<!--      <span class="position-absolute top-0 start-0 translate-middle p-2">-->
+<!--        <i data-feather="alert-octagon" [style]="getColor(flag?.flag)"></i>-->
+<!--      </span>-->
+    <div class="col-lg-12 grid-margin stretch-card">
+      <!-- <div class="card"> -->
+        <div class="card-body table-responsive p-0">
+            <ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill">
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>Fiche de synthèse</a>
+                  <ng-template ngbNavContent>
+                    <section class="container">
+                        <div class="header-class">
+                                <span class="span-logo">
+                                    <img src="assets/images/logo-final.png" width="70%"/>
+                                </span>
+                                <p class="info d-flex flex-column justify-content-center">
+                                  <span> Programme : {{projet?.parent?.name}}</span>
+                                  <span> Projet : {{projet?.name}}</span>
+                                  <span> {{projet?.structure?.nom}}</span>
+                                  <span>Secteur : {{getUniqueSectorLabels(projet?.subSectors)}}</span>
+                                </p>
+                        </div>
+                      <div class="header-class mt-2 justify-content-center align-items-center">
+                        <div>
+                          <div class="col-12 text-center fs-6 fw-bold text-decoration-underline mb-2">Periodes</div>
+                          <div class="d-flex justify-content-center align-items-center">
+                            <form class="d-flex range-selection" [formGroup]="form">
+                              <span class="mt-2 me-2 fs-7 fw-bold">Date Debut</span>
+                              <div class="form-group hidden">
+                                <div class="input-group">
+                                  <input name="datepicker"
+                                         class="form-control"
+                                         ngbDatepicker
+                                         #datepicker="ngbDatepicker"
+                                         [autoClose]="'outside'"
+                                         (dateSelect)="onDateSelection($event)"
+                                         [displayMonths]="2"
+                                         [dayTemplate]="t"
+                                         outsideDays="hidden"
+                                         [startDate]="fromDate!">
+                                  <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day"
+                                      [class.focused]="focused"
+                                      [class.range]="isRange(date)"
+                                      [class.faded]="isHovered(date) || isInside(date)"
+                                      (mouseenter)="hoveredDate = date"
+                                      (mouseleave)="hoveredDate = null">
+                                  {{ date.day }}
+                                </span>
+                                  </ng-template>
+                                </div>
+                              </div>
+                              <div class="mb-3">
+                                <div class="input-group" (click)="datepicker.toggle()">
+                                  <input #dpFromDate
+                                         class="form-control" placeholder="yyyy-mm-dd"
+                                         name="dpFromDate"
+                                         [value]="formatter.format(fromDate)"
+                                         (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+                                         formControlName="dateDebut">
+                                  <button class="input-group-text" type="button">
+                                    <i class="feather icon-calendar icon-md text-muted"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <div class="ms-2">
+                                <div class="input-group" (click)="datepicker.toggle()">
+                                  <input #dpToDate
+                                         class="form-control" placeholder="yyyy-mm-dd"
+                                         name="dpToDate"
+                                         [value]="formatter.format(toDate)"
+                                         (input)="toDate = validateInput(toDate, dpToDate.value)"
+                                         formControlName="dateFin">
+                                  <button class="input-group-text" type="button">
+                                    <i class="feather icon-calendar icon-md text-muted"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <span class="mt-2 ms-2 fs-7 fw-bold">Date Fin</span>
+                            </form>
+                            <div class="ms-3">
+                              <button class="btn btn-primary mb-3" (click)="chargerDataOnPeriode()">Charger</button>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Description du projet</span>
+                            </div>
+                            <p>{{projet?.description}}
+                            </p>
+                        </div>
+
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Objectif global</span>
+                            </div>
+                            <p>{{projet?.overallObjective}} </p>
+                        </div>
+
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Objectifs spécifiques</span>
+                            </div>
+                          <p *ngFor="let item of objectifsSpecifiques" class="list-group">
+                            <span class="list-group-item list-group-item-action p-1">{{item?.description}}</span>
+                          </p>
+                        </div>
+
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Impact attendu</span>
+                            </div>
+                          <p *ngFor="let item of impactAttendus" class="list-group">
+                            <span class="list-group-item list-group-item-action p-1">{{item?.description}}</span>
+                          </p>
+                        </div>
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Membre de l'UGP</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Rôle</th>
+                                            <th>Prénom/Nom</th>
+                                            <th>Structure de rattachement</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let acteur of acteurs">
+                                            <td>{{acteur.role.libelle}}</td>
+                                            <td>{{acteur.agent?.prenom}} {{acteur.agent?.nom}}</td>
+                                            <td>{{acteur.agent.structure?.nom}}</td>
+
+                                        </tr>
+
+                                        <!-- <ngb-pagination [collectionSize]="120" [(page)]="advancedPaginationCurrentPage" [maxSize]="1" [boundaryLinks]="true"></ngb-pagination> -->
+                                      </tbody>
+                                </table>
+                              </div>
+                        </div>
+                        <div class="mt-2 detail">
+                          <div class="header-class">
+                            <span>Zones d’intervention du projet</span>
+                          </div>
+                          <div class="table-responsive">
+                              <table class="table table-striped">
+                                  <thead>
+                                      <tr>
+                                          <th>Régions</th>
+                                          <th>Départements</th>
+                                          <th>Arrondissements</th>
+                                          <th>Communes</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                          <td>
+                                              <span *ngFor="let localisation of localisations">
+                                                <li *ngIf="localisation?.cadreLogique?.typeCadreLogique?.name == 'REGION'">{{localisation.cadreLogique.libelle}}</li>
+                                             </span>
+                                          </td>
+                                          <td>
+                                            <span *ngFor="let localisation of localisations">
+                                             <li *ngIf="localisation?.cadreLogique?.typeCadreLogique?.name == 'DEPARTEMENT'">{{localisation.cadreLogique.libelle}} ({{localisation.cadreLogique?.parent?.libelle}})</li>
+                                           </span>
+                                        </td>
+                                        <td>
+                                          <span *ngFor="let localisation of localisations">
+                                            <li *ngIf="localisation?.cadreLogique?.typeCadreLogique?.name == 'ARRONDISSEMENT'">{{localisation.cadreLogique.libelle}} ({{localisation.cadreLogique?.parent?.libelle}})</li>
+                                         </span>
+                                      </td>
+                                      <td>
+                                        <span *ngFor="let localisation of localisations">
+                                          <li *ngIf="localisation?.cadreLogique?.typeCadreLogique?.name == 'COMMUNE'">{{localisation.cadreLogique.libelle}} ({{localisation.cadreLogique?.parent?.libelle}})</li>
+                                       </span>
+                                    </td>
+                                      </tr>
+
+                                      <!-- <ngb-pagination [collectionSize]="120" [(page)]="advancedPaginationCurrentPage" [maxSize]="1" [boundaryLinks]="true"></ngb-pagination> -->
+                                    </tbody>
+                              </table>
+                            </div>
+                      </div>
+
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Budget et répartition par bailleur</span>
+                            </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>PAD</th>
+                                                <th>Montant (FCFA)</th>
+                                                <th>Type de financement</th>
+                                                <th>Part</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr *ngFor="let finance of budgets let i = index">
+                                              <td>{{finance?.structure?.nom}}</td>
+                                              <td>{{finance.montant | currency:'XOF':'symbol':'4.0-0'}}</td>
+                                              <td>{{finance.budget?.souceBudget?.description}}</td>
+                                              <td>{{finance.montant/finance?.budget?.actualAmount * 100 | currency:'symbol':''}} %</td>
+                                            </tr>
+                                          </tbody>
+                                    </table>
+                                  </div>
+                        </div> -->
+
+                      <p  class="table-responsive mt-3"><small style="color: red;">*</small> PAD : Partenaire Au Développement autrement dit le bailleur</p>
+
+
+<!--                        <div class="mt-2 detail">-->
+<!--                            <div class="header-class">-->
+<!--                              <span>Existence d’un comité de pilotage (oui/non, si oui préciser la fréquence de tenue des réunions et la date de la dernière réunion)</span>-->
+<!--                            </div>-->
+<!--                            <div class="table-responsive">-->
+<!--                               <p>-->
+<!--                                <li>Existence d’un comité de pilotage: <span *ngIf="projet?.copile">Oui</span> <span *ngIf="!projet?.copile">Non</span></li>-->
+<!--                                <li *ngIf="projet?.copile">Fréquence de tenue des réunions :  <span >{{projet?.meetingFrequency}}</span></li>-->
+<!--                                <li *ngIf="projet?.copile">Nombre de réunions tenues à date : <span >{{projet?.lastMeetingDate}}</span></li>-->
+<!--                               </p>-->
+
+<!--                              </div>-->
+
+<!--                        </div>-->
+
+                        <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Composition de l'UGP</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Postes clés</th>
+                                            <th>Existe-il ?</th>
+                                            <th>Est-il occupé ?</th>
+                                            <th>Statut (Fonctionnaire ou Contractuel)</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let ugp of ugps let i = index">
+                                            <td>{{ugp.ugpRole?.libelle}}</td>
+                                            <td>{{ugp.existed? 'Oui': 'Non'}}</td>
+                                            <td>{{ugp.occupied? 'Oui': 'Non'}}</td>
+                                            <td>{{ugp?.status}}</td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div>
+<!--                        <div class="mt-2 detail">-->
+<!--                            <div class="header-class">-->
+<!--                              <span>Taux de décaissement à fin novembre 2022</span>-->
+<!--                            </div>-->
+<!--                            <div class="table-responsive" >-->
+<!--                                <table class="table table-striped">-->
+<!--                                    <thead>-->
+<!--                                        <tr>-->
+<!--                                            <th>PAD</th>-->
+<!--                                            <th>Taux de décaissement Trim 1</th>-->
+<!--                                            <th>Taux de décaissement Trim 2</th>-->
+<!--                                            <th>Taux de décaissement Trim 3</th>-->
+<!--                                            <th>Taux de décaissement Trim 4</th>-->
+<!--                                        </tr>-->
+<!--                                      </thead>-->
+                                     <!-- <tbody>-->
+<!--                                        <tr *ngFor="let t of taux let i = index">-->
+<!--                                            <td>{{t.funding}}</td>-->
+<!--                                            <td>{{t.trim1Value}}</td>-->
+<!--                                            <td>{{t.trim2Value}}</td>-->
+<!--                                            <td>{{t.trim3Value}}</td>-->
+<!--                                            <td>{{t.trim4Value}}</td>-->
+
+<!--                                        </tr>-->
+<!--                                      </tbody>-->
+<!--                                </table>-->
+<!--                              </div>-->
+<!--                        </div> -->
+
+                        <div class="mt-2 detail">
+                          <div class="row">
+                            <div class="col-6">
+                              <div class="header-class">
+                                <span>Taux d'avancement</span>
+                              </div>
+                              <div class="table-responsive" *ngIf="!loadingChart">
+                                <table class="table table-striped">
+                                  <thead>
+                                  <tr>
+                                    <th>{{formTaux?.value?.year}}</th>
+                                    <th>TRIM 1</th>
+                                    <th>TRIM 2</th>
+                                    <th>TRIM 3</th>
+                                    <th>TRIM 4</th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr>
+                                    <td>PREVISIONS</td>
+                                    <td *ngFor="let value of previsions let i = index">{{value}}</td>
+                                  </tr>
+                                  <tr>
+                                    <td>RÉALISATIONS</td>
+                                    <td  *ngFor="let value of realisations let i = index">{{value}}</td>
+                                  </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div *ngIf="loadingChart">
+                                <div class="text-center">
+                                  <div class="spinner-border text-primary align-middle" style="width: 3rem; height: 3rem;" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="header-class">
+                                <span>Evolution des Taux d'avancement</span>
+                              </div>
+                              <div id="chart">
+                                <div>
+                                  <form action="" [formGroup]="formTaux">
+                                    <ng-select [items]="annees" bindLabel="value" bindValue="value" formControlName="year" [clearable]="false"
+                                               (change)="getTauxAvancement()" placeholder="Choisir une année">
+                                    </ng-select>
+                                  </form>
+
+                                </div>
+                                <div *ngIf="loadingChart">
+                                  <div class="text-center">
+                                    <div class="spinner-border text-primary align-middle" style="width: 3rem; height: 3rem;" role="status">
+                                      <span class="visually-hidden">Chargement...</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <apx-chart *ngIf="!loadingChart"
+                                           [series]="chartOptions.series"
+                                           [chart]="chartOptions.chart"
+                                           [xaxis]="chartOptions.xaxis"
+                                           [stroke]="chartOptions.stroke"
+                                           [colors]="chartOptions.colors"
+                                           [dataLabels]="chartOptions.dataLabels"
+                                           [legend]="chartOptions.legend"
+                                           [markers]="chartOptions.markers"
+                                           [grid]="chartOptions.grid"
+                                           [yaxis]="chartOptions.yaxis"
+                                           [title]="chartOptions.title"
+                                ></apx-chart>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+<!--                        <div class="detail">-->
+
+
+<!--                        </div>-->
+
+
+<!--                        <div class="mt-2 detail">-->
+<!--                          <div class="header-class">-->
+<!--                            <span>État d’avancement</span>-->
+<!--                          </div>-->
+<!--                          <div class="table-responsive" >-->
+<!--                              <table class="table table-striped">-->
+<!--                                  <thead>-->
+<!--                                      <tr>-->
+<!--                                          <th>Composantes</th>-->
+<!--                                          <th>Activités réalisées </th>-->
+<!--                                          <th>% avancement physique</th>-->
+<!--                                      </tr>-->
+<!--                                    </thead>-->
+<!--                                    <tbody>-->
+<!--                                      <tr *ngFor="let risque of risques let i = index">-->
+<!--                                          <td>{{risque.libelle}}</td>-->
+<!--                                          <td>{{risque.nature?.libelle}}</td>-->
+<!--                                          <td>{{risque.probability}}</td>-->
+<!--                                          <td><p class="info d-flex flex-column"><span *ngFor="let recommandation of getRecommandationsByRisk(risque.id)" class="mt-2"> <i class="pi pi-check"></i>-->
+<!--                                          {{recommandation?.libelle}}-->
+<!--                                      </span><br></p></td>-->
+<!--                                      </tr>-->
+<!--                                    </tbody>-->
+<!--                              </table>-->
+<!--                            </div>-->
+<!--                      </div>-->
+
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Difficultés rencontrées et Solutions envisageables/ à proposer</span>
+                            </div>
+                            <div class="table-responsive" style="max-height: 500px;">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Difficultés</th>
+                                            <th>Date de survenue</th>
+                                            <th>Responsables</th>
+                                            <th>Risque financier</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let probleme of problemes let i = index">
+                                            <td>
+                                              <p ngbTooltip="{{probleme.libelle}}" *ngIf="probleme.libelle?.length > 50; else templateName">
+                                                {{probleme.libelle | textFormatter: 'split:50'}}
+                                              </p>
+                                              <ng-template #templateName>
+                                                <p ngbTooltip="{{probleme.libelle}}">
+                                                  {{probleme.libelle}}
+                                                </p>
+                                              </ng-template>
+                                            </td>
+                                            <td>{{probleme.identificationDate | date: 'dd/MM/yyyy'}}</td>
+                                           <td>{{probleme?.supervisor?.code}}</td>
+                                          <td>{{probleme.risqueFinancier}}</td>
+
+                                        <td></td>
+                                        </tr>
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div> -->
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Missions</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Libellé</th>
+                                            <th>Date début</th>
+                                            <th>Date fin</th>
+                                            <th>Type</th>
+                                            <th>Structure d'exécution</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let mission of missions let i = index">
+                                            <td>{{mission.libelle}}</td>
+                                            <td>{{mission.startDate | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{mission.endDate | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{mission.assignmentType?.libelle}}</td>
+                                            <td>{{mission.structureExecution?.nom}}</td>
+                                        </tr>
+
+
+                                      </tbody>
+                                </table>
+                              </div>
+                        </div> -->
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Revues</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Label</th>
+                                            <th>Date</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let revue of revues let i = index">
+                                             <td>{{revue.keyPoint}}</td>
+                                             <td>{{revue.date | date: 'dd/MM/yyyy'}}</td>
+                                        </tr>
+
+
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div> -->
+
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Requêtes</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Objet</th>
+                                            <th>partenaire</th>
+                                            <th>Structure d'exécution</th>
+                                            <th>Montant</th>
+                                            <th>Situation requête</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let requete of requetes let i = index">
+                                            <td>{{requete.object}}</td>
+                                            <td>{{requete.partener?.nom}}</td>
+                                            <td>{{requete.executive?.nom}}</td>
+                                            <td>{{requete.amount}}</td>
+                                            <td>{{getSituation(requete.id)[0]}}</td>
+
+                                        </tr>
+
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div> -->
+                        <!-- <div class="mt-2 detail">
+                            <div class="header-class">
+                              <span>Localisation géographique</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                             <th>Libellé</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let localisation of localisations let i = index">
+                                            <td>{{localisation.cadreLogique?.code}}</td>
+                                            <td>{{localisation.cadreLogique?.libelle}}</td>
+                                        </tr>
+
+
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div> -->
+
+                        <!-- <div class="mt-2 detail text-white">
+                            <div class="header-class">
+                              <span>Dates importantes</span>
+                            </div>
+                            <div class="table-responsive" >
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Jalon</th>
+                                            <th>Date prévue</th>
+                                            <th>Date réelle</th>
+                                            <th>Commentaire</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr *ngFor="let date of dates let i = index">
+                                            <td>{{date.libelle}}</td>
+                                            <td>{{date.predicatedDate | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{date.readDate | date: 'dd/MM/yyyy'}}</td>
+                                            <td>{{date.comment}}</td>
+                                        </tr>
+
+                                      </tbody>
+                                </table>
+                              </div>
+
+                        </div> -->
+
+                    </section>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>Médiathèque</a>
+                  <ng-template ngbNavContent>
+                    <div class="card-body p-0">
+                        <ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill" #nav>
+                          <li [ngbNavItem]="1">
+                            <a ngbNavLink>Images</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div *ngFor="let url of urls" class="col-md-3 mt-3">
+                                        <img (click)="openImage(imageModal, url)" [attr.src]="url | safeUrl" class="wd-50 wd-sm-200 cursor-pointer">
+                                    </div>
+                                    <!-- <div *ngFor="let image of images">
+                                      <a href="{{ image.src }}" data-lightbox="image-gallery" data-title="{{ image.libelle }}">
+                                        <img [src]="image.src" alt="{{ image.iibelle }}" width="200px">
+                                      </a>
+                                    </div> -->
+
+                                    <!-- <div>
+                                      <a href="assets/images/siggi/ppasa.jpg" data-lightbox="gallery" data-title="Image 1" style="width: 50px; height: 50;">
+                                        <img src="assets/images/siggi/ppasa.jpg" alt="Thumbnail 1" />
+                                      </a>
+                                      <a href="assets/images/siggi/ppist.jpg" data-lightbox="gallery" data-title="Image 2" style="width: 10px; height: 10;">
+                                        <img src="assets/images/siggi/ppist.jpg" alt="Thumbnail 2" />
+                                      </a>
+                                    </div> -->
+
+
+                                </div>
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="2">
+                            <a ngbNavLink>Vidéos</a>
+                            <ng-template ngbNavContent>
+                                <div class="row">
+                                    <div *ngFor="let video of videos" class="col-md-3 mt-3">
+                                        <iframe width="100%" height="200px" class="m-0" [attr.src]="video?.src | safeUrl"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen> </iframe>
+                                    </div>
+                                </div>
+                            </ng-template>
+                          </li>
+                        </ul>
+                            <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
+                      </div>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                  <a ngbNavLink>Documents</a>
+                  <ng-template ngbNavContent>
+                    <app-documents-projet [projetId]="projetId" [action]="false"></app-documents-projet>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
+        </div>
+      <!-- </div> -->
+    </div>
+  </div>
+
+<ng-template #imageModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Lecture image</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+
+  <div class="modal-body p-0">
+    <img [attr.src]="imageUrl | safeUrl" alt="Image" class="w-100 h-100" style="object-fit: contain;">
+  </div>
+</ng-template>
+

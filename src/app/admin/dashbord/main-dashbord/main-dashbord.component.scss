@@ -1,0 +1,106 @@
+.main-dashboard-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding: 20px;
+}
+
+.btn-outline-primary {
+  border: 1px solid #dee2e6;
+  color: #495057;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: green;
+    border-color: green;
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    background-color: green;
+    border-color: green;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+  }
+
+  i {
+    font-size: 14px;
+  }
+}
+
+// .card {
+//   border: 1px solid #e3e6f0;
+//   border-radius: 8px;
+//   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+
+// }
+.card-body {
+  border: 1px solid #e3e6f0;
+  border-radius: 8px;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  padding: 1.25rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: green;
+  margin-bottom: 1rem;
+}
+
+.dashboard-content {
+  margin-top: 20px;
+}
+
+.dashboard-view {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e3e6f0;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  overflow: hidden;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+}
+
+@media (max-width: 768px) {
+  .main-dashboard-container {
+    padding: 15px;
+  }
+
+  .d-flex.flex-wrap {
+    justify-content: center;
+  }
+
+  .btn-outline-primary {
+    flex: 1;
+    min-width: 120px;
+    margin: 2px;
+    text-align: center;
+
+    i {
+      display: block;
+      margin: 0 auto 4px auto;
+    }
+  }
+}
+
+/* Animation simple */
+.dashboard-view {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

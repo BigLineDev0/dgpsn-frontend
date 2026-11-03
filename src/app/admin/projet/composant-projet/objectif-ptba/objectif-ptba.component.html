@@ -1,0 +1,614 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active"><a>Budgets</a></li>
+            <li class="breadcrumb-item active"><a routerLink="/ptba">Financement</a></li>
+            <li class="breadcrumb-item text-primary" aria-current="page">Objectifs</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <button type="button"
+                class="btn btn-primary"
+                (click)="openAddModal()"
+                [disabled]="!selectedNodeType">
+            {{ getAddButtonLabel() }}
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Colonne Arborescence (Gauche) -->
+    <div class="col-sm-12 col-md-4 mb-4" style="position: relative;">
+        <div class="card" style="height: 58px; background-color: #3b5943; color: #fff">
+            <div class="card-body p-2" style="position: relative;">
+                <h2 class="card-title text-white">Objectifs</h2>
+                <button style="position: absolute; top: 10px; right: 2px"
+                        (click)="openModal(addObjectifModal, 'xl')"
+                        mat-icon-button
+                        aria-label="nouvel objectif"
+                        matTooltip="nouvel objectif"
+                        matTooltipClass="custom-tooltip">
+                    <mat-icon>assignment_add</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="card-tree">
+            <!-- Leaf Node -->
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                <button mat-icon-button></button>
+                <div class="cursor-pointer folder-item"
+                     [class.selected]="isNodeSelected(node)"
+                     (click)="selectNode(node)">
+                    <i class="feather"
+                       [ngClass]="{
+                         'icon-target': node.data.type === 'OBJECTIF',
+                         'icon-folder': node.data.type === 'ACTION',
+                         'icon-file-text': node.data.type === 'ACTIVITY',
+                         'icon-bar-chart': node.data.type === 'INDICATOR'
+                       }"
+                       class="icon-md mr-1"
+                       [ngClass]="{
+                         'text-success': node.data.type === 'OBJECTIF',
+                         'text-primary': node.data.type === 'ACTION',
+                         'text-info': node.data.type === 'ACTIVITY',
+                         'text-warning': node.data.type === 'INDICATOR'
+                       }"></i>
+                    <span [ngClass]="{
+                      'fw-bold': node.data.type === 'OBJECTIF',
+                      'fw-semibold': node.data.type === 'ACTION'
+                    }">
+                      {{ node.data.nomenclature }} : {{ node.data.libelle }}
+                    </span>
+                </div>
+                <div class="box-projet-actions" *ngIf="node.data.type !== 'INDICATOR'">
+                    <app-objectif-actions [node]="node" (actionEvent)="handleAction($event)"></app-objectif-actions>
+                </div>
+            </mat-tree-node>
+
+            <!-- Expandable Node -->
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                <button mat-icon-button matTreeNodeToggle>
+                    <mat-icon>{{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}</mat-icon>
+                </button>
+                <div class="cursor-pointer folder-item"
+                     [class.selected]="isNodeSelected(node)"
+                     (click)="selectNode(node)">
+                    <i class="feather"
+                       [ngClass]="{
+                         'icon-target': node.data.type === 'OBJECTIF',
+                         'icon-folder': node.data.type === 'ACTION',
+                         'icon-file-text': node.data.type === 'ACTIVITY',
+                         'icon-bar-chart': node.data.type === 'INDICATOR'
+                       }"
+                       class="icon-md mr-1"
+                       [ngClass]="{
+                         'text-success': node.data.type === 'OBJECTIF',
+                         'text-primary': node.data.type === 'ACTION',
+                         'text-info': node.data.type === 'ACTIVITY',
+                         'text-warning': node.data.type === 'INDICATOR'
+                       }"></i>
+                    <span [ngClass]="{
+                      'fw-bold': node.data.type === 'OBJECTIF',
+                      'fw-semibold': node.data.type === 'ACTION'
+                    }">
+                      {{ node.data.nomenclature }} : {{ node.data.libelle }}
+                    </span>
+                </div>
+                <div class="box-projet-actions" *ngIf="node.data.type !== 'INDICATOR'">
+                    <app-objectif-actions [node]="node" (actionEvent)="handleAction($event)"></app-objectif-actions>
+                </div>
+            </mat-tree-node>
+        </mat-tree>
+    </div>
+
+    <!-- Colonne Tableau (Droite) -->
+    <div class="col-sm-12 col-md-8">
+        <div class="card-body">
+            <!-- Message si aucun nœud sélectionné -->
+            <div *ngIf="!selectedNodeType" class="alert alert-info">
+                <i class="feather icon-info icon-md mr-2"></i>
+                Veuillez sélectionner un élément dans l'arborescence
+            </div>
+
+            <!-- Tableau des Actions -->
+            <div class="row" *ngIf="selectedNodeType === 'OBJECTIF'">
+                <div class="col-lg-12">
+                    <h4 class="mb-3">{{ getTableTitle() }}</h4>
+                    <section class="table-container mat-elevation-z8" tabindex="0">
+                        <app-spinner *ngIf="loadingIndicator"
+                                     [displayedColumns]="displayedColumnsActions"></app-spinner>
+
+                        <table mat-table [dataSource]="tableData" *ngIf="!loadingIndicator">
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Code</th>
+                                <td mat-cell *matCellDef="let item">{{ item.code }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nomenclature">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Nomenclature</th>
+                                <td mat-cell *matCellDef="let item">{{ item.nomenclature }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="libelle">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Libellé</th>
+                                <td mat-cell *matCellDef="let item">{{ item.libelle }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center"
+                                    style="min-width:100px;">Actions
+                                </th>
+                                <td mat-cell *matCellDef="let item" class="text-center bg-white">
+                                    <div class="text-center d-inline-block">
+                                        <!--                                        <button ngbTooltip="Source Financement" placement="bottom" class="me-2 text-primary" (click)="openSourceFinancement(item.id, null,null)" mat-icon-button>-->
+                                        <!--                                            <mat-icon>payments</mat-icon>-->
+                                        <!--                                        </button>-->
+                                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer text-black"
+                                              matRipple>
+                                            <mat-icon>more_vert</mat-icon>
+                                        </span>
+                                        <mat-menu #menu="matMenu" class="bg-white">
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="editItem(modalUpdateActionActivite, 'xl', item)">
+                                                <span class="me-2">Modifier</span>
+                                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                                            </a>
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="deleteItem(item)">
+                                                <span class="me-2">Supprimer</span>
+                                                <mat-icon class="text-danger icon-lg">delete</mat-icon>
+                                            </a>
+                                        </mat-menu>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsActions; sticky: true"
+                                class="table-head-bg"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsActions"></tr>
+                        </table>
+
+                        <div *ngIf="!loadingIndicator && tableData.length === 0" class="p-4 text-center text-muted">
+                            <i class="feather icon-inbox icon-lg mb-2"></i>
+                            <p>Aucune action pour cet objectif</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Tableau des Activités -->
+            <div class="row" *ngIf="selectedNodeType === 'ACTION'">
+                <div class="col-lg-12">
+                    <h4 class="mb-3">{{ getTableTitle() }}</h4>
+                    <section class="table-container mat-elevation-z8" tabindex="0">
+                        <app-spinner *ngIf="loadingIndicator"
+                                     [displayedColumns]="displayedColumnsActivites"></app-spinner>
+
+                        <table mat-table [dataSource]="tableData" *ngIf="!loadingIndicator">
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Code</th>
+                                <td mat-cell *matCellDef="let item">{{ item.code }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="nomenclature">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Nomenclature</th>
+                                <td mat-cell *matCellDef="let item">{{ item.nomenclature }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="libelle">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Libellé</th>
+                                <td mat-cell *matCellDef="let item">{{ item.libelle }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateDebut">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Date début
+                                </th>
+                                <td mat-cell *matCellDef="let item" class="text-center">
+                                    {{ formatDate(item.startDate) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateFin">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Date fin</th>
+                                <td mat-cell *matCellDef="let item" class="text-center">
+                                    {{ formatDate(item.endDate) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center"
+                                    style="min-width:100px;">Actions
+                                </th>
+                                <td mat-cell *matCellDef="let item" class="text-center bg-white">
+                                    <div class="text-center d-inline-block">
+                                        <button ngbTooltip="Source Financement" placement="bottom"
+                                                class="me-2 text-primary"
+                                                (click)="openSourceFinancement(item.id, null)" mat-icon-button>
+                                            <mat-icon>payments</mat-icon>
+                                        </button>
+                                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer text-black"
+                                              matRipple>
+                                            <mat-icon>more_vert</mat-icon>
+                                        </span>
+                                        <mat-menu #menu="matMenu" class="bg-white">
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="editItem(modalUpdateActionActivite, 'xl', item)">
+                                                <span class="me-2">Modifier</span>
+                                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                                            </a>
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="deleteItem(item)">
+                                                <span class="me-2">Supprimer</span>
+                                                <mat-icon class="text-danger icon-lg">delete</mat-icon>
+                                            </a>
+                                        </mat-menu>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsActivites; sticky: true"
+                                class="table-head-bg"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsActivites"></tr>
+                        </table>
+
+                        <div *ngIf="!loadingIndicator && tableData.length === 0" class="p-4 text-center text-muted">
+                            <i class="feather icon-inbox icon-lg mb-2"></i>
+                            <p>Aucune activité pour cette action</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Tableau des Indicateurs -->
+            <div class="row" *ngIf="selectedNodeType === 'ACTIVITY'">
+                <div class="col-lg-12">
+                    <h4 class="mb-3">{{ getTableTitle() }}</h4>
+                    <section class="table-container mat-elevation-z8" tabindex="0">
+                        <app-spinner *ngIf="loadingIndicator"
+                                     [displayedColumns]="displayedColumnsIndicateurs"></app-spinner>
+
+                        <table mat-table [dataSource]="tableData" *ngIf="!loadingIndicator">
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Code</th>
+                                <td mat-cell *matCellDef="let val">{{ val?.code }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="libelle">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Libellé</th>
+                                <td mat-cell *matCellDef="let val">
+                                  <span class="fw-semibold">
+                                    {{ val?.nomenclature ? val?.nomenclature+' : ' : '' }}{{ val?.libelle }}
+                                  </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center"
+                                    style="min-width:110px;">Actions
+                                </th>
+                                <td mat-cell *matCellDef="let val" class="text-center bg-white">
+                                    <div class="text-center d-inline-block">
+                                        <button ngbTooltip="Source Financement" placement="bottom"
+                                                class="me-2 text-primary"
+                                                (click)="openSourceFinancement(val?.id,null)" mat-icon-button>
+                                            <mat-icon>payments</mat-icon>
+                                        </button>
+                                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer text-black"
+                                              matRipple>
+                                            <mat-icon>more_vert</mat-icon>
+                                        </span>
+                                        <mat-menu #menu="matMenu" class="bg-white">
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="editItem(modalUpdateIndicator, 'xl', val)">
+                                                <span class="me-2">Modifier</span>
+                                                <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                                            </a>
+                                            <a ngbDropdownItem class="d-flex align-items-center"
+                                               (click)="deleteItem(val)">
+                                                <span class="me-2">Supprimer</span>
+                                                <mat-icon class="text-danger icon-lg">delete</mat-icon>
+                                            </a>
+                                        </mat-menu>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsIndicateurs; sticky: true"
+                                class="table-head-bg"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsIndicateurs"></tr>
+                        </table>
+
+                        <div *ngIf="!loadingIndicator && tableData.length === 0" class="p-4 text-center text-muted">
+                            <i class="feather icon-inbox icon-lg mb-2"></i>
+                            <p>Aucun indicateur pour cette activité</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Tableau des Tâches -->
+            <div class="row" *ngIf="selectedNodeType === 'INDICATOR'">
+                <div class="col-lg-12">
+                    <h4 class="mb-3">{{ getTableTitle() }}</h4>
+                    <section class="table-container mat-elevation-z8" tabindex="0">
+                        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumnsTaches"></app-spinner>
+
+                        <table mat-table [dataSource]="tableData" *ngIf="!loadingIndicator">
+                            <ng-container matColumnDef="trimestre">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Trimestre</th>
+                                <td mat-cell *matCellDef="let tache">
+                                    <span class="badge" [ngClass]="{
+                                        'bg-primary': tache?.trimestre === 1,
+                                        'bg-success': tache?.trimestre === 2,
+                                        'bg-warning': tache?.trimestre === 3,
+                                        'bg-danger': tache?.trimestre === 4
+                                    }">
+                                        Trimestre {{ tache?.trimestre }}
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="mois">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Mois</th>
+                                <td mat-cell *matCellDef="let tache">
+                                    <span class="badge bg-info">{{ getMoisLabel(tache?.mois) }}</span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="semaines">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Semaines</th>
+                                <td mat-cell *matCellDef="let tache" class="text-center">
+                                    <span *ngIf="tache?.semaines && tache?.semaines.length > 0">
+                                        <span class="badge bg-secondary me-1"
+                                              *ngFor="let semaine of tache?.semaines">S{{ semaine }}</span>
+                                    </span>
+                                    <span *ngIf="!tache?.semaines || tache?.semaines.length === 0" class="text-muted">
+                                        Tout le mois
+                                    </span>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateDebut">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Date Début
+                                </th>
+                                <td mat-cell *matCellDef="let tache" class="text-center">
+                                    {{ formatDate(tache?.dateDebut) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dateFin">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Date Fin</th>
+                                <td mat-cell *matCellDef="let tache" class="text-center">
+                                    {{ formatDate(tache?.dateFin) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="commentaire">
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text">Commentaire</th>
+                                <td mat-cell *matCellDef="let tache">{{ tache?.commentaire || '-' }}</td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="statut" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center">Statut</th>
+                                <td mat-cell *matCellDef="let tache" class="text-center bg-white">
+                                    <span [matMenuTriggerFor]="menuStatut" class="cursor-pointer" matRipple>
+                                        <span class="badge" [ngClass]="colorBadgeStatut(tache?.statut)"
+                                              style="min-width: 80px;">
+                                            {{ getStatutLabel(tache?.statut) }}
+                                        </span>
+                                    </span>
+                                    <mat-menu #menuStatut="matMenu" class="bg-white">
+                                        <button mat-menu-item (click)="updateStatus(tache, 'TERMINE')"
+                                                [disabled]="tache?.statut === 'TERMINE'">
+                                            <mat-icon class="text-success">check_circle</mat-icon>
+                                            <span class="ms-2">Terminé</span>
+                                        </button>
+                                        <button mat-menu-item (click)="updateStatus(tache, 'EN_COURS')"
+                                                [disabled]="tache?.statut === 'EN_COURS'">
+                                            <mat-icon class="text-warning">hourglass_empty</mat-icon>
+                                            <span class="ms-2">En cours</span>
+                                        </button>
+                                        <button mat-menu-item (click)="updateStatus(tache, 'PLANIFIE')"
+                                                [disabled]="tache?.statut === 'PLANIFIE'">
+                                            <mat-icon class="text-secondary">schedule</mat-icon>
+                                            <span class="ms-2">Planifié</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center"
+                                    style="min-width:110px;">Actions
+                                </th>
+                                <td mat-cell *matCellDef="let tache" class="text-center bg-white">
+                                    <div class="text-center d-inline-block">
+                                        <!--                                        <button ngbTooltip="Source Financement" placement="bottom" (click)="openSourceFinancement(modalSourceFinancement,null,tache.id, null)" class="me-2 text-primary" mat-icon-button>-->
+                                        <button ngbTooltip="Source Financement" placement="bottom"
+                                                (click)="openSourceFinancement(null,tache.id)"
+                                                class="me-2 text-primary" mat-icon-button>
+                                            <mat-icon>payments</mat-icon>
+                                        </button>
+                                        <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer text-black"
+                                              matRipple>
+                                            <mat-icon>more_vert</mat-icon>
+                                        </span>
+                                        <mat-menu #menu="matMenu" class="bg-white">
+                                            <a mat-menu-item (click)="editItem(modalUpdateTache, 'xl', tache)">
+                                                <mat-icon class="text-primary me-2">edit</mat-icon>
+                                                <span>Modifier</span>
+                                            </a>
+                                            <a mat-menu-item (click)="deleteItem(tache)">
+                                                <mat-icon class="text-danger me-2">delete</mat-icon>
+                                                <span>Supprimer</span>
+                                            </a>
+                                        </mat-menu>
+                                    </div>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnsTaches; sticky: true"
+                                class="table-head-bg"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnsTaches"></tr>
+                        </table>
+
+                        <div *ngIf="!loadingIndicator && tableData.length === 0" class="p-4 text-center text-muted">
+                            <i class="feather icon-inbox icon-lg mb-2"></i>
+                            <p>Aucune tâche pour cet indicateur</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Ajout Objectif -->
+<ng-template #addObjectifModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout d'un objectif</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-objectif (submit)="close($event)" [budgetId]="budgetId" [isSearch]="false"></app-form-objectif>
+    </div>
+</ng-template>
+
+<!-- Modal Ajout Action -->
+<ng-template #addActionModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout d'une action</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-action-activite
+                (submit)="close($event)"
+                [parentId]="selectedNodeId"
+                [type]="'ACTION'"
+                [isSearch]="false">
+        </app-form-action-activite>
+    </div>
+</ng-template>
+
+<!-- Modal Ajout Activité -->
+<ng-template #addActiviteModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout d'une activité</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-action-activite
+                (submit)="close($event)"
+                [parentId]="selectedNodeId"
+                [type]="'ACTIVITY'"
+                [isSearch]="false">
+        </app-form-action-activite>
+    </div>
+</ng-template>
+
+<!-- Modal Ajout Tâche -->
+<ng-template #addTacheModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ajout Tâche</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-tache
+                [label]="'Enregistrer'"
+                (submit)="close($event)"
+                [activityId]="getParentActivityId(getSelectedNode())"
+                [indicatorId]="selectedNodeId"
+                [isSearch]="false"
+                [modal]="modalRef">
+        </app-form-tache>
+    </div>
+</ng-template>
+
+<!-- Modal Modification -->
+<ng-template #modalUpdateTache let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modification Tâche</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-tache
+                [label]="'Modifier'"
+                (submit)="close($event)"
+                [tacheToUpdate]="itemToUpdate"
+                [isSearch]="false"
+                [modal]="modalRef">
+        </app-form-tache>
+    </div>
+</ng-template>
+
+<!-- Modal Ajout Activité -->
+<ng-template #addIndicateurModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            <mat-icon class="me-2">bar_chart</mat-icon>
+            Ajout d'un Indicateur
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="indicatorForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Code <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="code" placeholder="Ex: IND-001">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Libellé <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="libelle" placeholder="Ex: Taux de réalisation des activités">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" formControlName="description" rows="3" placeholder="Description de l'indicateur..."></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Annuler</button>
+        <button type="button" class="btn btn-primary text-white" (click)="saveIndicator(modal)">
+            Enregistrer l'indicateur
+        </button>
+    </div>
+</ng-template>
+
+<!-- Modal de Modification pour Indicateur -->
+<ng-template #modalUpdateIndicator let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Modification de l'Indicateur</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-action-activite
+                (submit)="close($event)"
+                [item]="itemToUpdate"
+                [type]="'INDICATOR'"
+                [isSearch]="false">
+        </app-form-action-activite>
+    </div>
+</ng-template>
+
+<!-- Modal de Modification pour Action / Activité -->
+<ng-template #modalUpdateActionActivite let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Modification de {{ itemToUpdate?.type === 'ACTION' ? 'l\'Action' : 'l\'Activité' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-action-activite
+                (submit)="close($event)"
+                [item]="itemToUpdate"
+                [type]="itemToUpdate?.type"
+                [isSearch]="false">
+        </app-form-action-activite>
+    </div>
+</ng-template>

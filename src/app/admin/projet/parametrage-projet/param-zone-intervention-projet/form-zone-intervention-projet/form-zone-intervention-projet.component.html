@@ -1,0 +1,6 @@
+<p-listbox [options]="cardres" [(ngModel)]="selectedCardres" optionLabel="libelle" [style]="{'width':'700px'}"
+           [multiple]="true" [metaKeySelection]="false" [filter]="true"></p-listbox>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+  <button type="button" class="btn btn-primary" (click)="create()">Enregistrer</button>
+</div>

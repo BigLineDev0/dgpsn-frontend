@@ -1,0 +1,72 @@
+<section *ngIf="!isSearch">
+
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Statut<small style="color: red;">*</small></label>
+          <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut"
+                     formControlName="statusId">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date début<small style="color: red;">*</small></label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date fin<small style="color: red;">*</small></label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Statut</label>
+          <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut"
+                     formControlName="statusId">
+          </ng-select>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date début</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date fin</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer mt-3">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+
+</section>

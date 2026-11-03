@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Region</a></li>
+      <li class="breadcrumb-item active"><a routerLink="/referentiel/region">Liste des region</a></li>
+      <li class="breadcrumb-item active">Suivi</li>
+      <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+  <a class="me-4 d-block" ngbTooltip="Departement" routerLink="/referentiel/departement" #tooltip1="ngbTooltip">
+    <i class="feather icon-map icon-lg" [ngClass]="activeUrl('departement', tooltip1)"></i>
+  </a>
+
+  </div>
+</div>

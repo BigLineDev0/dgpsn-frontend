@@ -1,0 +1,68 @@
+.table-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+  
+    table {
+      width: 100%;
+      background-color: white;
+  
+      .table-head-bg {
+        background-color: #f8f9fa;
+      }
+  
+      .table-head-text {
+        font-weight: 600;
+        color: #495057;
+        padding: 16px 12px;
+      }
+  
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #e9ecef;
+      }
+  
+      tr:hover {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+  
+  .paginate {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .progress {
+    border-radius: 10px;
+    overflow: hidden;
+    
+    .progress-bar {
+      transition: width 0.3s ease;
+      font-weight: 600;
+    }
+  }
+  
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  mat-icon {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  .badge {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  ::ng-deep {
+    .mat-mdc-menu-panel {
+      min-width: 180px;
+    }
+  }

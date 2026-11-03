@@ -1,0 +1,71 @@
+.navbar{
+    background-color: #4f6c52;
+}
+.title {
+    position: relative;
+    left: 50%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    font-size: 1.4em;
+    // color:#C06C0E;
+    color: white;
+}
+.rechercheByMatricule{
+  z-index: 1081
+}
+@media only screen and (max-width: 600px) {
+  .title {
+    font-size: 0.8em;
+    text-align: left;
+    margin-right:15px;
+  }
+  .vertical-menu .navbar .navbar-content{
+    padding:0;
+  }
+  .navbar-content{
+    margin-left: 0;
+  }
+}
+
+.search-bar-container {
+  position: absolute;
+  top: 60px; /* Ajustez la valeur en fonction de votre mise en page */
+  right: 130px;
+  width: 215px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px 0 5px 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  //width: 100%;
+  //border: none;
+  outline: none;
+}
+.list-group-item:hover {
+  background-color: #031729;
+  color:white;
+}
+.list-group-item {
+  color:#031729;
+}
+/* Style pour le modal de chargement */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour couvrir l'écran */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.align-right {
+  float: right;
+}
+
+

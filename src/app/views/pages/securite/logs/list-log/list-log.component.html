@@ -1,0 +1,101 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb ">
+      <li class="breadcrumb-item active"><a>Sécurité</a></li>
+      <li class="breadcrumb-item breadcrumb-active" aria-current="page">Journal</li>
+    </ol>
+  </nav>
+</div>
+
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body m-0 p-0">
+<!--            <ngb-accordion [closeOthers]="true">-->
+<!--                <ngb-accordion-item id="static-1">-->
+<!--                    <ngb-accordion-header>-->
+<!--                        Recherche-->
+<!--                    </ngb-accordion-header>-->
+<!--                    <ngb-accordion-collapse>-->
+<!--                        <ngb-accordion-body>-->
+<!--                            <app-form-log [label]="'Rechercher'" (search)="doSearch($event)"></app-form-log>-->
+<!--                        </ngb-accordion-body>-->
+<!--                    </ngb-accordion-collapse>-->
+<!--                </ngb-accordion-item>-->
+<!--            </ngb-accordion>-->
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <!-- is only used before getting data to the api-->
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+      <!-- is only used before getting data to the api-->
+
+      <table mat-table [dataSource]="logs" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="utilisateur">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Utilisateur </th>
+          <td mat-cell *matCellDef="let log"> {{log?.user}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="login">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Login </th>
+          <td mat-cell *matCellDef="let log" > {{log?.login}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actionType">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Type d'action </th>
+          <td mat-cell *matCellDef="let log" > <span> {{log?.actionType}} </span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="chemin">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Chemin d'accès </th>
+          <td mat-cell *matCellDef="let log" > {{log?.path}} </td>
+        </ng-container>
+        
+        <!-- <ng-container matColumnDef="method">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Méthode </th>
+          <td mat-cell *matCellDef="let log" class="text-center"> {{log?.method}} </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="ipAddress">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Adresse ip </th>
+          <td mat-cell *matCellDef="let log" > {{log?.ipAddress}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userAgent">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;"> Système </th>
+          <td mat-cell *matCellDef="let log" > {{log?.userAgent}} </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:250px;"> URL </th>
+          <td mat-cell *matCellDef="let log" class="text-center"> {{log?.url}} </td>
+        </ng-container>          -->
+
+        <ng-container matColumnDef="creationDate">
+
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Date </th>
+          <td mat-cell *matCellDef="let log" class="text-center"> {{log?.creationDate | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="Number(pageOptions.page+1)" [pageSize]="pageOptions.size"
+                        [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true" [ellipses]="true"
+                        [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>

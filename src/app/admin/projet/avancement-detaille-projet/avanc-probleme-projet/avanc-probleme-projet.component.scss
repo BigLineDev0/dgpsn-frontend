@@ -1,0 +1,53 @@
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* Espacement général pour les autres champs */
+  }
+  
+  label {
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  #styled-textarea {
+    width: 100%;
+    max-width: 750px;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    resize: vertical; /* Permet de redimensionner verticalement seulement */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  #styled-textarea:focus {
+    border-color: #3B5943; /* Bordure verte lors du focus */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    outline: none; /* Enlève le contour par défaut */
+  }
+  
+  #styled-textarea::placeholder {
+    color: #999; /* Couleur du texte de l'espace réservé (placeholder) */
+    font-style: italic;
+  }
+
+  /* Classe pour une icône validée */
+.valid-icon {
+    color: #00813d; /* Vert pour les éléments valides */
+  }
+  
+  /* Classe pour une icône non validée */
+  .invalid-icon {
+    color: #f4c276; /* Orange pour les éléments non valides */
+  }
+  
+  /* Applique le style flex en ligne pour les boutons radio */
+.form-group.mt-2 {
+  flex-direction: row; /* Assure que les boutons radio sont sur la même ligne */
+  align-items: center; /* Aligne verticalement les boutons et le label */
+  margin-bottom: 10px; /* Diminue l'espace entre les radio buttons et le commentaire */
+}

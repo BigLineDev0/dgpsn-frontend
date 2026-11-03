@@ -1,0 +1,172 @@
+<!-- <div [class]="containerClass">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-logo-content sp4">
+                    <div class="row"> -->
+                        <!-- Logo et description -->
+                        <!-- <div class="col-lg-3 col-md-6">
+                            <div class="logo-content">
+                                <img [src]="logo" alt=""  style="width: 80px;height: 60px;">
+                                <p>Notre objectif est de simplifier les démarches juridiques, répondre à vos questions et vous donner les outils nécessaires pour mieux comprendre vos droits.</p>
+                                <ul>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-instagram"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-1 d-lg-block d-none"></div> -->
+
+                        <!-- Services juridiques -->
+                        <!-- <div class="col-lg-2 col-md-6">
+                            <div class="space30 d-block d-md-none"></div>
+                            <div class="service-heading">
+                                <h2>Services juridiques</h2>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Conseil juridique</a></li>
+                                    <li><a href="javascript:void(0)">Dépôt de plainte</a></li>
+                                    <li><a href="javascript:void(0)">Assistance aux litiges</a></li>
+                                    <li><a href="javascript:void(0)">Médiation et conciliation</a></li>
+                                    <li><a href="javascript:void(0)">Accès aux tribunaux</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-1 d-lg-block d-none"></div>
+
+                        <!-- Liens rapides -->
+                        <!-- <div class="col-lg-2 col-md-6">
+                            <div class="space30 d-md-block d-lg-none"></div>
+                            <div class="service-heading">
+                                <h2>Liens rapides</h2>
+                                <ul>
+                                    <li><a routerLink="/home-1">Accueil</a></li>
+                                    <li><a routerLink="/about">Accès au droit</a></li>
+                                    <li><a routerLink="/services/one">Démarches administratives</a></li>
+                                    <li><a routerLink="/testimonials">Base juridique</a></li>
+                                    <li><a routerLink="/contact-up">Annuaire juridique</a></li>
+                                </ul>
+                            </div>
+                        </div> --> 
+
+                        <!-- Contact -->
+                        <!-- <div class="col-lg-3 col-md-6">
+                            <div class="space30 d-md-block d-lg-none"></div>
+                            <div class="service-heading contact">
+                                <h2>Contactez-nous</h2>
+                                <ul>
+                                    <li><a href="tel:+221123456789">
+                                            <span class="icons"><i class="fa-solid fa-phone"></i></span><span>+221 123 456 789</span></a>
+                                    </li>
+                                    <li><a href="mailto:info@justice.sn">
+                                            <span class="icons"><i class="fa-solid fa-envelope"></i></span><span>info&#64;justice.sn</span></a>
+                                    </li>
+                                    <li><a href="javascript:void(0)">
+                                            <span class="icons"><i class="fa-solid fa-location-dot"></i></span><span>Mairie de Dakar, Rue de la Justice <br> Dakar, Sénégal</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- Copyright -->
+                <!-- <div class="copyright p-0"  style="background-color:#815549 ">
+                    <p>© Copyright {{currentYear}} - Tous droits réservés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div [class]="containerClass">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="footer-logo-content sp4">
+                    <div class="row">
+                        <!-- Logo et description -->
+                        <div class="col-lg-4 col-md-6">
+                            <div class="logo-content">
+                                 <!-- <ul class="mb-4">
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-instagram"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="fa-brands fa-youtube"></i></a></li>
+                                </ul> -->
+                                <img src="assets/img/footer/logo.png" alt="" style="height: 300px; width: 400px;">
+                                <!-- <p style="font-size: 15px; margin: 10px;">Notre objectif est de simplifier les démarches juridiques, répondre à vos questions et vous donner les outils nécessaires pour mieux comprendre vos droits.</p> -->
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-1 d-lg-block d-none"></div> -->
+                        <!-- Services juridiques -->
+                        <div class="col-lg-2 col-md-6">
+                            <div class="space30 d-block d-md-none"></div>
+                            <div class="service-heading">
+                                <h2>Services juridiques</h2>
+                                <ul>
+                                    <li *ngFor="let service of footerData.services | slice:0:footerData.displayCount" class="d-flex align-items-center" style="width: 400px ;">
+                                        <img [src]="service.imageUrl" [alt]="service.name" class="me-2 mt-3" style="width: 60px; height: 40px;">
+                                        <a href="javascript:void(0)">{{ service.name }}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-1 d-lg-block d-none"></div>
+
+                        <!-- Liens rapides -->
+                        <div class="col-lg-2 col-md-6">
+                            <div class="space30 d-md-block d-lg-none"></div>
+                            <div class="service-heading">
+                                <h2>Liens rapides</h2>
+                                <ul>
+                                    <li><a routerLink="/home-1">Accueil</a></li>
+                                    <li><a routerLink="/acces-au-droit">Accès au droit</a></li>
+                                    <li><a routerLink="/demarches-administratives">Démarches administratives</a></li>
+                                    <li><a routerLink="/base-juridique">Base juridique</a></li>
+                                    <li><a routerLink="/contact-us">Annuaire juridique</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Contact -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="space30 d-md-block d-lg-none"></div>
+                            <div class="service-heading contact">
+                                <h2>Contactez-nous</h2>
+                                <ul>
+                                    <li><a href="tel:+221123456789">
+                                            <span class="icons"><i class="fa-solid fa-phone"></i></span><span>+221 123 456 789</span></a>
+                                    </li>
+                                    <li><a href="mailto:info@justice.sn">
+                                            <span class="icons"><i class="fa-solid fa-envelope"></i></span><span>info&#64;justice.sn</span></a>
+                                    </li>
+                                    <li><a href="javascript:void(0)">
+                                            <span class="icons"><i class="fa-solid fa-location-dot"></i></span><span>Mairie de Dakar, Rue de la Justice <br> Dakar, Sénégal</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="logo-content mt-4" style="margin-left: 8px;">
+                                 <ul class="mb-4">
+                                    <li class="me-2"><a href="javascript:void(0)"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                    <li class="me-2"><a href="javascript:void(0)"><i class="fa-brands fa-instagram"></i></a></li>
+                                    <li class="me-2"><a href="javascript:void(0)"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                                    <li class="me-2"><a href="javascript:void(0)"><i class="fa-brands fa-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Copyright -->
+                <div class="copyright p-0" style="background-color:#815549">
+                    <p>© Copyright {{currentYear}} - Tous droits réservés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

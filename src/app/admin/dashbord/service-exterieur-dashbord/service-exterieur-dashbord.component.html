@@ -1,0 +1,233 @@
+<div class="main-dashboard-container">
+  <!-- Breadcrumb -->
+
+  <!-- Cartes de Statistiques -->
+  <div class="row mb-5 g-4">
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+      <div class="card border-0 shadow-sm hover-lift h-100">
+        <div class="card-body text-center p-3">
+          <div class="d-flex justify-content-center mb-3">
+            <div class="rounded-circle bg-primary bg-opacity-10 p-2" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+              <i class="feather icon-book  text-primary"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-2  fs-4">{{ dashboardStats.totalFormations }}</h3>
+          <p class="text-muted mb-0 small">Formations</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+      <div class="card border-0 shadow-sm hover-lift h-100">
+        <div class="card-body text-center p-3">
+          <div class="d-flex justify-content-center mb-3">
+            <div class="rounded-circle bg-success bg-opacity-10 p-2" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+              <i class="feather icon-briefcase  text-success"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-2  fs-4">{{ dashboardStats.totalMissions }}</h3>
+          <p class="text-muted mb-0 small">Missions</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+      <div class="card border-0 shadow-sm hover-lift h-100">
+        <div class="card-body text-center p-3">
+          <div class="d-flex justify-content-center mb-3">
+            <div class="rounded-circle bg-warning bg-opacity-10 p-2" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+              <i class="feather icon-users  text-warning"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-2  fs-4">{{ dashboardStats.totalAteliers }}</h3>
+          <p class="text-muted mb-0 small">Ateliers</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+      <div class="card border-0 shadow-sm hover-lift h-100">
+        <div class="card-body text-center p-3">
+          <div class="d-flex justify-content-center mb-3">
+            <div class="rounded-circle bg-info bg-opacity-10 p-2" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+              <i class="feather icon-dollar-sign  text-info"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-2  fs-4">{{ dashboardStats.totalBudget | currency:'FCFA':'symbol':'1.0-0' }}</h3>
+          <p class="text-muted mb-0 small">Budget Total</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques Principaux -->
+  <div class="row mb-5 g-4">
+    <!-- Répartition par Type d'Activité -->
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-3">
+              <i class="feather icon-pie-chart fs-5 text-primary"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-primary">Répartition par Type d'Activité</h5>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas #typeActiviteChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget par Type d'Activité -->
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-success bg-opacity-10 p-2 me-3">
+              <i class="feather icon-bar-chart-2 fs-5 text-success"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-success">Budget par Type d'Activité</h5>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas #budgetChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques Secondaires -->
+  <div class="row mb-5 g-4">
+    <!-- Évolution des Activités par Mois -->
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-info bg-opacity-10 p-2 me-3">
+              <i class="feather icon-trending-up fs-5 text-info"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-info">Évolution des Activités par Mois</h5>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas #evolutionChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Répartition par Statut -->
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-3">
+              <i class="feather icon-activity fs-5 text-warning"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-warning">Répartition par Statut</h5>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas #statutChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Graphiques Avancés -->
+  <div class="row g-4">
+    <!-- Top 5 des Activités par Budget -->
+    <div class="col-xl-8 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-danger bg-opacity-10 p-2 me-3">
+              <i class="feather icon-award fs-5 text-danger"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-danger">Top 5 - Activités par Budget</h5>
+          </div>
+          <div class="chart-container" style="height: 350px;">
+            <canvas #topBudgetChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Participants par Type d'Activité -->
+    <div class="col-xl-4 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-4">
+            <div class="rounded-circle bg-secondary bg-opacity-10 p-2 me-3">
+              <i class="feather icon-users fs-5 text-secondary"></i>
+            </div>
+            <h5 class="mb-0 fw-semibold text-uppercase text-secondary">Participants par Type</h5>
+          </div>
+          <div class="chart-container" style="height: 350px;">
+            <canvas #participantsChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Filtre -->
+<ng-template #filterModal let-modal>
+  <div class="modal-header border-0 pb-0">
+    <h5 class="modal-title fw-semibold">
+      <i class="feather icon-filter me-2 text-primary"></i>Filtrer les activités
+    </h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body px-4 py-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="feather icon-tag me-1"></i>Type d'activité
+        </label>
+        <select class="form-select form-select-sm shadow-sm border-0" [(ngModel)]="filters.typeActivite" aria-label="Type d'activité">
+          <option value="">Tous les types</option>
+          <option value="FORMATION">📚 Formation</option>
+          <option value="MISSION">💼 Mission</option>
+          <option value="ATELIER">👥 Atelier</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="feather icon-check-circle me-1"></i>Statut
+        </label>
+        <select class="form-select form-select-sm shadow-sm border-0" [(ngModel)]="filters.statut" aria-label="Statut">
+          <option value="">Tous les statuts</option>
+          <option value="PLANIFIE">📋 Planifiée</option>
+          <option value="EN_COURS">⏳ En cours</option>
+          <option value="TERMINE">✅ Terminée</option>
+          <option value="ANNULE">❌ Annulée</option>
+        </select>
+      </div>
+    </div>
+    <div class="row g-3 mt-1">
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="feather icon-calendar me-1"></i>Date de début
+        </label>
+        <input type="date" class="form-control form-control-sm shadow-sm border-0" [(ngModel)]="filters.dateDebut" aria-label="Date de début">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label fw-medium small text-muted">
+          <i class="feather icon-calendar me-1"></i>Date de fin
+        </label>
+        <input type="date" class="form-control form-control-sm shadow-sm border-0" [(ngModel)]="filters.dateFin" aria-label="Date de fin">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer border-0 pt-0">
+    <button type="button" class="btn btn-light btn-sm px-4" (click)="clearFilters()">
+      <i class="feather icon-rotate-ccw me-1"></i>Effacer
+    </button>
+    <button type="button" class="btn btn-primary btn-sm px-4 shadow-sm" (click)="applyFilters()">
+      <i class="feather icon-check me-1"></i>Appliquer
+    </button>
+  </div>
+</ng-template>
+

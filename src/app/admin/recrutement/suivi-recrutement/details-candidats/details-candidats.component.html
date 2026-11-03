@@ -1,0 +1,123 @@
+<ul ngbNav #fillJustifyNav="ngbNav" class="nav-tabs nav-fill">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>  
+      <mat-icon class="align-middle">description</mat-icon> 
+      CV  
+    </a>
+    <ng-template ngbNavContent>
+      <div class="cv-container">
+        <div class="cv-content">
+          <!-- Informations du CV -->
+          <div class="cv-info">
+            <div class="cv-header">
+              <h3>{{candidat?.nom + ' ' + candidat?.prenom}}</h3>
+              <p><strong>{{candidat?.postePostule}}</strong></p>
+            </div>
+
+            <div class="cv-details">
+              <div class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">location_on</mat-icon>
+                <p>{{candidat?.adresse}}</p>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">payments</mat-icon>
+                <p>{{candidat?.salaireSouhaite}}</p>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">work_outline</mat-icon>
+                <p>{{candidat?.experienceProfessionnelle | experienceLabel }}</p>
+              </div>
+
+              <!-- <div *ngIf="candidat?.statutPre" class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">check_circle_outline</mat-icon>
+                <p>{{candidat?.statutPre}}</p>
+              </div>
+
+              <div *ngIf="candidat?.statut" class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">radio_button_unchecked</mat-icon>
+                <p>{{candidat?.statut?.description}}</p>
+              </div> -->
+
+              <!-- Nouveau : Niveau d'études -->
+              <div class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">school</mat-icon>
+                <p class="fw-boldest">{{candidat?.niveauEtude | niveauEtude}}</p>
+              </div>
+
+              <!-- Nouveau : Compétences -->
+              <div class="detail-item">
+                <mat-icon class="icon-lg align-middle text-primary">content_paste</mat-icon>
+                <p><strong>Compétences:</strong> {{candidat?.competences?.join(', ')}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Photo de profil -->
+          <div class="cv-profile">
+            <img src="https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg" alt="Photo de profil" class="profile-img">
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink><mat-icon class="align-middle">description</mat-icon> Documents</a>
+    <ng-template ngbNavContent>
+      <div class="documents-container">
+<!--        <h4 class="mb-3">Documents du candidat</h4>-->
+        <div *ngIf="mockDocx().length > 0; else noDocs">
+          <div class="document-card" *ngFor="let doc of mockDocx()">
+            <div class="doc-icon">
+              <span [ngClass]="getIconClass(doc.type)"></span>
+            </div>
+            <div class="doc-info">
+              <h5>{{ doc.nom }}</h5>
+              <p class="doc-type">{{ doc.type.toUpperCase() }}</p>
+              <p class="doc-date">Ajouté le : {{ doc.dateAjout | date:'dd-MM-yyyy' }}</p>
+            </div>
+            <div class="doc-actions d-flex align-items-center">
+              <a target="_blank" class="btn btn-primary btn-sm me-2">
+                <span class="mdi mdi-eye"></span> Aperçu
+              </a>
+              <a target="_blank" class="btn btn-primary btn-sm">
+                <span class="mdi mdi-download"></span> Télécharger
+              </a>
+            </div>
+          </div>
+        </div>
+        <ng-template #noDocs>
+          <p class="text-muted">Aucun document disponible.</p>
+        </ng-template>
+      </div>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="3">
+    <a ngbNavLink><mat-icon class="align-middle">record_voice_over</mat-icon> Entretien</a>
+    <ng-template ngbNavContent>
+      <div class="entretien-container">
+<!--        <h4 class="section-title">Évaluation de l'entretien</h4>-->
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Critère</th>
+            <th>Évaluation</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let critere of criteres">
+            <td>{{ critere.code }}</td>
+            <td>{{ critere.libelle }}</td>
+            <td><span class="badge" [ngClass]="getBadgeClass(critere.value)">{{ critere.value }}</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+
+  </li>
+
+</ul>
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>

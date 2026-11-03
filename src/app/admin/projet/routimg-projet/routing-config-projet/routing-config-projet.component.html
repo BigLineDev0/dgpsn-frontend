@@ -1,0 +1,81 @@
+<!-- 
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Projets</a></li>
+      <li class="breadcrumb-item active"><a routerLink="/projet">Liste projets</a></li>
+      <li class="breadcrumb-item active">Parametrage</li>
+      <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+    </ol>
+  </nav>
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <a class="me-4 d-block" ngbTooltip="UGP" routerLink="/admin/acces/parametrage/ugp" #tooltip1="ngbTooltip">
+      <i class="feather icon-target icon-md" [ngClass]="activeUrl('admin/acces/parametrage/ugp', tooltip1)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Zones d'Intervention" routerLink="/admin/acces/parametrage/zone-intervention" #tooltip2="ngbTooltip">
+      <i class="feather icon-globe icon-md" [ngClass]="activeUrl('admin/acces/parametrage/zone-intervention', tooltip2)"></i>
+    </a>
+    <a class="me-4 d-block" ngbTooltip="Structures de Tutelle" routerLink="/admin/acces/parametrage/structure-tutelle" #tooltip3="ngbTooltip">
+      <i class="feather icon-award icon-md" [ngClass]="activeUrl('admin/acces/parametrage/structure-tutelle', tooltip3)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Structures d'execution" routerLink="/admin/acces/parametrage/structure-execution" #tooltip4="ngbTooltip">
+      <i class="feather icon-share-2 icon-md" [ngClass]="activeUrl('admin/acces/parametrage/structure-execution', tooltip4)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Partenaires" routerLink="/admin/acces/parametrage/partenaires" #tooltip8="ngbTooltip">
+      <i class="feather icon-user-plus icon-md" [ngClass]="activeUrl('admin/acces/parametrage/partenaires', tooltip8)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Indicateurs" routerLink="/admin/acces/parametrage/indicateur" #tooltip5="ngbTooltip">
+      <i class="feather icon-activity icon-md" [ngClass]="activeUrl('admin/acces/parametrage/indicateur', tooltip5)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Membres de l'UGP" routerLink="/admin/acces/parametrage/acteur/evaluation" #tooltip6="ngbTooltip">
+      <i class="feather icon-users icon-md" [ngClass]="activeUrl('admin/acces/parametrage/acteur/evaluation', tooltip6)"></i>
+    </a>
+    <a ngbTooltip="Jalons" routerLink="/admin/acces/parametrage/jalons" #tooltip7="ngbTooltip">
+      <i class="feather icon-crosshair icon-md" [ngClass]="activeUrl('admin/acces/parametrage/jalons', tooltip7)"></i>
+    </a>
+  </div>
+</div> -->
+
+<!--<div class="btn-retour justify-content-between" >-->
+<!--  <a routerLink="/">-->
+<!--    <i class="feather icon-arrow-left-circle icon-md"></i>-->
+<!--  </a>-->
+<!--</div>-->
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-0">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active"><a>Projets</a></li>
+      <li class="breadcrumb-item active"><a (click)="navigateTo('projet')">Liste projets</a></li>
+      <li class="breadcrumb-item active">Parametrage</li>
+      <li class="breadcrumb-item text-primary" aria-current="page">{{pageTitle}}</li>
+    </ol>
+  </nav>
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <a class="me-4 d-block" ngbTooltip="UGP" (click)="navigateTo('admin/acces/parametrage/ugp')" #tooltip1="ngbTooltip">
+      <i class="feather icon-target icon-md" [ngClass]="activeUrl('admin/acces/parametrage/ugp', tooltip1)"></i>
+    </a>
+    <!-- <a class="me-4" ngbTooltip="Zones d'Intervention" (click)="navigateTo('admin/acces/parametrage/zone-intervention')" #tooltip2="ngbTooltip">
+      <i class="feather icon-globe icon-md" [ngClass]="activeUrl('admin/acces/parametrage/zone-intervention', tooltip2)"></i>
+    </a> -->
+    <a class="me-4 d-block" ngbTooltip="Structures de Tutelle" (click)="navigateTo('admin/acces/parametrage/structure-tutelle')" #tooltip3="ngbTooltip">
+      <i class="feather icon-award icon-md" [ngClass]="activeUrl('admin/acces/parametrage/structure-tutelle', tooltip3)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Structures d'execution" (click)="navigateTo('admin/acces/parametrage/structure-execution')" #tooltip4="ngbTooltip">
+      <i class="feather icon-share-2 icon-md" [ngClass]="activeUrl('admin/acces/parametrage/structure-execution', tooltip4)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Partie prenante" (click)="navigateTo('admin/acces/parametrage/partenaires')" #tooltip8="ngbTooltip">
+      <i class="feather icon-user-plus icon-md" [ngClass]="activeUrl('admin/acces/parametrage/partenaires', tooltip8)"></i>
+    </a>
+    <a class="me-4" ngbTooltip="Indicateurs" (click)="navigateTo('admin/acces/parametrage/indicateur')" #tooltip5="ngbTooltip">
+      <i class="feather icon-activity icon-md" [ngClass]="activeUrl('admin/acces/parametrage/indicateur', tooltip5)"></i>
+    </a>
+    <!-- <a class="me-4" ngbTooltip="Membres de l'UGP" (click)="navigateTo('admin/acces/parametrage/acteur/evaluation')" #tooltip6="ngbTooltip">
+      <i class="feather icon-users icon-md" [ngClass]="activeUrl('admin/acces/parametrage/acteur/evaluation', tooltip6)"></i>
+    </a> -->
+    <a ngbTooltip="Jalons" (click)="navigateTo('admin/acces/parametrage/jalons')" #tooltip7="ngbTooltip">
+      <i class="feather icon-crosshair icon-md" [ngClass]="activeUrl('admin/acces/parametrage/jalons', tooltip7)"></i>
+    </a>
+  </div>
+</div>

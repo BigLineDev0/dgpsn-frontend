@@ -1,0 +1,162 @@
+<div class="dashboard-container">
+  <!-- Cartes Statistiques Principales -->
+  <div class="row mb-4 g-3">
+    <div
+      class="col-xl-4 col-lg-6 col-md-6 col-sm-12"
+      *ngFor="let card of statsAgentsCard()"
+    >
+      <div class="card border-0 shadow-sm hover-lift h-100">
+        <div class="card-body text-center p-3">
+          <div class="d-flex justify-content-center mb-2">
+            <div
+              class="rounded-circle bg-opacity-10 p-2"
+              [ngClass]="card.bgClass"
+              style="
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <i [class]="card.icon + ' ' + card.textClass"></i>
+            </div>
+          </div>
+          <h3 class="fw-bold mb-1 fs-5">{{ card.value }}</h3>
+          <p class="text-muted small mb-0">{{ card.label }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition par Direction et Sexe -->
+  <div class="row mb-4 g-3">
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-primary bg-opacity-10 p-2 me-2">
+              <i class="feather icon-pie-chart fs-5 text-primary"></i>
+            </div>
+            <h6 class="mb-0 fw-semibold">
+              Répartition des Agents par Direction
+            </h6>
+          </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas #directionChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-danger bg-opacity-10 p-2 me-2">
+              <i class="feather icon-users fs-5 text-danger"></i>
+            </div>
+            <h6 class="mb-0 fw-semibold">Répartition des Sexes</h6>
+          </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas #performanceChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition par Tranche d'âge -->
+  <div class="row mb-4 g-3">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-success bg-opacity-10 p-2 me-2">
+              <i class="feather icon-target fs-5 text-success"></i>
+            </div>
+            <h6 class="mb-0 fw-semibold">Répartition par Tranche d'âge</h6>
+          </div>
+          <div class="chart-container" style="height: 500px">
+            <canvas #agentAgeChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Évolution des Recrutements & Répartition par Fonction -->
+  <div class="row mb-4 g-3">
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-info bg-opacity-10 p-2 me-2">
+              <i class="feather icon-trending-up fs-5 text-info"></i>
+            </div>
+            <h6 class="mb-0 fw-semibold">Évolution des Recrutements</h6>
+          </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas #recruitmentChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-12">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="rounded-circle bg-warning bg-opacity-10 p-2 me-2">
+              <i class="feather icon-briefcase fs-5 text-warning"></i>
+            </div>
+            <h6 class="mb-0 fw-semibold">Répartition par Fonction</h6>
+          </div>
+          <div class="chart-container" style="height: 280px">
+            <canvas #functionChartCanvas></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  -->
+<div class="card border-0 shadow-sm h-100">
+  <div class="card-body p-4">
+    <div class="d-flex align-items-center mb-3">
+      <div class="rounded-circle bg-secondary bg-opacity-10 p-2 me-2 w-auto">
+        <i class="feather icon-clock fs-5 text-secondary"></i>
+      </div>
+      <h6 class="mb-0 fw-semibold me-3">
+        Prévision des retraites par direction
+      </h6>
+
+      <select
+        id="yearFilter"
+        class="form-select form-select-sm w-auto ms-auto"
+        (change)="onYearChange($event)"
+      >
+        <option value="" >Toutes les années</option>
+        <option *ngFor="let year of yearsList()" [value]="year">
+          {{ year }}
+        </option>
+      </select>
+      <button (click)="resetFilter()" class="btn btn-sm btn-outline-secondary ms-2">
+        Réinitialiser
+      </button>
+    </div>
+
+    <!-- ⚠️ Message si aucune donnée -->
+    <div *ngIf="hasNoData()" class="text-center text-muted py-5">
+      <i class="feather icon-info fs-4 d-block mb-2"></i>
+      Aucune donnée disponible pour l'année sélectionnée.
+    </div>
+
+    <!-- Graphique -->
+    <div *ngIf="!hasNoData()" class="chart-container" style="height: 400px; position: relative">
+      <canvas #chartRetraite id="chartRetraite"></canvas>
+    </div>
+  </div>
+</div>
+
+  <!--  -->
+</div>

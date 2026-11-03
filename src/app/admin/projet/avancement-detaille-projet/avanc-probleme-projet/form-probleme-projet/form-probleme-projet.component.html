@@ -1,0 +1,265 @@
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé</label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Nature</label>
+          <ng-select [items]="natures" bindLabel="libelle" bindValue="id" placeholder="nature"
+                     formControlName="natureId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Statut</label>
+          <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut"
+                     formControlName="statusId">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Impact financier</label>
+          <ng-select [items]="criticities" bindLabel="description" bindValue="name"
+                     placeholder="impact sur le financement" formControlName="financialImpact"
+                     (change)="getFinancialWeight($event)">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Impact delai</label>
+          <ng-select [items]="criticities" bindLabel="description" bindValue="name" placeholder="impact sur le delai"
+                     (change)="getDelayWeight($event)" formControlName="delayImpact">
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+
+      <div class="col-sm-4 col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Date identification</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="identificationDate">
+
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Date Résolution</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="resolutionDate">
+
+        </div>
+      </div><!-- Col -->
+      <!-- Col -->
+      <div class="col-sm-4 col-md-4">
+        <div class="mb-3">
+          <label class="form-label">Date échéance</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="deadline">
+
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+
+</section>
+
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <mat-stepper [linear]="false" #stepper>
+      <mat-step [stepControl]="form">
+        <ng-template matStepLabel>Problème</ng-template>
+        <div class="row">
+          <div class="col-sm-6 col-md-12 mb-3">
+              <label class="form-label">Risque</label>
+              <ng-select [items]="risques" [multiple]=true [closeOnSelect]="false" [searchable]="false"
+                         bindLabel="libelle" bindValue="id" placeholder="Choisir le risque" formControlName="risksIds">
+              </ng-select>
+              <div class="mt-2">
+                <ul>
+                  <li *ngFor="let item of selectedRisque">{{item.libelle}}</li>
+                </ul>
+              </div>
+          </div>
+
+          <div class="col-sm-6 col-md-12 mb-3">
+              <label class="form-label">Libellé <small style="color: red;">*</small></label>
+              <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6 col-md-12 mb-3">
+              <label class="form-label">Structure</label>
+              <ng-select [items]="ministereStructure" bindLabel="nom" bindValue="id" placeholder="Structure"
+                         formControlName="ministerId">
+              </ng-select>
+          </div>
+          <div class="col-sm-12 col-md-12 mb-3">
+              <label class="form-label">Impact du problème sur le projet</label>
+              <input type="text" class="form-control" placeholder="Impact sur le projet" formControlName="impact">
+          </div>
+          <div class="col-sm-4 col-md-8 mb-3">
+              <label class="form-label">Sous catégorie</label>
+              <ng-select [items]="sousCategorie" bindLabel="libelle" bindValue="id" placeholder="Sous Catégories"
+                         formControlName="subCategoryId">
+              </ng-select>
+          </div>
+          <div class="col-sm-4 col-md-4 mb-3">
+              <label class="form-label">Statut du probléme</label>
+              <ng-select [items]="statuts" bindLabel="libelle" bindValue="id" placeholder="statut" formControlName="statusId">
+              </ng-select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-6 mb-3">
+              <label class="form-label">Impact financier</label>
+              <ng-select [items]="criticities" bindLabel="description" bindValue="name"
+                         placeholder="impact sur le financement" formControlName="financialImpact"
+                         (change)="getFinancialWeight($event)">
+              </ng-select>
+          </div>
+          <div class="col-sm-6 mb-3">
+              <label class="form-label">Impact délai</label>
+              <ng-select [items]="criticities" bindLabel="description" bindValue="name" placeholder="impact sur le délai"
+                         (change)="getDelayWeight($event)" formControlName="delayImpact">
+              </ng-select>
+          </div>
+          <div class="col-sm-12 mb-3">
+              <label class="form-label">Criticité: <span>{{criticite}}</span></label>
+              <p><ngb-progressbar type="danger" [value]="value" [showValue]="true"></ngb-progressbar></p>
+          </div>
+        </div>
+
+        <div class="modal-footer mt-2 d-flex justify-content-end">
+          <button matStepperNext type="button" class="btn btn-secondary">Suivant</button>
+        </div>
+
+      </mat-step>
+
+      <mat-step [stepControl]="form">
+        <ng-template matStepLabel>Détails</ng-template>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-control" placeholder="description" formControlName="description">
+          </div>
+          <div class="col-sm-6 col-md-4 mb-3">
+              <label class="form-label">Nature Spécifique</label>
+              <ng-select [items]="specificNature" bindLabel="libelle" bindValue="id" placeholder="nature spécifique"
+                         formControlName="specificNatureId">
+              </ng-select>
+          </div>
+
+          <div class="col-sm-6 col-md-4 mb-3">
+              <label class="form-label">Risque financier(en Mds FCFA)</label>
+              <input type="number" class="form-control" placeholder="Risque financier" formControlName="risqueFinancier">
+          </div>
+          <div class="col-sm-6 col-md-4 mb-3">
+              <label class="form-label">Source</label>
+              <ng-select [items]="sources" bindLabel="libelle" bindValue="id" placeholder="source"
+                         formControlName="sourceId">
+              </ng-select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4 col-md-6 mb-3">
+              <label class="form-label">Responsable du problème</label>
+              <ng-select [items]="structure" bindLabel="nom" bindValue="id" placeholder="Responsable du problème"
+                         formControlName="supervisorId">
+              </ng-select>
+          </div>
+<!--          <div class="col-sm-12 col-md-4">-->
+<!--            <div class="mb-3">-->
+<!--              <label class="form-label">Responsable DSEPP</label>-->
+<!--              <ng-select [items]="agent" bindLabel="fullname" bindValue="id" placeholder="DSEPP"-->
+<!--                         formControlName="dseppSupervisorId">-->
+<!--              </ng-select>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="col-sm-6 col-md-6">-->
+<!--            <div class="mb-3">-->
+<!--              <label class="form-label">Autres responsables du problème</label>-->
+<!--              <ng-select [items]="otherSupervisors" [multiple]=true [closeOnSelect]="false" [searchable]="true"-->
+<!--                         bindLabel="nom" bindValue="id" placeholder="Choisir les autres responsables"-->
+<!--                         formControlName="otherSuppervisorsId" (change)="onChangeOtherSuervisors($event)">-->
+<!--              </ng-select>-->
+<!--            </div>-->
+<!--          </div>-->
+          <div class="col-sm-6 col-md-12">
+            <div class="mb-3">
+              <label class="form-label">Canal de résolution</label>
+              <ng-select [items]="resolveChannles" [multiple]=true [closeOnSelect]="false" [searchable]="true"
+                         bindLabel="libelle" bindValue="id" placeholder="Choisir les canaux de resolution"
+                         formControlName="resolveChannelsIds">
+              </ng-select>
+            </div>
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-sm-4 col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Date identification</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="identificationDate">
+
+              </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Date Résolution</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="resolutionDate">
+
+              </div>
+            </div><!-- Col -->
+            <!-- Col -->
+            <div class="col-sm-4 col-md-4">
+              <div class="mb-3">
+                <label class="form-label">Date échéance</label>
+                <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="deadline">
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="mb-3">
+              <label class="form-label">Commentaire</label>
+              <textarea type="text" class="form-control" placeholder="commentaire" formControlName="comment"
+                        rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer mt-2 d-flex justify-content-between">
+          <button matStepperPrevious type="button" class="btn btn-secondary">Précédent</button>
+          <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+        </div>
+
+        <!-- <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button> -->
+      </mat-step>
+    </mat-stepper>
+  </form>
+</section>

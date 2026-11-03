@@ -1,0 +1,99 @@
+.detail-courrier-container {
+  padding: 0;
+  
+  .header-section {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 1rem;
+    
+    .close-btn {
+      margin-top: -8px;
+      margin-right: -8px;
+    }
+  }
+  
+  .info-grid {
+    display: grid;
+    gap: 12px;
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f8f9fa;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      strong {
+        color: #495057;
+        min-width: 160px;
+      }
+      
+      span {
+        text-align: right;
+        flex: 1;
+      }
+    }
+  }
+  
+  .documents-list {
+    .document-item {
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+        border-color: #007bff;
+      }
+    }
+  }
+  
+  // Styles pour les badges
+  .badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+  
+  // Responsive
+  @media (max-width: 768px) {
+    .info-grid .info-item {
+      flex-direction: column;
+      align-items: flex-start;
+      
+      strong {
+        min-width: auto;
+        margin-bottom: 4px;
+      }
+      
+      span {
+        text-align: left;
+      }
+    }
+  }
+}
+
+// Styles pour les cartes Material
+mat-card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+  border: 1px solid #e9ecef;
+  
+  mat-card-header {
+    padding: 12px 16px;
+    
+    mat-card-title {
+      font-size: 1.1rem;
+      margin: 0;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  
+  mat-card-content {
+    padding: 0 16px 16px;
+  }
+}

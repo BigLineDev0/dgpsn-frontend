@@ -1,0 +1,106 @@
+<div class="dialog-container">
+    <!-- Header -->
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon>playlist_add</mat-icon>
+            </div>
+            <div class="header-text">
+                <h2>Ajout étape</h2>
+                <!-- <p>Définissez une nouvelle étape dans le workflow</p> -->
+            </div>
+        </div>
+        <button mat-icon-button class="close-btn" (click)="close()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Content -->
+    <div class="dialog-content">
+        <form [formGroup]="form" class="etape-form">
+            <!-- Code -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>vpn_key</mat-icon>
+                    Code
+                    <span class="required">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <input
+                            matInput
+                            placeholder="Ex: ETAPE_001"
+                            formControlName="code">
+                    <mat-icon matPrefix>tag</mat-icon>
+                </mat-form-field>
+            </div>
+
+            <!-- Ordre -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>format_list_numbered</mat-icon>
+                    Ordre d'exécution
+                    <span class="required">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <input
+                            matInput
+                            type="number"
+                            placeholder="Ex: 1, 2, 3..."
+                            formControlName="ordre"
+                            min="1">
+                    <mat-icon matPrefix>looks_one</mat-icon>
+                    <!-- <mat-hint>Ordre dans lequel l'étape sera exécutée</mat-hint> -->
+                </mat-form-field>
+            </div>
+
+            <!-- Libellé -->
+            <div class="form-field">
+                <label class="field-label">
+                    <mat-icon>description</mat-icon>
+                    Description 
+                    <span class="required">*</span>
+                </label>
+                <mat-form-field appearance="outline" class="full-width">
+                    <textarea
+                            matInput
+                            placeholder="Décrivez l'étape en détail..."
+                            formControlName="libelle"
+                            rows="4"
+                            maxlength="500"></textarea>
+                    <mat-icon matPrefix>notes</mat-icon>
+                    <mat-hint align="end">{{ form.get('libelle')?.value?.length || 0 }}/500</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <!-- Info Box -->
+            <!-- <div class="info-box">
+                <mat-icon>info</mat-icon>
+                <div class="info-content">
+                    <strong>Conseil :</strong>
+                    <p>Utilisez une description claire et concise pour faciliter la compréhension du workflow.</p>
+                </div>
+            </div> -->
+        </form>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Footer -->
+    <div class="dialog-footer">
+        <button mat-stroked-button class="cancel-btn" (click)="close()">
+            <mat-icon>cancel</mat-icon>
+            Annuler
+        </button>
+        <button
+                mat-raised-button
+                color="primary"
+                class="submit-btn"
+                [disabled]="!form.valid"
+                (click)="save()">
+            <mat-icon>check_circle</mat-icon>
+            Enregistrer
+        </button>
+    </div>
+</div>

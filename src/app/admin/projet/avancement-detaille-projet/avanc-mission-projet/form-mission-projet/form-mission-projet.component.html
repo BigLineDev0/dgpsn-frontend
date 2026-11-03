@@ -1,0 +1,145 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row mt-2">
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Type de mission <small style="color: red;">*</small></label>
+          <ng-select [items]="assimentTypes"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="Type de mission"
+                     formControlName="assignmentTypeId">
+
+
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label for="libelle" class="form-label">Libelle<small style="color: red;">*</small></label>
+          <input type="text" class="form-control" id="libelle" placeholder="Libelle" formControlName="libelle">
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date de début</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+          <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d1.toggle()">
+                <i data-feather="calendar" appFeatherIcon></i>
+              </button>
+              <input class="form-control " placeholder="yyyy-mm-dd"
+                  name="dp" ngbDatepicker #d1="ngbDatepicker" formControlName="startDate">
+          </div> -->
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date de fin</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+          <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d2.toggle()">
+                <i data-feather="calendar" appFeatherIcon></i>
+              </button>
+              <input class="form-control " placeholder="yyyy-mm-dd"
+                  name="dp" ngbDatepicker #d2="ngbDatepicker" formControlName="endDate">
+          </div> -->
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label for="budget" class="form-label">Structure d'exécution<small style="color: red;">*</small></label>
+          <ng-select [items]="executives"
+                     bindLabel="nom"
+                     bindValue="id"
+                     placeholder="Structure d'exécution"
+                     formControlName="structureId">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label for="budget" class="form-label">Bailleurs<small style="color: red;">*</small></label>
+          <ng-select [items]="parteners"
+                     bindLabel="nom"
+                     bindValue="id"
+                     placeholder="Bailleurs"
+                     formControlName="partenerId">
+          </ng-select>
+        </div>
+      </div>
+      <div class="col-md-12 col-sm-12" *ngIf="!isResearch">
+        <div class="mb-3">
+          <label class="form-label" for="formFile">Joindre document</label>
+          <input class="form-control" type="file" id="formFile" (change)="fileChange($event)" accept=".pdf, .doc, .docx, .xlsx, .xls">
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary me-3" (click)="reset()">Annuler</button>
+    <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="save()">Enregistrer</button>
+  </div>
+</section>
+<!-- search -->
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row mt-2">
+      <div class="col-md-12 col-sm-12">
+        <div class="mb-3">
+          <label for="libelle" class="form-label">Libelle</label>
+          <input type="text" class="form-control" id="libelle" placeholder="Libelle" formControlName="libelle">
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Type de mission</label>
+          <ng-select [items]="assimentTypes"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="Type de mission"
+                     formControlName="assignmentTypeId">
+
+
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12">
+        <div class="mb-3">
+          <label for="budget" class="form-label">Structure d'exécution</label>
+          <ng-select [items]="executives"
+                     bindLabel="nom"
+                     bindValue="id"
+                     placeholder="Structure d'exécution"
+                     formControlName="structureExecutionId">
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Date de début</label>
+            <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <input class="form-control " placeholder="yyyy-mm-dd" type="date" name="dp" formControlName="startDate">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Date de fin</label>
+            <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+              <input class="form-control" placeholder="yyyy-mm-dd"name="dp" type="date" formControlName="endDate">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer mt-3">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

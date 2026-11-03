@@ -1,0 +1,90 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+    </div>
+    <div>
+      <label for="libelle" class="form-label">Libellé<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+             formControlName="libelle">
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-md-12">
+        <div class="mb-3">
+          <label for="unitId1" class="form-label">Categorie Depense<small style="color: red;">*</small></label>
+          <ng-select
+            bindLabel="libelle"
+            placeholder="categorie depense"
+            formControlName="categorieDepenseId"
+          >
+            <ng-option *ngFor="let option of sector" [value]="option.id">{{ option?.libelle }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+
+      <!-- <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="indicatorTypeId1" class="form-label">Type d'indicateur<small style="color: red;">*</small></label>
+          <ng-select
+                     bindLabel="libelle"
+                     placeholder="Type d'indicateur"
+                     formControlName="indicatorTypeId"
+                     >
+                     <ng-option *ngFor="let option of indicatorTypes" [value]="option.id">{{ option.libelle }}</ng-option>
+
+          </ng-select>
+        </div>
+      </div> -->
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="mb-3">
+      <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+    </div>
+    <div>
+      <label for="libelle" class="form-label">Libellé<small style="color: red;">*</small></label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+             formControlName="libelle">
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-md-12">
+        <div class="mb-3">
+          <label for="unitId1" class="form-label">Categorie Depense<small style="color: red;">*</small></label>
+          <ng-select
+            bindLabel="libelle"
+            placeholder="categorie depense"
+            formControlName="categorieDepenseId"
+          >
+            <ng-option *ngFor="let option of sector" [value]="option.id">{{ option?.libelle }}</ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <!-- <div class="col-sm-6">
+        <div class="mb-3">
+          <label for="indicatorTypeId1" class="form-label">Type d'indicateur<small style="color: red;">*</small></label>
+          <ng-select
+                     bindLabel="libelle"
+                     placeholder="Type d'indicateur"
+                     formControlName="indicatorTypeId"
+                     >
+                     <ng-option *ngFor="let option of indicatorTypes" [value]="option.id">{{ option.libelle }}</ng-option>
+
+          </ng-select>
+        </div>
+      </div> -->
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>
+

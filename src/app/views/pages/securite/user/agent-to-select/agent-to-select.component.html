@@ -1,0 +1,85 @@
+
+<section>
+	<div class="container" *ngIf="!loading"><br>
+		<mat-card class="cardWithShadow">
+			<div [formGroup]="formSearch" class="d-flex align-items-center justify-content-center">
+				<div class="d-flex align-items-center col-9" style="width: 68%; margin-left: 10px;">
+					<input type="text" class="form-control form-control-md w-65 " placeholder="Rechercher"
+						formControlName="nom" formControlName="prenom" />
+					<button (click)="doSearch()" type="button" class="btn btn-warning btn-icon ms-2"
+						ngbTooltip="Rechercher">
+						<i class="feather icon-search"></i>
+					</button>
+				</div>
+			</div>
+			<mat-card-content class="p-4">
+				<div class="table-responsive">
+					<table mat-table [dataSource]="dataSource" class="w-100">
+						<ng-container matColumnDef="#">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> #
+							</th>
+							<td mat-cell *matCellDef="let matricule" class="f-s-14">
+								<a class="m-r-10 cursor-pointer" matTooltip="Sélectionner un agent">
+									<mat-radio-button value="{{matricule.id}}" (change)="getSelected(matricule)"
+										[checked]="selectedMatriculeId === matricule.id"></mat-radio-button>
+								</a>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="matricule">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">
+								Matricule </th>
+							<td mat-cell *matCellDef="let agent" class="f-s-14">{{ agent.matricule }}</td>
+						</ng-container>
+						<ng-container matColumnDef="nom">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Nom
+							</th>
+							<td mat-cell *matCellDef="let agent" class="f-s-14">{{ agent.nom }}</td>
+						</ng-container>
+						<ng-container matColumnDef="prenom">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">
+								Prénom </th>
+							<td mat-cell *matCellDef="let agent" class="f-s-14">
+								<span style="margin-right: 3px;"
+									class="p-x-16 p-y-4 f-w-500 rounded f-s-12">{{agent.prenom}}</span>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="structure">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">
+								Structure </th>
+							<td mat-cell *matCellDef="let agent" class="f-s-14">
+								<span style="margin-right: 3px;"
+									class="p-x-16 p-y-4 f-w-500 rounded f-s-12">{{agent?.structure?.libelle}}</span>
+							</td>
+						</ng-container>
+						<ng-container matColumnDef="telephone">
+							<th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;">
+								Telephone </th>
+							<td mat-cell *matCellDef="let agent" class="f-s-14">
+								<span style="margin-right: 3px;"
+									class="p-x-16 p-y-4 f-w-500 rounded f-s-12">{{agent?.telephone}}</span>
+							</td>
+						</ng-container>
+						<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+						<tr mat-row *matRowDef="let row; columns: displayedColumns"
+							[class.selected]="selectedMatriculeId === row.id" ngbTooltip="selectionne l'agent">
+						</tr>
+					</table>
+					<div class="d-flex align-items-center justify-content-between">
+						<div class="  mt-3 d-flex justify-content-center w-100">
+							<ngb-pagination [collectionSize]="metadata?.totalElements" [page]="Number(pageOptions.page + 1)"
+								[pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm"
+								[rotate]="true" [ellipses]="true" [boundaryLinks]="true">
+							</ngb-pagination>
+						</div>
+						<div class="d-flex justify-content-end ms-auto">
+							<button class="btn btn-primary btn-sm me-2" (click)="save()" [disabled]="!selectAgent">
+								Valider
+							</button>
+							<button class="btn btn-secondary btn-sm" (click)="close()">Annuler</button>
+						</div>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</section>

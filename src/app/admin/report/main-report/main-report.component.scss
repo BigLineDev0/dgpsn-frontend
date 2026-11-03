@@ -1,0 +1,215 @@
+// Variables
+$primary-color: #4f6c52;
+$primary-light: lighten($primary-color, 40%);
+$primary-dark: darken($primary-color, 10%);
+$text-color: #333;
+$border-color: #e0e0e0;
+$background: #f5f5f5;
+
+.report-container {
+  min-height: 100vh;
+  background-color: $background;
+  padding: 20px;
+
+  .report-header {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+      }
+
+      .header-text {
+        h1 {
+          margin: 0;
+          font-size: 28px;
+          font-weight: 700;
+          color: $primary-color;
+          margin-bottom: 8px;
+        }
+
+        p {
+          margin: 0;
+          font-size: 14px;
+          color: #666;
+        }
+      }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+
+        &.btn-export {
+          background-color: $primary-color;
+          color: white;
+
+          &:hover {
+            background-color: $primary-dark;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+          }
+        }
+
+        &.btn-print {
+          background-color: white;
+          color: $primary-color;
+          border: 2px solid $primary-color;
+
+          &:hover {
+            background-color: $primary-light;
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+
+  .report-tabs {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    ::ng-deep {
+      .mat-mdc-tab-labels {
+        background-color: $primary-light;
+        border-bottom: 2px solid $primary-color;
+      }
+
+      .mat-mdc-tab {
+        min-width: 160px;
+        height: 64px;
+
+        .tab-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          margin-right: 8px;
+          color: $primary-color;
+        }
+
+        .tab-label {
+          font-size: 14px;
+          font-weight: 500;
+          color: $text-color;
+        }
+
+        &.mdc-tab--active {
+          .tab-icon,
+          .tab-label {
+            color: $primary-color;
+            font-weight: 600;
+          }
+        }
+      }
+
+      .mat-mdc-tab-body-wrapper {
+        padding: 0;
+      }
+
+      .mat-ink-bar,
+      .mdc-tab-indicator__content--underline {
+        background-color: $primary-color !important;
+        height: 3px;
+      }
+    }
+
+    .tab-content {
+      padding: 24px;
+      min-height: 500px;
+      animation: fadeIn 0.3s ease-in;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .report-container {
+    padding: 12px;
+
+    .report-header {
+      padding: 16px;
+
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+
+        .header-text h1 {
+          font-size: 22px;
+        }
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+
+        button {
+          flex: 1;
+          justify-content: center;
+        }
+      }
+    }
+
+    .report-tabs {
+      ::ng-deep {
+        .mat-mdc-tab {
+          min-width: 120px;
+          padding: 0 12px;
+
+          .tab-label {
+            font-size: 12px;
+          }
+        }
+      }
+
+      .tab-content {
+        padding: 16px;
+      }
+    }
+  }
+}

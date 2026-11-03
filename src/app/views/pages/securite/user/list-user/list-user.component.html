@@ -1,0 +1,157 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+  <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+    <ol class="breadcrumb ">
+      <li class="breadcrumb-item active"><a>Sécurité</a></li>
+      <li class="breadcrumb-item breadcrumb-active" aria-current="page">utilisateurs</li>
+    </ol>
+  </nav>
+  <div class="d-flex align-items-center flex-wrap text-nowrap">
+    <button (click)="openBasicModal(basicModal)" type="button"
+      class="btn btn-primary">Nouvel utilisateur</button>
+  </div>
+</div>
+
+<!-- <div class="row mt-3 mb-3">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body p-0">
+        <ngb-accordion [closeOthers]="true">
+          <ngb-panel id="static-1" title="Recherche">
+            <ng-template ngbPanelContent>
+              <app-form-user [isSearch]="true" (search)="doSearch($event)"></app-form-user>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <!-- is only used before getting data to the api-->
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+      <!-- is only used before getting data to the api-->
+
+      <table mat-table [dataSource]="users" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="prenom">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Prénom </th>
+          <td mat-cell *matCellDef="let user"> {{user?.agent?.prenom}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nom">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Nom </th>
+          <td mat-cell *matCellDef="let user"> <span> {{user?.agent?.nom}} </span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="login">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Login </th>
+          <td mat-cell *matCellDef="let user"> {{user.login}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="profil">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Profil </th>
+          <td mat-cell *matCellDef="let user" > {{user?.profile?.libelle}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="portee">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;"> Portée </th>
+          <td mat-cell *matCellDef="let user" > {{user?.profile?.portee?.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="strcuture">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Strcuture </th>
+          <td mat-cell *matCellDef="let user"> {{user?.agent?.structure?.libelle}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activer" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;"> Activer/Désactiver </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <div class="form-check form-switch mb-2" *ngIf="user.profile?.code != 'ROOT_ADMIN'">
+              <input style="position: relative; top: 50%; left: 50%;" type="checkbox" class="form-check-input" [checked]="user.status" id="formSwitch1" (change)="changeStatus(user)">
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;"> Actions </th>
+          <td mat-cell *matCellDef="let user" class="text-center">
+            <div class="text-center d-inline-block" *ngIf="user.profile?.code != 'ROOT_ADMIN'">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+              </span>
+
+              <mat-menu #menu="matMenu">
+                <div *ngIf="user.profile?.code != 'ROOT_ADMIN'">
+                  <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(modalUpdate,user)">
+                    <span class="me-2">Modifier</span>
+                    <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                  </a>
+                  <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteUsers(user.id)">
+                    <span class="me-2">Supprimer</span>
+                    <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                  </a>
+                  <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(modalUpdatePassword,user)">
+                    <span class="me-2">Modifier mot de passe</span>
+                    <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                  </a>
+                </div>
+
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.metadata?.totalElements" [page]="Number(pageOptions.page+1)" [pageSize]="pageOptions.size"
+                        [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true" [ellipses]="true"
+                        [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!--Add user-->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Ajout utilisateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-user [isSearch]="false" [label]="'Enregistrer'" (submit)="close($event)"></app-form-user>
+  </div>
+</ng-template>
+<!--End Add user-->
+
+<!--Update user-->
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification utilisateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-user [isSearch]="false" [label]="'Modifier'" (submit)="close($event)"
+      [userToUpdate]="userToUpdate"></app-form-user>
+  </div>
+</ng-template>
+<ng-template #modalUpdatePassword let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Modification mot de passe</h5>
+    <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-update-password  (updatePassword)="close($event)"
+      [user]="userToUpdate"></app-form-update-password>
+  </div>
+</ng-template>
+<!--End Add users-->

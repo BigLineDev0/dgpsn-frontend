@@ -1,0 +1,104 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé<small style="color: red;">*</small></label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Type document<small style="color: red;">*</small></label>
+          <ng-select [items]="documentTypes"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="selectionner un type de document" formControlName="documentTypeId" >
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Auteur</label>
+          <input type="text" class="form-control" placeholder="auteur"formControlName="author">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Pièce jointe</label>
+          <input type="file" [formEnctype]="" class="form-control" (change)="fileChange($event)" style="width: 90%;" accept=".pdf, .doc, .docx, .xlsx, .xls">
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button [disabled]="!form.valid" type="button" class="btn btn-primary" (click)="create()">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Libellé</label>
+          <input type="text" class="form-control" placeholder="libellé" formControlName="libelle">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Type document</label>
+          <ng-select [items]="documentTypes"
+                     bindLabel="libelle"
+                     bindValue="id"
+                     placeholder="selectionner un type de document" formControlName="documentTypeId" >
+          </ng-select>
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Auteur</label>
+          <input type="text" class="form-control" placeholder="auteur"formControlName="author">
+        </div>
+      </div><!-- Col -->
+
+    </div><!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="date">
+        </div>
+      </div><!-- Col -->
+    </div><!-- Row -->
+
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

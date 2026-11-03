@@ -1,0 +1,92 @@
+<div class="main-dashboard-container">
+  <div
+    class="d-flex justify-content-between align-items-center flex-wrap grid-margin"
+  >
+    <nav
+      class="page-breadcrumb"
+      style="position: relative; top: 15px; left: 0px"
+    >
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active"><a>Tableau de Bord</a></li>
+        <li class="breadcrumb-item text-primary" aria-current="page">
+          {{ getActiveStep()?.title }}
+        </li>
+      </ol>
+    </nav>
+    <div
+      class="d-flex justify-content-end align-items-baseline mt-3 mb-3"
+    ></div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-lg-12">
+      <div class="card-body">
+        <!-- Navigation par onglets -->
+        <ul
+          ngbNav
+          #dashboardNav="ngbNav"
+          [(activeId)]="currentDashboard"
+          class="nav-tabs nav-fill"
+        >
+          <li [ngbNavItem]="'agent'" *afHasAnyAuthority="[readTdbAgent]">
+            <a ngbNavLink>
+              <i class="fas fa-user-tie me-2"></i>
+             Agents
+
+            </a>
+          </li>
+          <li [ngbNavItem]="'budget'" *afHasAnyAuthority="[readTdbBudget]">
+            <a ngbNavLink>
+              <i class="fas fa-chart-pie me-2"></i>
+               Budgets
+            </a>
+          </li>
+          <li [ngbNavItem]="'conge'" *afHasAnyAuthority="[readTdbConge]">
+            <a ngbNavLink>
+              <i class="fas fa-calendar-alt me-2"></i>
+              Demandes de Congés
+            </a>
+          </li>
+          <!-- <li [ngbNavItem]="'projet'">
+            <a ngbNavLink>
+              <i class="fas fa-project-diagram me-2"></i>
+              Projets
+            </a>
+          </li> -->
+          <li [ngbNavItem]="'service'" *afHasAnyAuthority="[readTdbService]">
+            <a ngbNavLink>
+              <i class="fas fa-cogs me-2"></i>
+              Services Exterieur
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-content mt-4">
+    <!-- Contenu des onglets -->
+    <div [ngbNavOutlet]="dashboardNav" class="mt-2"></div>
+
+    <!-- Gardez vos vues existantes comme fallback -->
+    <div *ngIf="currentDashboard === 'agent'" class="dashboard-view">
+      <app-agent-dashbord></app-agent-dashbord>
+    </div>
+
+    <div *ngIf="currentDashboard === 'budget'" class="dashboard-view">
+      <app-budget-dashbord></app-budget-dashbord>
+    </div>
+
+    <div *ngIf="currentDashboard === 'conge'" class="dashboard-view">
+      <app-conge-dashbord></app-conge-dashbord>
+    </div>
+
+    <div *ngIf="currentDashboard === 'projet'" class="dashboard-view">
+      <app-projet-dashbord></app-projet-dashbord>
+    </div>
+
+    <div *ngIf="currentDashboard === 'service'" class="dashboard-view">
+      <app-service-exterieur-dashbord></app-service-exterieur-dashbord>
+    </div>
+  </div>
+</div>

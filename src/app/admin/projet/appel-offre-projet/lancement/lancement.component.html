@@ -1,0 +1,167 @@
+<app-routing-appel-offre-projet  [addButtontitle]="'Nouveau Marché'" [pageTitle]="'Marchés'"></app-routing-appel-offre-projet>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <!--  <div></div>-->
+  <!--  <div>-->
+  <!--    <h6 class="text-center text-primary" ngbTooltip="Projet">Construction d'une école primaire</h6>-->
+  <!--  </div>-->
+  <div class="row">
+    <div class="mb-3 card p-0">
+      <div class="card-body p-2">
+        <h5 class="badge text-secondary me-1 cursor-pointer" ngbTooltip="{{libelle}}">{{libelle}}</h5>
+        <!--        <i class="icon-lg text-secondary" data-feather="chevron-right" appFeatherIcon></i>-->
+        <!--        <h3 class="badge text-secondary cursor-pointer" ngbTooltip="{{lancement?.libelle}}">{{lancement?.libelle | textFormatter: 'split:50'}}</h3>-->
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <!-- <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button> -->
+    <!-- <button type="button" class="btn btn-info btn-icon me-2" (click)="openBasicModal(diagrammeModal)" ngbTooltip="Diagramme de gantt">
+      <i class="feather icon-bar-chart-2"></i>
+    </button> -->
+    <button type="button"  class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouveau marché
+    </button>
+  </div>
+
+  </div>
+<div class="row">
+    <div class="col-lg-12">
+      <section class="table-container mat-elevation-z8" tabindex="0" style="background-color: #f9fafb;">
+        <!-- is only used before getting data to the api-->
+        <!-- is only used before getting data to the api-->
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+          <ng-container matColumnDef="reference">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> REF </th>
+            <td mat-cell *matCellDef="let marches">{{marches.reference}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="libelle">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Libellé </th>
+            <td mat-cell *matCellDef="let marches" class=""> <span>{{marches.libelle}} </span></td>
+          </ng-container>
+          <ng-container matColumnDef="objet">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Objet du marché </th>
+            <td mat-cell *matCellDef="let marches" class=""> <span>{{marches.objectMarket}} </span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="responsable">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:200px;"> Publié le </th>
+            <td mat-cell *matCellDef="let marches" class=""> <span>{{marches.plannedRealLaunch | date: 'dd-MM-yyyy'  }} </span></td>
+          </ng-container>
+
+          <ng-container matColumnDef="date_debut">
+            <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:100px;"> Date Limite </th>
+            <td mat-cell *matCellDef="let marches" class=""> <span>{{marches.plannedRealLaunch | date: 'dd-MM-yyyy'}} </span></td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="actions" stickyEnd >
+            <th mat-header-cell *matHeaderCellDef class="table-head-text text-center " style="min-width:155px;"> Actions </th>
+            <td mat-cell *matCellDef="let marches" class="text-center bg-white">
+                <a *afHasAnyAuthority="read" class="me-2" role="button" ngbTooltip="Critére d'évaluation" placement="left" (click)="getCritereEvaluation(marches.id)">
+                  <mat-icon class="icon-lg text-primary">settings</mat-icon>
+                </a>
+                <a *afHasAnyAuthority="read" class="me-2" role="button" ngbTooltip="Reception dossier" placement="left" (click)="getReceptionDossier(marches)">
+                  <mat-icon class="icon-lg text-primary">folder</mat-icon>
+                </a>
+              <a *afHasAnyAuthority="read" class="me-2" role="button" ngbTooltip="Présélectionné" placement="left" (click)="openPreselectionner(marches)">
+                <mat-icon class="icon-lg text-primary">check_circle_outline</mat-icon>
+              </a>
+<!--
+              <a class="me-2" role="button" ngbTooltip="Présélectionné" placement="left" (click)="openPreselectionner(marches)">
+                <mat-icon class="icon-lg pb-3px text-primary"> publish</mat-icon>
+              </a> -->
+              <div class="text-center d-inline-block">
+                <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                  <mat-icon class="icon-lg text-muted">more_vert</mat-icon>
+                </span>
+               <mat-menu #menu="matMenu" stickyEnd>
+                <a *afHasAnyAuthority="read" ngbDropdownItem class="d-flex justify-content-between align-items-center">
+                  <span class="me-2">Consulter</span>
+                  <mat-icon class="text-primary icon-lg">visibility</mat-icon>
+                </a>
+                <a *afHasAnyAuthority="edit" ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(updateModal,marches)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a *afHasAnyAuthority="deletes" ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteMarket(marches.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+
+<!--                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(evaluationModal)">-->
+<!--               <span class="me-2">Evaluation du dossier</span>-->
+<!--               <mat-icon class="text-primary icon-lg">delete</mat-icon>-->
+<!--            </a>-->
+              </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns; sticky: true"
+            class="table-head-bg"
+          ></tr>
+          <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+
+        <div class="paginate">
+          <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+            [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+            [boundaryLinks]="true">
+          </ngb-pagination>
+        </div>
+      </section>
+    </div>
+</div>
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Ajout marché</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-lancement  (submit)="close($event)" [isSearch]="false"></app-form-lancement>
+    </div>
+  </ng-template>
+
+  <ng-template #updateModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Modifier un marché</h5>
+      <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-lancement [marketToUpdate]="marketToUpdate" [projetId]="projetId" (submit)="close($event)" [isSearch]="false"></app-form-lancement>
+    </div>
+  </ng-template>
+
+  <ng-template #searchModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Rechercher marché</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-lancement [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId" [isSearch]="true"></app-form-lancement>
+    </div>
+  </ng-template>
+
+  <ng-template #evaluationModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Evaluation du dossier</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-evaluation-dossier [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId" [isSearch]="true"></app-evaluation-dossier>
+    </div>
+  </ng-template>
+
+
+

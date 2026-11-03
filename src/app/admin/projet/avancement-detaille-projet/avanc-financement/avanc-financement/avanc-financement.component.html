@@ -1,0 +1,290 @@
+<div class="container-fluid mt-3">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Matrice de suivi financier des projets</h4>
+    </div>
+    <div class="card-body">
+      <!-- Section de filtres -->
+      <div class="row mb-4">
+        <div class="col-md-8">
+          <label for="projetSelect" class="form-label">Projet</label>
+          <ng-select id="projetSelect" [(ngModel)]="projetSelectionne">
+            <ng-option *ngFor="let projet of projets" [value]="projet">{{projet.nom}}</ng-option>
+          </ng-select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Niveau d'affichage</label>
+          <ng-select
+            [items]="niveauxAffichage"
+            bindLabel="label"
+            bindValue="value"
+            [clearable]="false"
+            [(ngModel)]="niveauAffichage"
+            placeholder="Sélectionner un niveau">
+          </ng-select>
+        </div>
+      </div>
+
+      <!-- Résumé du projet -->
+      <div class="alert alert-secondary mb-4" *ngIf="projetSelectionne">
+        <div class="row">
+          <div class="col-md-4">
+            <strong>Projet:</strong> {{projetSelectionne.nom}}
+          </div>
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Budget total:</strong> {{formaterMontant(projetSelectionne.budget || 0)}}
+              </div>
+              <div class="col-md-4">
+                <strong>Dépenses totales:</strong> {{formaterMontant(projetSelectionne.depense || 0)}}
+              </div>
+              <div class="col-md-4">
+                <strong>Taux d'exécution:</strong>
+                <span [ngClass]="obtenirClasse(projetSelectionne.tauxExecution || 0)">
+                  {{(projetSelectionne.tauxExecution || 0).toFixed(2)}}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau des composants -->
+      <div *ngIf="niveauAffichage === 'composant' && projetSelectionne">
+        <h5>Composants du projet</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+            <tr>
+              <th>Composant</th>
+              <th class="text-end">Budget</th>
+              <th class="text-end">Dépenses</th>
+              <th class="text-end">Taux d'exécution</th>
+              <th class="text-end">Écart</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let composant of projetSelectionne.composants">
+              <td>{{composant.nom}}</td>
+              <td class="text-end">{{formaterMontant(composant.budget || 0)}}</td>
+              <td class="text-end">{{formaterMontant(composant.depense || 0)}}</td>
+              <td class="text-end">
+                  <span [ngClass]="obtenirClasse(composant.tauxExecution || 0)">
+                    {{(composant.tauxExecution || 0).toFixed(2)}}%
+                  </span>
+              </td>
+              <td class="text-end">{{formaterMontant((composant.budget || 0) - (composant.depense || 0))}}</td>
+            </tr>
+            </tbody>
+            <tfoot class="table-secondary">
+            <tr>
+              <th>Total</th>
+              <th class="text-end">{{formaterMontant(projetSelectionne.budget || 0)}}</th>
+              <th class="text-end">{{formaterMontant(projetSelectionne.depense || 0)}}</th>
+              <th class="text-end">
+                  <span [ngClass]="obtenirClasse(projetSelectionne.tauxExecution || 0)">
+                    {{(projetSelectionne.tauxExecution || 0).toFixed(2)}}%
+                  </span>
+              </th>
+              <th class="text-end">{{formaterMontant((projetSelectionne.budget || 0) - (projetSelectionne.depense || 0))}}</th>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tableau des résultats -->
+      <div *ngIf="niveauAffichage === 'resultat' && projetSelectionne">
+        <h5>Résultats par composant</h5>
+        <div class="accordion" id="accordionResultats">
+          <div class="accordion-item" *ngFor="let composant of projetSelectionne.composants; let i = index">
+            <h2 class="accordion-header" [id]="'heading' + i">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + i"
+                      aria-expanded="true" [attr.aria-controls]="'collapse' + i">
+                {{composant.nom}} - Budget: {{formaterMontant(composant.budget || 0)}} |
+                Exécution: <span [ngClass]="obtenirClasse(composant.tauxExecution || 0)">
+                  {{(composant.tauxExecution || 0).toFixed(2)}}%
+                </span>
+              </button>
+            </h2>
+            <div [id]="'collapse' + i" class="accordion-collapse collapse show" [attr.aria-labelledby]="'heading' + i"
+                 data-bs-parent="#accordionResultats">
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                    <tr>
+                      <th>Résultat</th>
+                      <th class="text-end">Budget</th>
+                      <th class="text-end">Dépenses</th>
+                      <th class="text-end">Taux d'exécution</th>
+                      <th class="text-end">Écart</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let resultat of composant.resultats">
+                      <td>{{resultat.nom}}</td>
+                      <td class="text-end">{{formaterMontant(resultat.budget || 0)}}</td>
+                      <td class="text-end">{{formaterMontant(resultat.depense || 0)}}</td>
+                      <td class="text-end">
+                          <span [ngClass]="obtenirClasse(resultat.tauxExecution || 0)">
+                            {{(resultat.tauxExecution || 0).toFixed(2)}}%
+                          </span>
+                      </td>
+                      <td class="text-end">{{formaterMontant((resultat.budget || 0) - (resultat.depense || 0))}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot class="table-secondary">
+                    <tr>
+                      <th>Total du composant</th>
+                      <th class="text-end">{{formaterMontant(composant.budget || 0)}}</th>
+                      <th class="text-end">{{formaterMontant(composant.depense || 0)}}</th>
+                      <th class="text-end">
+                          <span [ngClass]="obtenirClasse(composant.tauxExecution || 0)">
+                            {{(composant.tauxExecution || 0).toFixed(2)}}%
+                          </span>
+                      </th>
+                      <th class="text-end">{{formaterMontant((composant.budget || 0) - (composant.depense || 0))}}</th>
+                    </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tableau des produits -->
+      <div *ngIf="niveauAffichage === 'produit' && projetSelectionne">
+        <h5>Produits par résultat</h5>
+        <div class="accordion" id="accordionProduits">
+          <ng-container *ngFor="let composant of projetSelectionne.composants; let i = index">
+            <div class="accordion-item" *ngFor="let resultat of composant.resultats; let j = index">
+              <h2 class="accordion-header" [id]="'headingProd' + i + j">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseProd' + i + j"
+                        aria-expanded="true" [attr.aria-controls]="'collapseProd' + i + j">
+                  {{composant.nom}} > {{resultat.nom}} - Budget: {{formaterMontant(resultat.budget || 0)}} |
+                  Exécution: <span [ngClass]="obtenirClasse(resultat.tauxExecution || 0)">
+                    {{(resultat.tauxExecution || 0).toFixed(2)}}%
+                  </span>
+                </button>
+              </h2>
+              <div [id]="'collapseProd' + i + j" class="accordion-collapse collapse show" [attr.aria-labelledby]="'headingProd' + i + j"
+                   data-bs-parent="#accordionProduits">
+                <div class="accordion-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead class="table-light">
+                      <tr>
+                        <th>Produit</th>
+                        <th class="text-end">Budget</th>
+                        <th class="text-end">Dépenses</th>
+                        <th class="text-end">Taux d'exécution</th>
+                        <th class="text-end">Écart</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let produit of resultat.produits">
+                        <td>{{produit.nom}}</td>
+                        <td class="text-end">{{formaterMontant(produit.budget || 0)}}</td>
+                        <td class="text-end">{{formaterMontant(produit.depense || 0)}}</td>
+                        <td class="text-end">
+                            <span [ngClass]="obtenirClasse(produit.tauxExecution || 0)">
+                              {{(produit.tauxExecution || 0).toFixed(2)}}%
+                            </span>
+                        </td>
+                        <td class="text-end">{{formaterMontant((produit.budget || 0) - (produit.depense || 0))}}</td>
+                      </tr>
+                      </tbody>
+                      <tfoot class="table-secondary">
+                      <tr>
+                        <th>Total du résultat</th>
+                        <th class="text-end">{{formaterMontant(resultat.budget || 0)}}</th>
+                        <th class="text-end">{{formaterMontant(resultat.depense || 0)}}</th>
+                        <th class="text-end">
+                            <span [ngClass]="obtenirClasse(resultat.tauxExecution || 0)">
+                              {{(resultat.tauxExecution || 0).toFixed(2)}}%
+                            </span>
+                        </th>
+                        <th class="text-end">{{formaterMontant((resultat.budget || 0) - (resultat.depense || 0))}}</th>
+                      </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Tableau des activités -->
+      <div *ngIf="niveauAffichage === 'activite' && projetSelectionne">
+        <h5>Activités par produit</h5>
+        <div class="accordion" id="accordionActivites">
+          <ng-container *ngFor="let composant of projetSelectionne.composants; let i = index">
+            <ng-container *ngFor="let resultat of composant.resultats; let j = index">
+              <div class="accordion-item" *ngFor="let produit of resultat.produits; let k = index">
+                <h2 class="accordion-header" [id]="'headingAct' + i + j + k">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseAct' + i + j + k"
+                          aria-expanded="true" [attr.aria-controls]="'collapseAct' + i + j + k">
+                    {{composant.nom}} > {{resultat.nom}} > {{produit.nom}} - Budget: {{formaterMontant(produit.budget || 0)}} |
+                    Exécution: <span [ngClass]="obtenirClasse(produit.tauxExecution || 0)">
+                      {{(produit.tauxExecution || 0).toFixed(2)}}%
+                    </span>
+                  </button>
+                </h2>
+                <div [id]="'collapseAct' + i + j + k" class="accordion-collapse collapse show" [attr.aria-labelledby]="'headingAct' + i + j + k"
+                     data-bs-parent="#accordionActivites">
+                  <div class="accordion-body">
+                    <div class="table-responsive">
+                      <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                        <tr>
+                          <th>Activité</th>
+                          <th class="text-end">Budget</th>
+                          <th class="text-end">Dépenses</th>
+                          <th class="text-end">Taux d'exécution</th>
+                          <th class="text-end">Écart</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let activite of produit.activites">
+                          <td>{{activite.nom}}</td>
+                          <td class="text-end">{{formaterMontant(activite.budget)}}</td>
+                          <td class="text-end">{{formaterMontant(activite.depense)}}</td>
+                          <td class="text-end">
+                              <span [ngClass]="obtenirClasse(activite.tauxExecution || 0)">
+                                {{(activite.tauxExecution || 0).toFixed(2)}}%
+                              </span>
+                          </td>
+                          <td class="text-end">{{formaterMontant(activite.budget - activite.depense)}}</td>
+                        </tr>
+                        </tbody>
+                        <tfoot class="table-secondary">
+                        <tr>
+                          <th>Total du produit</th>
+                          <th class="text-end">{{formaterMontant(produit.budget || 0)}}</th>
+                          <th class="text-end">{{formaterMontant(produit.depense || 0)}}</th>
+                          <th class="text-end">
+                              <span [ngClass]="obtenirClasse(produit.tauxExecution || 0)">
+                                {{(produit.tauxExecution || 0).toFixed(2)}}%
+                              </span>
+                          </th>
+                          <th class="text-end">{{formaterMontant((produit.budget || 0) - (produit.depense || 0))}}</th>
+                        </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

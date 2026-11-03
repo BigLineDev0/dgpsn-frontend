@@ -1,0 +1,17 @@
+<div class="card flex justify-content-center">
+    <p-listbox
+        [options]="items"
+        [(ngModel)]="selectedItems"
+        optionLabel="prenom"
+        [style]="{ width: '15rem' }"
+        [filter]="true"    
+        [multiple]="true"
+        [checkbox]="true"
+        [showToggleAll]="false"
+        [metaKeySelection]="false"
+        [showToggleAll]="true"
+        (onSelectAllChange)="onSelectAllChange($event)"
+        (onChange)="onChange($event)"
+        [listStyle]="{ 'max-height': '220px' }"
+    ></p-listbox>
+</div>

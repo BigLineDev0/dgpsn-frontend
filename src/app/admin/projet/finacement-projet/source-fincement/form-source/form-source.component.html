@@ -1,0 +1,74 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+  <div class="row">
+      <!-- <div class="mb-3 col-md-4">
+          <label for="libelle" class="form-label">code</label>
+          <input type="text" class="form-control form-control-lg" id="libelle" placeholder="code" formControlName="code">
+      </div> -->
+      <div class="mb-3 col-md-4">
+        <label class="form-label">Bailleur</label>
+        <ng-select placeholder="Bailleur" formControlName="structureId">
+            <ng-option *ngFor="let type of structure" [value]="type.id">
+               {{ type?.nom }}
+            </ng-option>
+        </ng-select>
+    </div>
+    <div class="mb-3 col-md-4">
+      <label class="form-label">Budget</label>
+      <ng-select placeholder="Budget" formControlName="budgetId">
+          <ng-option *ngFor="let type of budget" [value]="type.id">
+             {{ type?.actualAmount }}  : budget venant du {{type.souceBudget?.description}}
+          </ng-option>
+      </ng-select>
+  </div>
+     <div class="mb-3 col-md-4">
+      <label for="libelle" class="form-label">Montant</label>
+      <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Montant" formControlName="montant" >
+  </div>
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Commentaire</label>
+     <div>
+          <textarea rows="5" class="col-12" formControlName="comment"></textarea>
+     </div>
+  </div>
+</form>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+        <!-- <div class="mb-3 col-md-4">
+            <label for="libelle" class="form-label">code</label>
+            <input type="text" class="form-control form-control-lg" id="libelle" placeholder="code" formControlName="code">
+        </div> -->
+        <div class="mb-3 col-md-6">
+          <label class="form-label">Bailleur</label>
+          <ng-select>
+            <ng-option>Banque mondiale </ng-option>
+            <ng-option>Fonds monétaire international (FMI)</ng-option>
+            <ng-option>Banque africaine de développement (BAD)</ng-option>
+            <ng-option>Banque asiatique de développement (ADB)</ng-option>
+            <ng-option>Union européenne (UE)</ng-option>
+            <ng-option>Programme des Nations unies pour le développement (PNUD)</ng-option>
+            <ng-option>Agence française de développement (AFD)</ng-option>
+          </ng-select>
+        </div>
+       <div class="mb-3 col-md-6">
+          <label for="libelle" class="form-label">Montant Budget</label>
+          <!-- <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé" formControlName="libelle"> -->
+          <ng-select>
+            <ng-option>100 00000 : budget venant du privee</ng-option>
+            <ng-option>30 000 000: budget venant du public</ng-option>
+          </ng-select>
+       </div>
+      </div>
+</form>
+  <div class="modal-footer mt-2">
+      <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

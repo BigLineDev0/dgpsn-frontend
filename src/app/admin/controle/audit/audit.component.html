@@ -1,0 +1,187 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a>Contrôle & Pilotage</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Audit Trail</li>
+        </ol>
+    </nav>
+    <div class="mt-2 d-flex align-items-center">
+        <!-- Bouton Export -->
+        <button type="button" class="btn btn-success btn-icon me-2" (click)="exportLogs()" ngbTooltip="Exporter les logs">
+            <i class="feather icon-download"></i>
+        </button>
+        
+        <!-- Bouton Réinitialiser filtres -->
+        <button type="button" class="btn btn-outline-secondary btn-icon-text" (click)="clearFilters()">
+            <i class="feather icon-refresh-cw me-1"></i> Réinitialiser
+        </button>
+    </div>
+</div>
+
+<!-- Filtres -->
+<div class="row mb-3">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body py-2">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-2">
+                        <label class="form-label mb-1">Action</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedAction" (change)="applyFilters()">
+                            <option value="">Toutes</option>
+                            <option *ngFor="let action of actionOptions" [value]="action">
+                                {{ getActionLabel(action) }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label mb-1">Module</label>
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedModule" (change)="applyFilters()">
+                            <option value="">Tous</option>
+                            <option *ngFor="let module of moduleOptions" [value]="module">{{ module }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label mb-1">Date début</label>
+                        <input type="date" class="form-control form-control-sm" 
+                               [(ngModel)]="dateDebut" (change)="applyFilters()" />
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label mb-1">Date fin</label>
+                        <input type="date" class="form-control form-control-sm" 
+                               [(ngModel)]="dateFin" (change)="applyFilters()" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label mb-1">Recherche</label>
+                        <input type="text" class="form-control form-control-sm" 
+                               placeholder="Utilisateur, référence..." 
+                               [(ngModel)]="searchQuery" 
+                               (keyup.enter)="applyFilters()" />
+                    </div>
+                    <div class="col-md-1 d-flex gap-2">
+                        <button type="button" class="btn btn-primary btn-sm w-100" (click)="applyFilters()">
+                            <i class="feather icon-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tableau des logs -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="table-container mat-elevation-z8" tabindex="0">
+            
+            <table mat-table [dataSource]="dataSource?.payload" *ngIf="!loadingIndicator">
+                
+                <!-- Colonne Date -->
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Date & Heure</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <small>{{ formatDate(log.date) }}</small>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Utilisateur -->
+                <ng-container matColumnDef="utilisateur">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Utilisateur</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <div class="d-flex align-items-center">
+                            <div class="badge bg-light text-primary p-1 rounded-circle me-2" style="width: 32px; height: 32px;">
+                                <mat-icon style="font-size: 16px; width: 16px; height: 16px;">person</mat-icon>
+                            </div>
+                            <span>{{ log.utilisateur }}</span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Action -->
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Action</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <span class="badge" [ngClass]="getActionBadgeClass(log.action)">
+                            <mat-icon class="align-middle me-1" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;">
+                                {{ getActionIcon(log.action) }}
+                            </mat-icon>
+                            {{ getActionLabel(log.action) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Module -->
+                <ng-container matColumnDef="module">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:150px;">Module</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <span class="badge text-bg-secondary">{{ log.module }}</span>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Référence -->
+                <ng-container matColumnDef="reference">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Référence</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <code class="text-primary">{{ log.reference }}</code>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Description -->
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;">Description</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <div class="text-truncate" style="max-width: 350px;" [title]="log.description">
+                            {{ log.description }}
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne IP Address -->
+                <ng-container matColumnDef="ipAddress">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:130px;">Adresse IP</th>
+                    <td mat-cell *matCellDef="let log" class="text-left">
+                        <small class="text-muted">{{ log.ipAddress }}</small>
+                    </td>
+                </ng-container>
+
+                <!-- Colonne Actions -->
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:80px;">
+                        Actions
+                    </th>
+                    <td mat-cell *matCellDef="let log" class="text-center bg-white">
+                        <div class="text-center d-inline-block bg-white">
+                            <a role="button" 
+                               ngbTooltip="Voir détails" 
+                               placement="left"
+                               container="body"
+                               (click)="voirDetails(log)">
+                                <mat-icon class="text-primary icon-lg align-middle">visibility</mat-icon>
+                            </a>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+                <tr mat-row *matRowDef="let log; columns: displayedColumns"></tr>
+            </table>
+
+            <span *ngIf="dataSource?.metadata?.totalElements == 0" class="paginate text-danger mt-4">
+                Aucun log d'audit trouvé
+            </span>
+
+            <div class="paginate">
+                <ngb-pagination 
+                    [collectionSize]="dataSource?.metadata?.totalElements" 
+                    [page]="pageOptions.page+1"
+                    [pageSize]="pageOptions.size" 
+                    [maxSize]="5" 
+                    (pageChange)="paginate($event)" 
+                    size="sm"
+                    [rotate]="true" 
+                    [ellipses]="true" 
+                    [boundaryLinks]="true">
+                </ngb-pagination>
+            </div>
+        </section>
+    </div>
+</div>

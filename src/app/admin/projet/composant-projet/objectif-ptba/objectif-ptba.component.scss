@@ -1,0 +1,24 @@
+.folder-item {
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  &.selected {
+    background-color: #d4edda;
+    border-left: 4px solid #3b5943;
+    font-weight: 600;
+  }
+}
+
+.card-tree {
+  padding: 10px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}

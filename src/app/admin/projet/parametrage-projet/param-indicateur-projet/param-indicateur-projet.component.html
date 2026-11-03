@@ -1,0 +1,133 @@
+<app-routing-config-projet  [addButtontitle]="'Nouveau projet'" [pageTitle]="'Indicateur'"></app-routing-config-projet>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+  <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="Projet">{{projetLibelle}}</h6>
+  </div>
+
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <button type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i>Nouvel indicateur
+    </button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <section class="table-container mat-elevation-z8" tabindex="0">
+      <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+
+      <table mat-table [dataSource]="indicators" *ngIf="!loadingIndicator">
+        <ng-container matColumnDef="libelle">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:400px;"> Libellé</th>
+          <td mat-cell *matCellDef="let indicator"> {{indicator?.indicator?.libelle}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="periodicite">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:300px;">Périodicité </th>
+          <td mat-cell *matCellDef="let indicator" class="text-center">{{indicator.periodicity?.libelle}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="valeur cible">
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:100px;"> Valeur cible </th>
+          <td mat-cell *matCellDef="let indicator" class="text-center"> {{indicator?.targetValue}} {{indicator?.indicator?.unit?.libelle}} </td>
+        </ng-container>
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:200px;"> Actions </th>
+          <td mat-cell *matCellDef="let indicator" class="text-center">
+            <div class="text-center d-inline-block">
+              <span [matMenuTriggerFor]="menu" class="text-center cursor-pointer" matRipple>
+                <i class="icon-lg text-muted" data-feather="more-vertical" appFeatherIcon></i>
+              </span>
+
+              <mat-menu #menu="matMenu">
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="openBasicModal(modalUpdate, indicator)">
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a ngbDropdownItem class="d-flex justify-content-between align-items-center" (click)="deleteIndicateur(indicator.id)">
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+
+      <div class="paginate">
+        <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1" [pageSize]="pageOptions.size"
+                        [maxSize]="5" (pageChange)="paginate($event)" size="sm"  [rotate]="true" [ellipses]="true"
+                        [boundaryLinks]="true">
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+
+
+<!--Add Indicator-->
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout indicateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-indicateur-projet [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projectId" [isSearch]="false"></app-form-indicateur-projet>
+  </div>
+</ng-template>
+
+<ng-template #searchModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Rechercher indicateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-indicateur-projet (search)="doSearch($event)" [isSearch]="true"></app-form-indicateur-projet>
+  </div>
+</ng-template>
+
+<ng-template #modalUpdate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Modification indicateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-indicateur-projet [label]="'Modifier'" (submit)="close($event)" [projetId]="projectId"
+                         [indicatorToUpdate]="indicatorToUpdate" [isSearch]="false"></app-form-indicateur-projet>
+  </div>
+</ng-template>
+
+<!-- import indicateur -->
+<ng-template #importModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Importer indicateur</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <!-- Row -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Pièce jointe</label>
+          <input type="file" [formEnctype]="" class="form-control" (change)="fileChange($event)"
+                 accept=".pdf, .doc, .docx, .xlsx, .xls">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button (click)="importIndicateur()" type="button" class="btn btn-primary btn-xs me-2">Importer</button>
+  </div>
+</ng-template>

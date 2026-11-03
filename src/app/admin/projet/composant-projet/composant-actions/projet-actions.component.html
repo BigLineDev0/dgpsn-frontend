@@ -1,0 +1,52 @@
+<div>
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu actions">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="view(modalEdit)">
+      <mat-icon>visibility</mat-icon>
+      <span>Consulter</span>
+    </button>
+    <button mat-menu-item (click)="edit(modalEdit)">
+      <mat-icon>edit_square</mat-icon>
+      <span>Modifier</span>
+    </button>
+    <button mat-menu-item (click)="delete()">
+      <mat-icon>delete</mat-icon>
+      <span>Supprimer</span>
+    </button>
+    <button mat-menu-item *ngIf="node.level === 0" (click)="addNode(modalAddNode, 'RESULT')">
+      <mat-icon>engineering</mat-icon>
+      <span>Nouveau résultat</span>
+    </button>
+    <button mat-menu-item *ngIf="node.level === 1" (click)="addNode(modalAddNode, 'PRODUCT')">
+      <mat-icon>add_task</mat-icon>
+      <span>Nouveau produit</span>
+    </button>
+    <button mat-menu-item *ngIf="node.level === 2" (click)="addNode(modalAddNode, 'ACTIVITY')">
+      <mat-icon>add_task</mat-icon>
+      <span>Nouvelle activité</span>
+    </button>
+  </mat-menu>
+</div>
+
+<ng-template #modalEdit let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title"><span style="color: #C0930C"><b>{{node.data.code}}</b> - {{node.data.libelle}}</span></h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-composant *ngIf="node.level === 0" [composantProjectToUpdate]="node.data" [projetId]="node.data.id" [isSearch]="false" (submit)="emitEdit($event)"></app-form-composant>
+    <app-form-activite *ngIf="node.level > 0" [type]="node.data.type" [activite]="node.data" [view]="isView" (activiteEvent)="close($event)"></app-form-activite>
+  </div>
+</ng-template>
+
+<ng-template #modalAddNode let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout d'un {{type === 'RESULT' ? 'résultat' : type === 'PRODUCT' ? 'produit' : 'activité'}}</h5>
+    <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <app-form-activite [type]="type" [activite]="{projet: {id: node.data.id}}" (activiteEvent)="emitAddNode($event)" [isActivity]="type === 'ACTIVITY' ? true : false"></app-form-activite>
+  </div>
+</ng-template>

@@ -1,0 +1,130 @@
+<!-- <ul
+  ngbNav
+  #fillJustifyNav="ngbNav"
+  class="nav-tabs nav-fill"
+  [(activeId)]="activeTabIndex"
+  (navChange)="onTabChange($event.nextId)"
+>
+  <ng-container ngbNavItem="1">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">group</mat-icon>
+      <span>Candidats : 8</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat [typeCandidat]="typeCandidat"></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="2">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">group</mat-icon>
+      <span>Candidats préselectionnés pour entretien : 6</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat [typeCandidat]="typeCandidat"></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="3">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">star_outline</mat-icon>
+      <span>Candidats Préselectionnés : 6</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat [typeCandidat]="typeCandidat"></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="4">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">check_circle_outline</mat-icon>
+      <span>Candidats Retenus : 3</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat [typeCandidat]="typeCandidat"></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+</ul>
+
+<div [ngbNavOutlet]="fillJustifyNav" class="mt-2"></div> -->
+
+
+
+
+<ul
+  ngbNav
+  #fillJustifyNav="ngbNav"
+  class="nav-tabs nav-fill"
+  [(activeId)]="activeTabIndex"
+  (navChange)="onTabChange($event.nextId)"
+>
+  <ng-container ngbNavItem="1">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">group</mat-icon>
+      <span>Candidats : {{ countByTpe('CAN') }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat
+          [typeCandidat]="typeCandidat"
+
+        ></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="2">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">group</mat-icon>
+      <span>Préselectionnés entretien : {{ countByTpe('CAN_PRE_ENT') }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat
+          [typeCandidat]="typeCandidat"
+
+        ></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="3">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">star_outline</mat-icon>
+      <span>Préselectionnés : {{ countByTpe('CAN_RET') }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat
+          [typeCandidat]="typeCandidat"
+
+        ></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container ngbNavItem="4">
+    <a ngbNavLink class="d-flex align-items-center">
+      <mat-icon class="me-2">check_circle_outline</mat-icon>
+      <span>Retenus : {{ countByTpe('CAN_PRE_FINAL') }}</span>
+    </a>
+    <ng-template ngbNavContent>
+      <div class="p-3">
+        <app-liste-candidat
+          [typeCandidat]="typeCandidat"
+
+        ></app-liste-candidat>
+      </div>
+    </ng-template>
+  </ng-container>
+</ul>
+
+<div [ngbNavOutlet]="fillJustifyNav" class="mt-2"></div>

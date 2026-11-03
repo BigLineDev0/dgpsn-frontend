@@ -1,0 +1,112 @@
+.status-badge-validation {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 12px;
+  border-radius: 30px;
+  font-weight: 500;
+  background-color: #C5C5C5;
+  color: #0f5132;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Ajoutez ces styles dans votre component.scss */
+
+/* Modal body avec position relative pour l'overlay */
+.modal-body {
+  position: relative;
+  min-height: 200px;
+}
+
+/* Overlay de loading qui couvre tout le modal-body */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  border-radius: 0 0 0.375rem 0.375rem; /* Arrondi en bas */
+  animation: fadeIn 0.2s ease;
+}
+
+/* Container du spinner */
+.spinner-container {
+  text-align: center;
+  padding: 30px;
+  background: rgba(248, 249, 250, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-container p {
+  margin: 0;
+  font-size: 16px;
+  color: #212529;
+}
+
+.spinner-container small {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Spinner personnalisé (Bootstrap) */
+.spinner-border {
+  animation: spinner-border 0.75s linear infinite;
+}
+
+/* Désactiver les boutons pendant le chargement */
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* Style du spinner dans les boutons */
+.btn .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+  vertical-align: middle;
+}
+
+/* Style du bouton de fermeture désactivé */
+.btn-close[disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Animation du bouton pendant le chargement */
+.btn:disabled {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Style pour ng-select désactivé */
+ng-select.ng-select-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}

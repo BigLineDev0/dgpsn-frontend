@@ -1,0 +1,46 @@
+
+
+
+.card-tree {
+    position: relative;
+}
+
+.box-projet-actions {
+    position: absolute;
+    right: 0px;
+
+    button {
+        mat-icon {
+            font-size: 20px;
+        }
+    }
+}
+
+.tree-node {
+    border-bottom: 1px solid #ead79e;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+        background-color: #f8dfdc;
+        transform: scale(1.02);
+        color: #000;
+        cursor: pointer;
+    }
+}
+
+.tree-node-active {
+    background-color: #eedeae;
+    transform: scale(1.02);
+    color: #000;
+    cursor: pointer;
+}
+
+.menu-icon {
+    font-size: 19px;
+    color: #eedeae;
+}
+
+.menu-title {
+    font-size: 1.0em;
+    color: #eedeae;
+}

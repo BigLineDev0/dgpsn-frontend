@@ -1,0 +1,187 @@
+<!-- ventilation-budgetaire.component.html -->
+<div class="ventilation-card">
+  <div class="card-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="icon-container">
+          <span class="header-icon">💰</span>
+        </div>
+        <div class="title-text">
+          <h1 class="main-title">Ventilation Budgétaire</h1>
+          <p class="subtitle">Ventilez le montant total sur les comptes budgétaires</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="help-btn" title="Aide">
+          <span>?</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <!-- Cartes de résumé améliorées -->
+    <div class="summary-cards">
+      <div class="summary-card total">
+        <div class="card-icon">
+          <span>💳</span>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Montant Total</span>
+          <span class="card-value">{{ montantTotal | currency:'EUR' }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card ventilated" [class.warning]="isOverBudget">
+        <div class="card-icon">
+          <span>{{ isOverBudget ? '⚠️' : '📊' }}</span>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Total Ventilé</span>
+          <span class="card-value">{{ totalVentile | currency:'EUR' }}</span>
+        </div>
+      </div>
+
+      <div class="summary-card remaining" [class.negative]="restantAVentiler < 0">
+        <div class="card-icon">
+          <span>{{ restantAVentiler < 0 ? '❌' : '⚖️' }}</span>
+        </div>
+        <div class="card-content">
+          <span class="card-label">Restant à Ventiler</span>
+          <span class="card-value">{{ restantAVentiler | currency:'EUR' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barre de progression -->
+    <div class="progress-section" *ngIf="montantTotal > 0">
+      <div class="progress-header">
+        <span>Progression de la ventilation</span>
+        <span class="progress-percentage">{{ (totalVentile / montantTotal * 100) | number:'1.0-0' }}%</span>
+      </div>
+      <div class="ventilation-progress" [style.width.%]="(totalVentile / montantTotal * 100)" [class]="getProgressBarClass()">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Actions principales -->
+    <div class="actions-section" *ngIf="!isReadOnly">
+      <button class="action-btn primary" (click)="addLine()">
+        <span class="btn-icon">➕</span>
+        <span class="btn-text">Ajouter une Ligne</span>
+      </button>
+
+      <button class="action-btn secondary"
+              (click)="repartirAutomatiquement()" [disabled]="restantAVentiler <= 0">
+        <span class="btn-icon">🔄</span>
+        <span class="btn-text">Répartir Automatiquement</span>
+      </button>
+
+      <button class="action-btn tertiary" (click)="clearAll()">
+        <span class="btn-icon">🗑️</span>
+        <span class="btn-text">Tout Effacer</span>
+      </button>
+    </div>
+
+    <!-- Tableau des lignes de ventilation -->
+    <div class="table-section" *ngIf="dataSource.data.length > 0; else noLines">
+      <div class="table-header">
+        <h3 class="table-title">Lignes de Ventilation</h3>
+        <span class="line-count">{{ dataSource.data.length }} ligne(s)</span>
+      </div>
+
+      <div class="table-container">
+        <table class="ventilation-table">
+          <thead class="header-row">
+            <tr>
+              <th class="column-header">Classe</th>
+              <th class="column-header">Compte</th>
+              <th class="column-header">Sous-compte</th>
+              <th class="column-header">Rubrique</th>
+              <th class="column-header">Montant (€)</th>
+              <th class="column-header">Solde Disponible</th>
+              <th class="column-header actions-header">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let line of dataSource.data" class="data-row" [class.row-warning]="line.solde < line.montant">
+              <td class="column-cell">
+                <input type="text" class="form-input" [(ngModel)]="line.classe" placeholder="Ex: 6" maxlength="2">
+              </td>
+              <td class="column-cell">
+                <select class="form-select" [(ngModel)]="line.compte" (change)="onCompteSelection($event, line)">
+                  <option value="">Sélectionnez un compte</option>
+                  <option *ngFor="let compte of comptesBudgets" [value]="compte">{{ compte }}</option>
+                </select>
+              </td>
+              <td class="column-cell">
+                <input type="text" class="form-input" [(ngModel)]="line.sousCompte" placeholder="Ex: 6111" maxlength="6">
+              </td>
+              <td class="column-cell">
+                <input type="text" class="form-input" [(ngModel)]="line.rubrique" placeholder="Ex: Matières premières">
+              </td>
+              <td class="column-cell">
+                <input type="number" class="form-input amount-input"
+                       [(ngModel)]="line.montant" (input)="onMontantChange(line, $any($event.target).value)"
+                       min="0" step="0.01" placeholder="0.00">
+              </td>
+              <td class="column-cell">
+                <div class="solde-display" [class]="getSoldeClass(line)">
+                  <span class="solde-icon" *ngIf="line.solde < line.montant">⚠️</span>
+                  {{ line.solde | currency:'EUR' }}
+                </div>
+              </td>
+              <td class="column-cell actions-cell" *ngIf="!isReadOnly">
+                <button class="action-button delete" (click)="removeLine(line.id)" title="Supprimer la ligne">
+                  🗑️
+                </button>
+                <button class="action-button" (click)="duplicateLine(line)" title="Dupliquer la ligne">
+                  📋
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Message si aucune ligne -->
+    <ng-template #noLines>
+      <div class="empty-state">
+        <div class="empty-icon">
+          <span>📊</span>
+        </div>
+        <h3 class="empty-title">Aucune ligne de ventilation</h3>
+        <p class="empty-description">Commencez par ajouter une ligne pour ventiler votre budget</p>
+        <button class="empty-action" (click)="addLine()">
+          <span>➕</span>
+          Ajouter votre première ligne
+        </button>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Alertes contextuelles -->
+  <div class="alerts-section" *ngIf="isOverBudget || restantAVentiler < 0">
+    <div class="alert-card" [class.warning]="isOverBudget" [class.error]="restantAVentiler < 0">
+      <div class="alert-content">
+        <span class="alert-icon">
+          {{ isOverBudget ? '⚠️' : '❌' }}
+        </span>
+        <div class="alert-text">
+          <h4 class="alert-title">
+            {{ isOverBudget ? 'Dépassement budgétaire' : 'Ventilation incomplète' }}
+          </h4>
+          <p class="alert-message">
+            {{ isOverBudget ?
+               'Le montant ventilé dépasse le montant total de ' + (totalVentile - montantTotal | currency:'EUR') :
+               'Il reste ' + (restantAVentiler * -1 | currency:'EUR') + ' à ventiler' }}
+          </p>
+        </div>
+        <button class="alert-close" (click)="dismissAlert()">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

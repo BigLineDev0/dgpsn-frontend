@@ -1,0 +1,373 @@
+<div class="candidature-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="hero-title">
+            <mat-icon class="me-2">work</mat-icon>
+            Offres de Recrutement
+          </h1>
+          <p class="hero-subtitle">Trouvez l'opportunité qui correspond à votre profil et rejoignez notre équipe</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="container-fluid mt-4 px-4">
+    <!-- Loader -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary spinner-lg" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="mt-3 text-muted">Chargement des offres...</p>
+    </div>
+
+    <!-- Liste des recrutements -->
+    <div class="row g-4" *ngIf="!loading">
+      <div class="col-12 col-md-6 col-xl-4" *ngFor="let recrutement of recrutements">
+        <div class="offre-card">
+          <!-- En-tête de la carte -->
+          <div class="offre-header">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h3 class="offre-title">{{ recrutement.libelle }}</h3>
+              <span class="badge badge-contrat">{{ getTypeContratLabel(recrutement.typeContrat) }}</span>
+            </div>
+            <div class="offre-meta">
+              <span class="meta-item">
+                <mat-icon>event</mat-icon>
+                Publié le {{ recrutement.datePublication | date: 'dd/MM/yyyy' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>people</mat-icon>
+                {{ recrutement.nbCandidatures }} candidature(s)
+              </span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="offre-description">
+            <p>{{ recrutement.description }}</p>
+          </div>
+
+          <!-- Date limite avec alerte -->
+          <div class="deadline-alert" [class.urgent]="getJoursRestants(recrutement.dateLimite) <= 7">
+            <mat-icon>schedule</mat-icon>
+            <div class="deadline-content">
+              <strong>Date limite de candidature</strong>
+              <div class="deadline-date">
+                {{ recrutement.dateLimite | date: 'dd MMMM yyyy' }}
+                <span class="days-remaining" *ngIf="getJoursRestants(recrutement.dateLimite) > 0">
+                  ({{ getJoursRestants(recrutement.dateLimite) }} jour(s) restant(s))
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profil recherché -->
+          <div class="profil-section">
+            <h4 class="section-title">
+              <mat-icon>person_search</mat-icon>
+              Profil recherché
+            </h4>
+
+            <!-- Exigences OBLIGATOIRES -->
+            <div class="caracteristiques-group mb-3" *ngIf="getCaracteristiquesExigees(recrutement).length > 0">
+              <div class="group-header required">
+                <mat-icon>check_circle</mat-icon>
+                <span>Exigences obligatoires</span>
+              </div>
+              <div class="caracteristiques-list">
+                <div class="caracteristique-item required" 
+                     *ngFor="let char of getCaracteristiquesExigees(recrutement)">
+                  <mat-icon class="item-icon">done</mat-icon>
+                  <span class="item-label">{{ getCategorieLabel(char.categorieCaracteristique) }}:</span>
+                  <strong class="item-value">{{ char.caracteristique.libelle }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Compétences SOUHAITÉES -->
+            <div class="caracteristiques-group" *ngIf="getCaracteristiquesSouhaitees(recrutement).length > 0">
+              <div class="group-header optional">
+                <mat-icon>star_outline</mat-icon>
+                <span>Atouts supplémentaires</span>
+              </div>
+              <div class="caracteristiques-list">
+                <div class="caracteristique-item optional" 
+                     *ngFor="let char of getCaracteristiquesSouhaitees(recrutement)">
+                  <mat-icon class="item-icon">add</mat-icon>
+                  <span class="item-label">{{ getCategorieLabel(char.categorieCaracteristique) }}:</span>
+                  <span class="item-value">{{ char.caracteristique.libelle }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton de candidature -->
+          <div class="offre-footer">
+            <button class="btn-candidater" (click)="openCandidatureModal(candidatureModal, recrutement)">
+              <mat-icon>send</mat-icon>
+              <span>Postuler maintenant</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message si aucune offre -->
+    <div *ngIf="!loading && recrutements.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">inbox</mat-icon>
+      <h3>Aucune offre disponible</h3>
+      <p>Il n'y a pas d'offres de recrutement pour le moment. Revenez plus tard pour consulter de nouvelles opportunités.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de candidature -->
+<ng-template #candidatureModal let-modal>
+  <div class="candidature-modal">
+    <div class="modal-header-custom">
+      <div class="modal-title-wrapper">
+        <mat-icon>description</mat-icon>
+        <div>
+          <h2 class="modal-title">Formulaire de candidature</h2>
+          <p class="modal-subtitle">{{ selectedRecrutement?.libelle }}</p>
+        </div>
+      </div>
+      <button type="button" class="btn-close-custom" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="candidatureForm" (ngSubmit)="submitCandidature()">
+      <div class="modal-body-custom">
+        
+        <!-- Étape 1 : Informations personnelles -->
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-number">1</div>
+            <div class="section-info">
+              <h3>Informations personnelles</h3>
+              <p>Renseignez vos coordonnées</p>
+            </div>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Nom <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>person</mat-icon>
+                  <input type="text" class="form-control-custom" formControlName="nom" 
+                         placeholder="Entrez votre nom" />
+                </div>
+                <div *ngIf="candidatureForm.get('nom')?.invalid && candidatureForm.get('nom')?.touched" 
+                     class="error-message">
+                  <mat-icon>error</mat-icon>
+                  Ce champ est obligatoire
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Prénom <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>person</mat-icon>
+                  <input type="text" class="form-control-custom" formControlName="prenom" 
+                         placeholder="Entrez votre prénom" />
+                </div>
+                <div *ngIf="candidatureForm.get('prenom')?.invalid && candidatureForm.get('prenom')?.touched" 
+                     class="error-message">
+                  <mat-icon>error</mat-icon>
+                  Ce champ est obligatoire
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Email <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>email</mat-icon>
+                  <input type="email" class="form-control-custom" formControlName="email" 
+                         placeholder="exemple@email.com" />
+                </div>
+                <div *ngIf="candidatureForm.get('email')?.invalid && candidatureForm.get('email')?.touched" 
+                     class="error-message">
+                  <mat-icon>error</mat-icon>
+                  Adresse email valide requise
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Téléphone <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>phone</mat-icon>
+                  <input type="tel" class="form-control-custom" formControlName="telephone" 
+                         placeholder="+221 XX XXX XX XX" />
+                </div>
+                <div *ngIf="candidatureForm.get('telephone')?.invalid && candidatureForm.get('telephone')?.touched" 
+                     class="error-message">
+                  <mat-icon>error</mat-icon>
+                  Ce champ est obligatoire
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 2 : Qualification -->
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-number">2</div>
+            <div class="section-info">
+              <h3>Votre qualification</h3>
+              <p>Indiquez votre niveau d'études et votre expérience</p>
+            </div>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Niveau d'études <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>school</mat-icon>
+                  <select class="form-control-custom" formControlName="niveauEtude">
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="BFEM">BFEM</option>
+                    <option value="BAC">BAC</option>
+                    <option value="BAC+2">BAC+2</option>
+                    <option value="LICENCE">Licence</option>
+                    <option value="MASTER_I">Master I</option>
+                    <option value="MASTER_II">Master II</option>
+                    <option value="DOCTORAT">Doctorat</option>
+                    <option value="MAITRISE">Maîtrise</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Années d'expérience <span class="required-star">*</span>
+                </label>
+                <div class="input-with-icon">
+                  <mat-icon>work_history</mat-icon>
+                  <select class="form-control-custom" formControlName="experience">
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="0">Débutant (sans expérience)</option>
+                    <option value="1">1 an</option>
+                    <option value="2">2 ans</option>
+                    <option value="3">3 ans</option>
+                    <option value="4">4 ans</option>
+                    <option value="5">5 ans</option>
+                    <option value="5+">Plus de 5 ans</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 3 : Documents -->
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-number">3</div>
+            <div class="section-info">
+              <h3>Documents à joindre</h3>
+              <p>Téléchargez vos documents (format PDF uniquement)</p>
+            </div>
+          </div>
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Curriculum Vitae (CV) <span class="required-star">*</span>
+                </label>
+                <div class="file-upload-wrapper">
+                  <input type="file" id="cv" class="file-input" accept=".pdf" 
+                         (change)="onFileChange($event, 'cv')" />
+                  <label for="cv" class="file-label">
+                    <mat-icon>upload_file</mat-icon>
+                    <span>Cliquez pour choisir votre CV</span>
+                  </label>
+                  <small class="file-hint">PDF uniquement - Max 5 Mo</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group-custom">
+                <label class="form-label-custom">
+                  Lettre de motivation
+                </label>
+                <div class="file-upload-wrapper">
+                  <input type="file" id="lettre" class="file-input" accept=".pdf" 
+                         (change)="onFileChange($event, 'lettreMotivation')" />
+                  <label for="lettre" class="file-label optional">
+                    <mat-icon>description</mat-icon>
+                    <span>Choisir une lettre (optionnel)</span>
+                  </label>
+                  <small class="file-hint">PDF uniquement - Max 5 Mo</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 4 : Message -->
+        <div class="form-section">
+          <div class="section-header">
+            <div class="section-number">4</div>
+            <div class="section-info">
+              <h3>Message de motivation</h3>
+              <p>Présentez-vous en quelques mots (optionnel)</p>
+            </div>
+          </div>
+          
+          <div class="form-group-custom">
+            <textarea class="form-control-custom textarea-custom" formControlName="message" 
+                      rows="5" placeholder="Parlez-nous de votre motivation, de vos compétences et de ce qui fait de vous le candidat idéal pour ce poste..."></textarea>
+            <small class="text-muted">Maximum 500 caractères</small>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer-custom">
+        <button type="button" class="btn-secondary-custom" (click)="closeModal()">
+          <mat-icon>close</mat-icon>
+          Annuler
+        </button>
+        <button type="submit" class="btn-primary-custom" 
+                [disabled]="!candidatureForm.valid || loading">
+          <span *ngIf="!loading">
+            <mat-icon>send</mat-icon>
+            Soumettre ma candidature
+          </span>
+          <span *ngIf="loading" class="loading-state">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Envoi en cours...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>

@@ -1,0 +1,86 @@
+<section *ngIf="!isSearch">
+  <form [formGroup]="form">
+    <div formArrayName="lignes">
+      <div *ngFor="let ligne of lignes.controls; let i=index" [formGroupName]="i" class="row mb-2">
+        <div class="col-md-8">
+          <label class="form-label">Rubrique (Classe sélectionnée)*</label>
+          <ng-select placeholder="Sélectionner Rubrique" formControlName="rubriqueId" [items]="filteredRubriques"
+            bindValue="id" bindLabel="codeLibelle">
+            <ng-option *ngFor="let element of filteredRubriques" [value]="element.id">
+              {{ element.libelle }} ({{ element.code }})
+            </ng-option>
+          </ng-select>
+        </div>
+        <!-- <div class="col-md-4">
+          <label class="form-label">Montant</label>
+          <input type="number" class="form-control" placeholder="Montant" formControlName="montant">
+        </div> -->
+         <div class="col-md-4 mt-3">
+          <label class="form-label">Montant Primitif</label>
+          <input type="number" class="form-control" placeholder=" Montant Primitif" formControlName="montant">
+        </div>
+         <div class="col-md-6 mt-3">
+          <label class="form-label">Montant Modifie</label>
+          <input type="number" class="form-control" placeholder="Montant Modifie" formControlName="modification">
+        </div>
+         <div class="col-md-6 mt-3">
+          <label class="form-label">Montant Final</label>
+          <input type="number" class="form-control" placeholder="Montant Final" formControlName="budgetModifie">
+        </div>
+        <div class="col-md-12 mt-3">
+          <label class="form-label">Commentaire</label>
+          <textarea class="form-control" rows="3" formControlName="commentaire"></textarea>
+        </div>
+        <div class="col-md-12 d-flex justify-content-center align-items-center gap-2 mt-2">
+          <a class="icon-md text-danger" (click)="removeLigne(i)" ngbTooltip="Supprimer Ligne">
+            <mat-icon class="icon-md">delete</mat-icon>
+          </a>
+          <a class="icon-md text-primary" (click)="addLigne()" ngbTooltip="Ajouter Ligne">
+            <mat-icon class="icon-md">add_circle_outline</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>
+
+<section *ngIf="isSearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="libelle" class="form-label">Libellé</label>
+        <input type="text" class="form-control form-control-lg" id="libelle" placeholder="Libellé"
+          formControlName="libelle">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="planComptableElementId" class="form-label">Rubrique</label>
+        <ng-select placeholder="Sélectionner Rubrique" formControlName="rubriqueId">
+          <ng-option *ngFor="let element of planComptableElementList" [value]="element.id">
+            {{ element.libelle }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label class="form-label">Montant</label>
+        <input type="number" class="form-control" placeholder="Montant" formControlName="montant">
+      </div>
+      <div class="mb-3 col-md-6">
+        <label for="budgetDgpsnId" class="form-label">Budget DGPSN</label>
+        <ng-select placeholder="Sélectionner Budget DGPSN" formControlName="budgetDgpsnId">
+          <ng-option *ngFor="let budget of budgetDgpsnList" [value]="budget.id">
+            {{ budget.libelle }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer mt-2">
+    <button type="button" class="btn btn-secondary" (click)="doSearch()">Rechercher</button>
+  </div>
+</section>

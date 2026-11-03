@@ -1,0 +1,147 @@
+<section *ngIf="!iSimport">
+  <section *ngIf="!isSearch">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label class="form-label">Indicateur <small style="color: red;">*</small></label>
+            <ng-select [items]="indicateurs"
+                       bindLabel="indicator.libelle"
+                       bindValue="id"
+                       placeholder="indicateur"
+                       formControlName="indicatorProjetId" (change)="onSelectIndicateur($event)">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label class="form-label">Périodicité <small style="color: red;">*</small></label>
+            <input type="text" class="form-control" placeholder="Périodicité" name="periodicity" formControlName="periodicity" readonly>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Période <small style="color: red;">*</small></label>
+            <ng-select [items]="periodsFiltered"
+                       bindLabel="libelle"
+                       bindValue="name"
+                       placeholder="période"
+                       formControlName="period">
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Valeur cible <small style="color: red;">*</small></label>
+            <input type="number" class="form-control" placeholder="valeur cible" formControlName="targetValue">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Valeur atteinte</label>
+            <input type="number" class="form-control" placeholder="valeur atteinte" formControlName="valueReched">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label class="form-label">Date début</label>
+            <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+            <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+                <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d1.toggle()">
+                  <i data-feather="calendar" appFeatherIcon></i>
+                </button>
+                <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd"
+                    name="dp" ngbDatepicker #d1="ngbDatepicker" formControlName="startDate">
+              </div> -->
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="mb-3">
+            <label class="form-label">Date fin</label>
+            <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+            <!-- <div class="input-group wd-200 me-2 mb-2 mb-md-0" style="width: 100%;">
+                <button class="btn btn-outline-primary btn-icon calendar" type="button" (click)="d2.toggle()">
+                  <i data-feather="calendar" appFeatherIcon></i>
+                </button>
+                <input class="form-control border-primary bg-transparent" placeholder="yyyy-mm-dd"
+                    name="dp" ngbDatepicker #d2="ngbDatepicker" formControlName="endDate">
+              </div> -->
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+      <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+    </div>
+  </section>
+
+  <section *ngIf="isSearch">
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="mb-3">
+            <label class="form-label">Indicateur</label>
+            <ng-select [items]="indicateurs"
+                       bindLabel="indicator.libelle"
+                       bindValue="id"
+                       placeholder="indicateur"
+                       formControlName="indicatorProjetId">
+            </ng-select>
+          </div>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Période</label>
+            <!-- <ng-select [items]="periods"
+              bindLabel="libelle"
+              bindValue="id"
+              placeholder="période"
+              formControlName="periodId">
+            </ng-select> -->
+            <input type="text" class="form-control" placeholder="période" formControlName="periodId">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Valeur cible</label>
+            <input type="number" class="form-control" placeholder="valeur cible" formControlName="targetValue">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mb-3">
+            <label class="form-label">Valeur atteinte</label>
+            <input type="number" class="form-control" placeholder="valeur atteinte" formControlName="valueReched">
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary btn-xs" (click)="doSearch()">rechercher</button>
+    </div>
+  </section>
+</section>
+
+<section *ngIf="iSimport">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="mb-3">
+        <label class="form-label">Fichier</label>
+        <input type="file" class="form-control" (change)="fileChange($event)" accept=".xlsx, .xls">
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="import()">Enregistrer</button>
+  </div>
+</section>

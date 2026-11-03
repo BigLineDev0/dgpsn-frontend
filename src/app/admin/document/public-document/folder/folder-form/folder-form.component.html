@@ -1,0 +1,28 @@
+<form [formGroup]="form">
+    <div class="row">
+        <!-- <div class="col-12 mb-2 bg-bacdrump" *ngIf="parent !== undefined">
+            <p style="position: absolute; top: 20px; left: 20px;">
+                <span style="vertical-align: middle;">{{ parent?.data?.name }}</span>
+                <span *ngFor="let child of parent?.data?.subFolders"> 
+                    <i class="feather icon-chevron-right icon-lg" style="vertical-align: middle;"></i> {{ child?.name }}
+                </span>
+            </p>
+        </div> -->
+        <div class="col-12">
+            <div class="mb-3">
+                <label for="code" class="form-label">Code<small style="color: red;">*</small></label>
+                <input type="text" class="form-control form-control-lg" id="code" placeholder="Code" formControlName="code">
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nom<small style="color: red;">*</small></label>
+                <input type="text" class="form-control form-control-lg" id="name" placeholder="Nom" formControlName="name">
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+        <button type="button" class="btn btn-danger" (click)="form.reset()">Annuler</button>
+        <button [disabled]="!form.valid" (click)="save()" type="button" class="btn btn-primary">Enregistrer</button>
+    </div>
+</form>

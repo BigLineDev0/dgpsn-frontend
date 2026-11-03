@@ -1,0 +1,96 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+    <nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+        <ol class="breadcrumb ">
+            <li class="breadcrumb-item active"><a>Organigramme</a></li>
+        </ol>
+    </nav>
+
+    <!-- <div class="d-flex align-items-center flex-wrap text-nowrap">
+        <button type="button" class="btn btn-primary" (click)="false">Nouveau projet</button>
+    </div> -->
+</div>
+
+<div>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="card-tree">
+    
+        <!-- Leaf Node (Dossier sans sous-dossiers) -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding matTreeNodeToggle #treeNode1 class="tree-node" (click)="activeTreeNode($event)">
+            <button mat-icon-button disabled></button>
+            <div class="cursor-pointer folder-item" (click)="false" [matTooltip]="node.data.libelle"
+                matTooltipClass="custom-tooltip">
+                <!-- <i [ngClass]="{'feather': true, 'icon-menu': node.level == 0, 'icon-bookmark': node.level == 1}"
+                    class="icon-md text-primary mr-1"></i> -->
+                <i class="feather icon-git-pull-request icon-md text-primary mr-1"></i>
+                {{ node.data.libelle }}
+            </div>
+            <div class="box-projet-actions">
+                <button mat-icon-button (click)="addUnite($event, formStructureModal, 'xl', node.data)"><mat-icon class="text-primary"
+                        matTooltip="Nouvelle unité">add</mat-icon></button>
+                <button mat-icon-button (click)="addAgent($event, agentModal, node)"><mat-icon class="text-primary"
+                        matTooltip="Ajouter agent">person_add</mat-icon></button>
+                <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                    (click)="openMenu($event, node)" aria-label="Example icon-button with a menu">
+                    <mat-icon class="text-primary" matTooltip="Actions">more_vert</mat-icon>
+                </button>
+            </div><br>
+        </mat-tree-node>
+    
+        <!-- Expandable Node (Dossier avec sous-dossiers) -->
+        <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle #treeNode2 class="tree-node" (click)="activeTreeNode($event)">
+            <button mat-icon-button matTreeNodeToggle>
+                <mat-icon>
+                    {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                </mat-icon>
+            </button>
+            <div class="cursor-pointer folder-item" (click)="false" [matTooltip]="node.data.libelle"
+                matTooltipClass="custom-tooltip">
+                <i class="feather icon-git-pull-request icon-md text-primary mr-1"></i>
+                {{ node.data.libelle }}
+            </div>
+            <div class="box-projet-actions">
+                <button mat-icon-button (click)="addUnite($event, formStructureModal, 'xl', node.data)"><mat-icon class="text-primary"
+                        matTooltip="Nouvelle unité">add</mat-icon></button>
+                <button mat-icon-button (click)="addAgent($event, agentModal, node)"><mat-icon class="text-primary"
+                        matTooltip="Ajouter agent">person_add</mat-icon></button>
+                <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger"
+                    (click)="openMenu($event, node)" aria-label="Example icon-button with a menu">
+                    <mat-icon class="text-primary" matTooltip="Actions">more_vert</mat-icon>
+                </button>
+            </div>
+        </mat-tree-node>
+    </mat-tree>
+
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="updateUnite($event, formStructureModal, 'xl', selectedNode.data)">
+            <mat-icon class="menu-icon">edit_square</mat-icon>
+            <span class="menu-title">Modifier</span>
+        </button>
+        <button mat-menu-item (click)="deleteDirection($event, selectedNode.data.id)">
+            <mat-icon class="menu-icon">delete</mat-icon>
+            <span class="menu-title">Supprimer</span>
+        </button>
+    </mat-menu>
+</div>
+
+<app-chart-organigramme></app-chart-organigramme>
+
+<ng-template #formStructureModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajout Structure</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+       <app-form-orgarganigramme [directionParent]="directionParent" [directionToUpdate]="directionToUpdate" (submit)="addStructureEvent($event)"></app-form-orgarganigramme>
+    </div>
+</ng-template>
+
+<ng-template #agentModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Liste des Agents</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <!-- <app-list-agents [backdrumpDisplay]="false" [directionId]="selectedDirectionId"></app-list-agents> -->
+        <app-list-agent [backdrumpDisplay]="false" [directionId]="selectedDirectionId"></app-list-agent>
+    </div>
+</ng-template>

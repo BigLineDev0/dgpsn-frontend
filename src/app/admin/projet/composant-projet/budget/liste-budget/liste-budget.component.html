@@ -1,0 +1,125 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <div></div>
+  <div>
+    <h6 class="text-center text-primary" ngbTooltip="Activité">{{activite?.libelle}}</h6>
+  </div>
+  
+  <div>
+    <button type="button" class="btn btn-secondary btn-icon me-2" (click)="openBasicModal(searchModal)">
+      <i class="feather icon-search"></i>
+    </button>
+    <!-- <button type="button" class="btn btn-warning btn-icon me-2" ngbTooltip="Export">
+      <i class="feather icon-download"></i>
+    </button> -->
+    <!-- <button type="button" class="btn btn-info btn-icon me-2" (click)="openBasicModal(diagrammeModal)" ngbTooltip="Diagramme de gantt">
+      <i class="feather icon-bar-chart-2"></i>
+    </button> -->
+    <button *afHasAnyAuthority="[add]" type="button" class="btn btn-primary btn-icon-text" (click)="openBasicModal(basicModal)">
+      <i class="feather icon-plus-circle"></i> Nouveau budget
+    </button>
+  </div>
+  
+  </div>
+<div class="row">
+    
+    <section class="table-container mat-elevation-z8" tabindex="0">
+        <!-- is only used before getting data to the api-->
+        <app-spinner *ngIf="loadingIndicator" [displayedColumns]="displayedColumns"></app-spinner>
+        <!-- is only used before getting data to the api-->
+
+        <table mat-table [dataSource]="datasource?.content" *ngIf="!loadingIndicator">
+
+            <ng-container matColumnDef="libelle">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">libelle</th>
+                <td mat-cell *matCellDef="let budget"> {{budget?.label}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="montant">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:120px;">Montant Budget</th>
+                <td mat-cell *matCellDef="let budget"> {{budget?.amount}} </td>
+            </ng-container>
+           
+            <!-- <ng-container matColumnDef="typeBudget">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:220px;"> Type de budget</th>
+                <td mat-cell *matCellDef="let budget" class="text-center">
+                    {{budget?.typeBudget?.libelle}}
+                </td>
+            </ng-container> -->
+            <ng-container matColumnDef="dateAllocation">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:180px;">Annee</th>
+                <td mat-cell *matCellDef="let budget" class="text-center">
+                    <!-- {{budget.readDate | date: 'dd-MM-yyyy'}}  -->
+                    {{budget?.year}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="comment">
+                <th mat-header-cell *matHeaderCellDef class="table-head-text" style="min-width:300px;"> Commentaire
+                </th>
+                <td mat-cell *matCellDef="let budget"> {{budget.comment}} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table-head-text text-center" style="min-width:120px;">
+                    Actions </th>
+                <td mat-cell *matCellDef="let budget" class="text-center">
+                    <div class="text-center d-inline-block">
+                        <!-- Icône Modifier -->
+                        <a *afHasAnyAuthority="[update]" role="button" ngbTooltip="Modifier" placement="top"
+                           (click)="openBasicModal(modalUpdate, budget)">
+                          <i class="icon-md text-primary me-2 cursor-pointer" data-feather="edit" appFeatherIcon></i>
+                        </a>
+                      
+                        <!-- Icône Supprimer -->
+                        <a *afHasAnyAuthority="[delete]" role="button" ngbTooltip="Supprimer" placement="top"
+                           (click)="deleteActivity(budget.id)">
+                          <i class="icon-md text-danger cursor-pointer" data-feather="trash-2" appFeatherIcon></i>
+                        </a>
+                      </div>
+                      
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="table-head-bg"></tr>
+            <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+        </table>
+        <div class="paginate">
+            <ngb-pagination [collectionSize]="datasource?.totalElements" [page]="pageOptions.page+1"
+                [pageSize]="pageOptions.size" [maxSize]="5" (pageChange)="paginate($event)" size="sm" [rotate]="true"
+                [ellipses]="true" [boundaryLinks]="true">
+            </ngb-pagination>
+        </div>
+    </section>
+</div>
+<!--Add date importantes-->
+<ng-template #basicModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ajout Budget</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-budget [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId"
+            [isSearch]="false" [modal]="modalRef" [activityId]="activity"></app-form-budget>
+    </div>
+</ng-template>
+<!--End date importantes-->
+
+<!--Update date importantes-->
+<ng-template #modalUpdate let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modification budget</h5>
+        <button type="button" class="btn-close" (click)="modal.close('by: close icon')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-form-budget [label]="'Modifier'" (submit)="close($event)" [budgetToUpdate]="budgetToUpdate"
+            [isSearch]="false" [modal]="modalRef" [activityId]="activity"></app-form-budget>
+    </div>
+</ng-template>
+<!--End date importantess-->
+
+<ng-template #searchModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Rechercher Budget</h5>
+      <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <app-form-budget [label]="'Enregistrer'" (submit)="close($event)" [projetId]="projetId" [isSearch]="true" [modal]="modalRef"></app-form-budget>
+    </div>
+  </ng-template>

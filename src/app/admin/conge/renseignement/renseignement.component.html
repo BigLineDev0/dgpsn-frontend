@@ -1,0 +1,135 @@
+<!-- <section  *ngIf="renseignementFiche && conge?.typeConge.name == 'ADMINISTRATIF'" >
+<div class="card-body" #content>
+    <div class="row ">
+        <div class="col-md-6 col-sm-12 d-flex flex-column align-items-center">
+            <img src="./assets/images/logo-douane.png" width="20%" alt="">
+            <p class="mt-3 text-center">REPUBLIQUE DU SENEGAL <br>
+                <span>Un peuple - Un But - Une Foi</span><br>
+                <span class="mt-1 mb-1">MINISTERE DE L'ECONOMIE DES FINANCES ET DU PLAN</span><br>
+                <span class="mt-1 mb-1">DIRECTION GENERALE DES DOUANES</span><br>
+                <span class="mt-1 mb-1">DIRECTION DES RESSOURCES HUMAINES</span><br>
+                <span class="mt-1 mb-1">BUREAU DU PERSONNEL ET GESTION DES CARRIERES</span>
+            </p>
+        </div>
+        <div class="col-md-6 col-sm-12 d-flex justify-content-end">
+            <span class="">Nº {{conge.numFicheConge}} /DGD/DRH/BPGC</span>
+        </div>
+        <div class="col-md-12 col-sm-12 d-flex justify-content-end" style="margin-top: -170px;">
+            <span class="me-5 "><b>Dakar, le :</b> {{conge.dateDemande| date:'dd-MM-yyyy'}}</span>
+        </div>
+        <div class="col-md-12 col-sm-12 d-flex mt-4" style="border-bottom: 2px solid rgb(237, 184, 9);">
+        </div>
+        <div class="col-md-12 col-sm-12 d-flex justify-content-center mt-3">
+            <h5>FICHE DE RENSEIGNEMENTS</h5>
+        </div>
+        <span class="objet text-center mt-2">(À joindre obligatoirement à toutes les demandes de congé
+            Administratif)</span>
+        <div class="col-md-12 col-sm-12 d-flex justify-content-center mt-3">
+            <h6>FONCTIONNAIRE APPARTENANT A UN CORPS REGULIER</h6>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">CADRE</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">DOUANES</div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">PRENOM</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.agent.prenom}}</div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">NOM</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.agent.nom}}</div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">GRADE</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.agent?.echelon?.grade?.libelle}}
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex justify-content-between">
+            <span class="objet fw-bold">MATRICULE</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.agent.matricule}}</div>
+            <span class="objet fw-bold mx-auto text-center">GROUPE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">INDICE</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.agent?.echelon?.indice}}</div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">EN SERVICE</span>
+            <div class="flex-grow-1 border-bottom border-black  text-center">{{conge?.agent?.unite?.name}}</div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">PAYER PAR LE BUDGET DU SENEGAL CHAPITRE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+            <span class="objet fw-bold mx-auto text-center">ARTICLE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">DATE DE PRISE DE SERVICE LORS DU DERNIER CONGE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">NOMBRE DE JOURS DE PERMISSION D'ABSENCE DEDUCTIBLE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">ADRESSE DE CONGE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">COMPOSITION DE LA FAMILLE</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">DATE DE DEPART DEMANDEE</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{conge.dateDebut| date:'dd-MM-yyyy'}}
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">INDIQUER LE NOM DE JEUNE FILLE DE LA FEMME</span>
+            <div class="flex-grow-1 border-bottom border-black"></div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 mt-3 d-flex">
+            <span class="objet fw-bold">NOMBRE D'ENFANTS</span>
+            <div class="flex-grow-1 border-bottom border-black text-center">{{objectNumChildrenWords}}
+                ({{objectNumChildren}})</div>
+        </div>
+        <div class="col-md-12 col-sm-12 d-flex mt-4">
+        </div>
+    </div>
+    <div class="row card-body justify-content-center me-6">
+        <div class="col-md-6  col-sm-6 mt-2 ">
+            <span class="objet fw-bold" style="margin-left:50px;">LE CHEF DE SERVICE</span>
+        </div>
+        <div class="col-md-6 col-sm-6 mt-2 d-flex justify-content-end">
+            <span class="objet fw-bold">L'INTERRESSE(E)</span>
+        </div>
+
+    </div>
+    <div class="col-md-12 col-sm-12 d-flex mt-6">
+    </div>
+</div>
+</section> -->
+<!-- <button class="download-button">
+    <div class="docs">
+        <mat-icon class="text-white icon-xl">download</mat-icon>Télécharger</div>
+    <div class="download">
+      <img ngbTooltip="Pdf" placement="bottom" (click)="generatePdf()" src="assets/icone/adobe-pdf-icon.svg" height="24" width="24" alt="" class="me-4">
+      <img ngbTooltip="Word" placement="bottom" (click)="generateWord()" src="assets/icone/icon-word.svg" height="24" width="24" alt="">
+    </div>
+  </button> -->
+  <!-- <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner"></div> 
+    Generation PDF en cours...
+  </div> -->
+  <div class="mt-2 modal-footer"  *ngIf="typeConge == 'ADMINISTRATIF'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+    <!-- <button type="button" ngbTooltip="PDF" class="btn btn-primary">
+      <img placement="bottom" src="assets/icone/adobe-pdf-icon.svg" height="50" width="50" alt="">
+    </button> -->
+  </div>

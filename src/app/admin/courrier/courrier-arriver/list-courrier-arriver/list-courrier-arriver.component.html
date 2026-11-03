@@ -1,0 +1,440 @@
+<div class="d-flex justify-content-between align-items-center flex-wrap grid-margin mb-1">
+    <nav class="page-breadcrumb cursor-pointer">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active"><a>Gestion des Courriers Arrivée</a></li>
+            <li class="breadcrumb-item active"><a>Liste des Courriers Arrivée</a></li>
+        </ol>
+    </nav>
+    <div class="d-flex justify-content-end align-items-center gap-2">
+
+        <!-- Export Menu -->
+<!--        <button [matMenuTriggerFor]="exportMenu" type="button" class="btn btn-icon me-2"-->
+<!--            style="background-color: #d0a217;" ngbTooltip="Export">-->
+<!--            <i class="feather icon-download"></i>-->
+<!--        </button>-->
+<!--        <mat-menu #exportMenu="matMenu" yPosition="above" class="bg-white">-->
+<!--            <button mat-menu-item (click)="exportData('excel')">Excel/CSV</button>-->
+<!--            <button mat-menu-item (click)="exportData('pdf')">PDF</button>-->
+<!--        </mat-menu>-->
+
+        <!-- Search Button -->
+<!--        <button type="button" class="btn btn-secondary btn-icon me-2"-->
+<!--            (click)="rechercherCourrier()" [class.btn-animate]="hasSearchCriteria()">-->
+<!--            <i class="feather icon-search"></i>-->
+<!--        </button>-->
+<!--        //<div class="d-flex justify-content-end align-items-center gap-2">-->
+            <!-- Search Button -->
+            <button type="button" class="btn btn-secondary btn-icon me-2"
+                    (click)="rechercherCourrier()" [class.btn-animate]="hasSearchCriteria()">
+                <i class="feather icon-search"></i>
+            </button>
+
+        <!-- Add Button -->
+        <button *afHasAnyAuthority="['add']" type="button" class="btn btn-primary btn-icon-text"
+            (click)="ajouterCourrier()">
+            <i class="feather icon-plus-circle"></i>&nbsp;&nbsp; Nouveau Courrier Arrivé
+        </button>
+
+
+    </div>
+</div>
+
+
+
+<!--&lt;!&ndash; Affichage des critères de recherche actifs &ndash;&gt;-->
+<!--<div *ngIf="hasSearchCriteria()" class="alert alert-info alert-dismissible fade show" role="alert">-->
+<!--    <strong>Recherche active:</strong>-->
+<!--    <span *ngIf="searchCriteria.reference"> Référence: "{{searchCriteria.reference}}"</span>-->
+<!--    <span *ngIf="searchCriteria.correspondant"> | Correspondant: "{{searchCriteria.correspondant}}"</span>-->
+<!--    <span *ngIf="searchCriteria.objet"> | Objet: "{{searchCriteria.objet}}"</span>-->
+<!--    <span *ngIf="searchCriteria.statut"> | Statut: "{{getStatutDescription(searchCriteria.statut)}}"</span>-->
+<!--    <span *ngIf="searchCriteria.urgence"> | Urgence: "{{searchCriteria.urgence}}"</span>-->
+<!--    <button type="button" class="btn-close" (click)="clearSearch()" aria-label="Close"></button>-->
+<!--</div>-->
+
+<div class="card mt-4">
+    <div class="card-body p-0">
+        <section class="table-container mat-elevation-z8" tabindex="0">
+            <table mat-table [dataSource]="dataSource">
+
+                <!-- Référence Column -->
+                <ng-container matColumnDef="reference">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Référence</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        <a href="javascript:void(0)" (click)="voirDetails(courrier)"
+                           class="text-primary text-decoration-none">
+                            {{ courrier?.reference || "N/A" }}
+                        </a>
+                    </td>
+                </ng-container>
+
+                <!-- Correspondant Column -->
+                <ng-container matColumnDef="correspondant">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Correspondant</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        {{ courrier?.correspondant || "Non spécifié" }}
+                    </td>
+                </ng-container>
+
+                <!-- Objet Column -->
+                <ng-container matColumnDef="objet">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Objet</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        <span class="text-truncate d-inline-block" style="max-width: 200px">
+                            {{ courrier?.objet || "Sans objet" }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- DateReception Column -->
+                <ng-container matColumnDef="dateReception">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Date de réception</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        {{ courrier?.dateReception ? (courrier.dateReception | date:'dd-MM-yyyy') : "N/A" }}
+                    </td>
+                </ng-container>
+
+                <!-- TypeCourrier Column -->
+                <ng-container matColumnDef="typeCourrier">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Type</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        {{ courrier?.typeCourrier || "Courrier Arrivé" }}
+                    </td>
+                </ng-container>
+
+                <!-- Urgence Column -->
+                <ng-container matColumnDef="urgence">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Urgence</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        <span [ngClass]="{
+                            'badge text-bg-danger': courrier?.urgence === 'URGENT',
+                            'badge text-bg-warning': courrier?.urgence === 'IMPORTANT',
+                            'badge text-bg-secondary': courrier?.urgence === 'NORMALE' || !courrier?.urgence
+                        }" class="badge">
+                            {{ courrier?.urgence?.libelle || courrier?.urgence || "NORMALE" }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Statut Column -->
+                <ng-container matColumnDef="statut">
+                    <th mat-header-cell *matHeaderCellDef class="table-head-text"style="min-width: 100px">Statut</th>
+                    <td mat-cell *matCellDef="let courrier">
+                        <span [ngClass]="getBadgeClass(courrier?.statut)" class="badge"
+                              style="font-size: 11px">
+                            {{ getStatutDescription(courrier?.statut?.libelle) }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column (Sticky End) -->
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef 
+                        class="table-head-text text-center">
+
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>Actions</span>
+<!--                            <button type="button"-->
+<!--                                class="btn text-white btn-icon btn-xs column-config"-->
+<!--                                ngbTooltip="Configurer les colonnes"-->
+<!--                                placement="left"-->
+<!--                                (click)="openColumnConfig()">-->
+<!--                                <i class="feather icon-settings"></i>-->
+<!--                            </button>-->
+                        </div>
+                    </th>
+                    <td mat-cell *matCellDef="let courrier" class="bg-white"
+                        class="text-end align-middle py-3">
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            <!-- Voir détails -->
+                            <button type="button"
+                                class="btn btn-link text-primary p-0"
+                                ngbTooltip="Voir courrier"
+                                placement="top"
+                                (click)="voirDetails(courrier)">
+                                <mat-icon class="icon-md">description</mat-icon>
+                            </button>
+
+                            <!-- Pièce jointe -->
+                            <button *afHasAnyAuthority="['readDocument']" type="button"
+                                class="btn btn-link text-primary p-0"
+                                ngbTooltip="Pièce jointe"
+                                placement="top"
+                                (click)="openBasicModal(DocumentModal, 'xl', courrier)">
+                                <mat-icon class="icon-md">attach_file</mat-icon>
+                            </button>
+
+                            <!-- Archiver -->
+                            <button *afHasAnyAuthority="['archiver']" type="button"
+                                class="btn btn-link text-info p-0"
+                                ngbTooltip="Archiver"
+                                placement="top"
+                                (click)="archiverCourrier(courrier)">
+                                <mat-icon class="icon-md">archive</mat-icon>
+                            </button>
+
+                            <!-- Menu déroulant -->
+                            <button type="button"
+                                class="btn btn-link text-dark p-0"
+                                [matMenuTriggerFor]="menu"
+                                matRipple>
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button *afHasAnyAuthority="['updated']" mat-menu-item (click)="modifierCourrier(courrier)">
+                                    <mat-icon class="me-2">edit</mat-icon>
+                                    <span>Modifier</span>
+                                </button>
+                                <button *afHasAnyAuthority="['deleted']" mat-menu-item (click)="delete(courrier)">
+                                    <mat-icon class="me-2 text-danger">delete</mat-icon>
+                                    <span class="text-danger">Supprimer</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="getVisibleColumns(); sticky: true" class="table-head-bg"></tr>
+                <tr mat-row *matRowDef="let courrier; columns: getVisibleColumns();"
+                    [class.table-warning]="courrier?.urgence === 'URGENT'"></tr>
+            </table>
+
+            <span *ngIf="dataSource.length === 0" class="paginate text-danger mt-4">
+                Aucun courrier arrivé trouvé
+            </span>
+
+            <!-- Pagination -->
+            <div class="pagination-wrapper d-flex justify-content-center mt-4">
+                <div class="d-flex align-items-center gap-3 p-2 rounded border bg-light">
+                    <ngb-pagination [collectionSize]="dataSource.length"
+                        [page]="pageOptions.page + 1"
+                        [pageSize]="pageOptions.size"
+                        [maxSize]="5"
+                        (pageChange)="paginate($event)"
+                        size="sm"
+                        [rotate]="true"
+                        [ellipses]="true"
+                        [boundaryLinks]="true">
+                    </ngb-pagination>
+                    <!-- <div class="d-flex align-items-center">
+                        <select class="form-select form-select-sm" style="width: auto; margin-top: -14px"
+                            [(ngModel)]="pageOptions.size"
+                            (change)="onPageSizeChange()">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div> -->
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+<!-- Modal de Recherche -->
+<!--"btn btn-primary btn-icon-text"-->
+<ng-template #searchModal let-modal>
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+            <i class="feather icon-search me-2"></i>
+            Rechercher un Courrier Arrivé
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="row">
+                <!-- Référence -->
+                <div class="col-md-6 mb-3">
+                    <label for="searchReference" class="form-label">Référence</label>
+                    <input type="text" class="form-control" id="searchReference"
+                           [(ngModel)]="searchCriteria.reference" name="reference"
+                           placeholder="Ex: REF-2024-001">
+                </div>
+
+                <!-- Correspondant -->
+                <div class="col-md-6 mb-3">
+                    <label for="searchCorrespondant" class="form-label">Correspondant</label>
+                    <input type="text" class="form-control" id="searchCorrespondant"
+                           [(ngModel)]="searchCriteria.correspondant" name="correspondant"
+                           placeholder="Nom du correspondant">
+                </div>
+
+                <!-- Objet -->
+                <div class="col-md-12 mb-3">
+                    <label for="searchObjet" class="form-label">Objet</label>
+                    <input type="text" class="form-control" id="searchObjet"
+                           [(ngModel)]="searchCriteria.objet" name="objet"
+                           placeholder="Objet du courrier">
+                </div>
+
+                <!-- Date de réception (Début) -->
+                <div class="col-md-6 mb-3">
+                    <label for="searchDateDebut" class="form-label">Date de réception (Début)</label>
+                    <input type="date" class="form-control" id="searchDateDebut"
+                           [(ngModel)]="searchCriteria.dateDebut" name="dateDebut">
+                </div>
+
+                <!-- Date de réception (Fin) -->
+                <div class="col-md-6 mb-3">
+                    <label for="searchDateFin" class="form-label">Date de réception (Fin)</label>
+                    <input type="date" class="form-control" id="searchDateFin"
+                           [(ngModel)]="searchCriteria.dateFin" name="dateFin">
+                </div>
+
+<!--                &lt;!&ndash; Statut &ndash;&gt;-->
+<!--                <div class="col-md-6 mb-3">-->
+<!--                    <label for="searchStatut" class="form-label">Statut</label>-->
+<!--                    <select class="form-select" id="searchStatut"-->
+<!--                            [(ngModel)]="searchCriteria.statut" name="statut">-->
+<!--&lt;!&ndash;                        <option value="">Tous les statuts</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <option value="NON_TRAITE">En attente</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <option value="EN_COURS">En cours de traitement</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <option value="TRAITE">Traité</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <option value="ARCHIVE">Archivé</option>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <option value="ANNULE">Annulé</option>&ndash;&gt;-->
+<!--                    </select>-->
+
+<!--                </div>-->
+
+                <!-- Urgence -->
+<!--                <div class="col-md-6 mb-3">-->
+<!--                    <label for="searchUrgence" class="form-label">Urgence</label>-->
+<!--                    <select class="form-select" id="searchUrgence"-->
+<!--                            [(ngModel)]="searchCriteria.urgence" name="urgence">-->
+<!--                        <option value="">Toutes les urgences</option>-->
+<!--                        <option value="NORMALE">Normale</option>-->
+<!--                        <option value="IMPORTANT">Important</option>-->
+<!--                        <option value="URGENT">Urgent</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="clearSearch(); modal.dismiss()">
+            <i class="feather icon-x me-1"></i>
+            Réinitialiser
+        </button>
+        <button type="button" class="btn btn-primary" (click)="applySearch(); modal.close()">
+            <i class="feather icon-search me-1"></i>
+            Rechercher
+        </button>
+    </div>
+</ng-template>
+
+
+
+
+
+
+
+<!-- Modal Configuration Colonnes -->
+<ng-template #columnConfigModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Configuration des colonnes</h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Colonnes disponibles</h6>
+                <div class="list-group" style="max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let column of availableColumns; trackBy: trackByColumn"
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" [id]="'col-' + column.key"
+                                [checked]="column.visible" (change)="toggleColumnVisibility(column)"
+                                [disabled]="column.fixed">
+                            <label class="form-check-label" [for]="'col-' + column.key">
+                                {{ column.label }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6>Ordre des colonnes visibles</h6>
+                <div class="list-group" cdkDropList (cdkDropListDropped)="dropColumn($event)"
+                    style="max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let column of getVisibleColumnConfig(); trackBy: trackByColumn"
+                        class="list-group-item d-flex justify-content-between align-items-center"
+                        cdkDrag>
+                        <span class="w-75">{{ column.label }}</span>
+                        <div class="drag-handle w-10" cdkDragHandle>
+                            <i class="feather icon-move"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="d-flex justify-content">
+            <button type="button" class="btn btn btn-primary btn-sm  me-2"
+                (click)="resetColumnsToDefault()">
+                Réinitialiser
+            </button>
+            <button type="button" class="btn btn btn-primary btn-sm me-2" (click)="selectAllColumns()">
+                Tout sélectionner
+            </button>
+            <button type="button" class="btn btn btn-primary btn-sm" (click)="deselectAllColumns()">
+                Tout désélectionner
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Les autres modales restent identiques -->
+<ng-template #basicModal let-modal>
+    <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+            {{ courrierToUpdate ? "Modifier le courrier arrivé" : "Nouveau courrier arrivé" }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-add-courrier-arriver [courrierToUpdate]="courrierToUpdate" (submit)="onCourrierAdded($event)"
+            (close)="modal.dismiss()"></app-add-courrier-arriver>
+    </div>
+</ng-template>
+
+<ng-template #detailModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            <mat-icon class="align-middle me-2">description</mat-icon>
+            Détails du Courrier Arrivé - {{ courrierToUpdate?.reference }}
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <app-detail-courrier-arriver [courrier]="courrierToUpdate" (close)="modal.close()"></app-detail-courrier-arriver>
+    </div>
+</ng-template>
+
+<ng-template #DocumentModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">
+            Documents de
+            <span class="breadcrumb-item active"><a>{{ courrierToUpdate?.libelle }}</a></span>
+        </h5>
+        <button type="button" class="btn-close" (click)="modal.close()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- <div class="mb-3">
+                    <app-list-document [statut]="courrierToUpdate?.statut" [agentId]="null"
+                        [categoryId]="courrierToUpdate.id" [inputAgent]="false"></app-list-document>
+                </div> -->
+                <div class="mb-3">
+          <app-list-document [category]="'COURRIER'" [categoryId]="courrierToUpdate?.id"></app-list-document>
+        </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

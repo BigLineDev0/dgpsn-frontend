@@ -1,0 +1,33 @@
+.folder-content {
+    
+}
+
+.folder-head {
+    background-color: #4F6C52;
+    height: 56px;
+    padding: 10px;
+    color: #ffff;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;;
+
+}
+
+.folder-body {
+    background-color: #ffffff;
+    height: 500px;
+    overflow: auto;
+}
+
+.selected {
+    background-color: #4F6C52;
+    color: white;
+  }
+  .view{
+    margin-top: -40px;
+  }
+  .view-button{
+    // font-size: 40px;
+     margin-top: -40px;
+  }

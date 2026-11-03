@@ -1,0 +1,191 @@
+<!-- liste investissements -->
+<div
+  class="d-flex justify-content-end align-items-end flex-wrap grid-margin"
+>
+  <div class="d-flex justify-content-end align-items-baseline mt-3 mb-3">
+    <button
+      (click)="openDialog(basicModal, 'lg')"
+      type="button"
+      class="btn btn-primary"
+    >
+      Nouvelle Ligne Budgetaire
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <section
+      class="table-container mat-elevation-z8"
+      tabindex="0"
+      style="background-color: #f9fafb"
+    >
+      <app-spinner
+        *ngIf="loading()"
+        [displayedColumns]="displayedColumns"
+      ></app-spinner>
+
+      <table mat-table [dataSource]="dataSource" *ngIf="!loading()">
+        <ng-container matColumnDef="code">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="table-head-text"
+            style="min-width: 100px"
+          >
+            Code
+          </th>
+          <td mat-cell *matCellDef="let ligne">{{ ligne.code }}</td>
+        </ng-container>
+        <ng-container matColumnDef="libelle">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="table-head-text"
+            style="min-width: 100px"
+          >
+            Libelle
+          </th>
+          <td mat-cell *matCellDef="let ligne">{{ ligne.libelle }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="montant">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="table-head-text"
+            style="min-width: 100px"
+          >
+            Montant
+          </th>
+          <td mat-cell *matCellDef="let ligne" class="">
+            <span>{{ ligne.montant }} </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="table-head-text text-center"
+            style="min-width: 130px"
+          >
+            Actions
+          </th>
+          <td mat-cell *matCellDef="let agent" class="text-center bg-white">
+            <div class="d-flex justify-content-center align-items-center">
+              <!-- <a
+                ngbDropdownItem
+                ngbTooltip="Voir document"
+                class="d-flex align-items-center justify-content-center"
+                placement="left" container="body"
+              >
+                <i class="text-primary icon-md feather icon-file-text"></i>
+              </a> -->
+              <button 
+                ngbDropdownItem
+                ngbTooltip="Voir Realisation" container="body"
+                class="d-flex align-items-center justify-content-center"
+                (click)="navigateToRealisation(agent.code)"
+              >
+                <!-- <i class="text-primary icon-md feather icon-eye"></i> -->
+              <mat-icon color="primary" class="icon-md">insights</mat-icon>
+              </button> 
+              <span
+                [matMenuTriggerFor]="menu"
+                class="text-center cursor-pointer d-flex align-items-center justify-content-center"
+                matRipple
+              >
+             <mat-icon class="icon-lg text-black">more_vert</mat-icon>
+              </span>
+              <mat-menu #menu="matMenu" class="bg-white">
+                <a
+                  ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="openDialog(updateAgentModal, 'lg', agent)"
+                >
+                  <span class="me-2">Modifier</span>
+                  <mat-icon class="text-primary icon-lg">edit</mat-icon>
+                </a>
+                <a
+                  ngbDropdownItem
+                  class="d-flex justify-content-between align-items-center"
+                  (click)="deleteLabel(agent.id)"
+                >
+                  <span class="me-2">Supprimer</span>
+                  <mat-icon class="text-primary icon-lg">delete</mat-icon>
+                </a>
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="table-head-bg"
+        ></tr>
+        <tr mat-row *matRowDef="let emprow; columns: displayedColumns"></tr>
+      </table>
+      <span
+        *ngIf="dataSource.data.length == 0"
+        class="paginate text-danger mt-2"
+        >Aucun Ligne Budgetaire Enregistrer</span
+      >
+      <div class="paginate">
+        <ngb-pagination
+          [collectionSize]="dataSource.data.length"
+          [page]="pageOptions.page + 1"
+          [pageSize]="pageOptions.size"
+          [maxSize]="5"
+          (pageChange)="paginate($event)"
+          size="sm"
+          [rotate]="true"
+          [ellipses]="true"
+          [boundaryLinks]="true"
+        >
+        </ngb-pagination>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #basicModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Ajout Ligne Budgetaire</h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.close('by: close icon')"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-add-investissement
+      (submit)="close()"
+      [excludeRubriqueCodes]="excludeRubriqueCodes"
+      [budgetCode]="currentBudgetCode"
+      [isSearch]="false"
+    ></app-add-investissement>
+  </div>
+</ng-template>
+
+<ng-template #updateAgentModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">
+      Ajout {{ referentielType?.agent }}
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.close('by: close icon')"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-add-agent
+      [referentielType]="referentielType"
+      [agentToUpdate]="agentToUpdate"
+      (submit)="close()"
+    ></app-add-agent>
+  </div>
+</ng-template>

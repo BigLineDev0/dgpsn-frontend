@@ -1,0 +1,18 @@
+
+<div class="mt-2 modal-footer" >
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+
+  </div>
+  <div class="mt-2 modal-footer"*ngIf="materniter || maladie || autres && conge?.typeConge.name == 'MATERNITER' || conge?.typeConge.name == 'MALADIE' || conge?.typeConge.name == 'AUTRES'">
+    <button type="button" ngbTooltip="Word" class="btn btn-primary me-4"
+      (click)="generateWord()">
+      <img placement="bottom" src="assets/icone/icon-word.svg" height="50" width="50" alt="">
+    </button>
+  </div>
+  <div *ngIf="isLoading" class="loading-indicator">
+    <div class="spinner"></div> 
+    Generation PDF en cours...
+  </div>

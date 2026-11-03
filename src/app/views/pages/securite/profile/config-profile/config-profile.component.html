@@ -1,0 +1,99 @@
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active">Sécurité</li>
+      <li class="breadcrumb-item"><a routerLink="/securite/profile" class="text-muted">Profils</a></li>
+      <li class="breadcrumb-item active" aria-current="page" style="color: #5b62e8">Configuration</li>
+    </ol>
+</nav>
+
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <i class="feather icon-search me-2"></i>
+                        Recherche
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <form [formGroup]="form">
+                    <div class="row g-3">
+                        <div class="col-sm-12 col-md-6">
+                            <label for="menu" class="form-label">Menu</label>
+                            <ng-select
+                                    id="menu"
+                                    [items]="modules"
+                                    bindLabel="description"
+                                    bindValue="name"
+                                    placeholder="Sélectionner un menu"
+                                    formControlName="moduleName"
+                                    (change)="getFeature($event)">
+                            </ng-select>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <label for="submenu" class="form-label">Sous menu</label>
+                            <ng-select
+                                    id="submenu"
+                                    [items]="features"
+                                    bindLabel="description"
+                                    bindValue="name"
+                                    placeholder="Sélectionner un sous-menu"
+                                    formControlName="featureName"
+                                    (change)="doSearch()">
+                            </ng-select>
+                        </div>
+                    </div>
+                </form>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-content-center">
+            <h6 class="mb-2 align-self-center">Configuration <a routerLink="/securite/profile">{{profile?.libelle}}</a></h6>
+            <button type="button" class="btn btn-primary mt-2 mb-2" (click)="saveConfig()">Enregistrer</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                          <input type="checkbox" class="form-check-input" [checked]="setCkeckAllPermission(permissions)" (change)="changeAllPermission($event, permissions)">
+                        </th>
+                        <th>Module</th>
+                        <th>Sous menu</th>
+                        <th>Fonctionnalité</th>
+                        <!-- <th>Action</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let permission of permissions">
+                        <td>
+                            <input #checkbox type="checkbox" class="form-check-input" [(ngModel)]="permission.checked" [checked]="isChecked(profile, permission)" (change)="changePermission(permission)">
+                        </td>
+                        <td>
+                            {{ permission?.feature?.module?.description }}
+                        </td>
+                        <td>
+                            {{ permission?.feature?.description }}
+                        </td>
+                        <td>
+                          {{ permission?.description }}
+                      </td>
+                        <!-- <td>
+                          <a (click)="false"><i data-feather="trash" appFeatherIcon class="icon-sm me-2"></i></a>
+                        </td> -->
+                    </tr>
+                  </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+</div>

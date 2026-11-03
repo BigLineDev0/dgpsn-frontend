@@ -1,0 +1,83 @@
+<section *ngIf="isResearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Structure d'execution</label>
+          <ng-select  [items]="partenaires" bindLabel="nom" bindValue="id" placeholder="Structure d'execution"
+                      formControlName="structureId" >
+          </ng-select>
+        </div>
+      </div>
+      <!-- <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Role structure</label>
+          <ng-select [items]="structureProjectTypeList"
+                     bindLabel="libelle"
+                     bindValue="nom"
+                     placeholder="Role structure"
+                     formControlName="structureProjectType">
+          </ng-select>
+        </div>
+      </div> -->
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date de Debut</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date de Fin</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer mt-3">
+
+    <button type="button" class="btn btn-primary" (click)="doResearch()">Rechercher</button>
+  </div>
+</section>
+
+<section *ngIf="!isResearch">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="mb-3">
+          <label class="form-label">Structure</label>
+          <ng-select [items]="partenaires"
+                     bindLabel="nom"
+                     bindValue="id"
+                     placeholder="Structure"
+                     formControlName="structureId">
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date de Debut</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="startDate">
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="mb-3">
+          <label class="form-label">Date de Fin</label>
+          <input type="date" class="form-control" placeholder="dd-mm-yyyy" formControlName="endDate">
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Fermer</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="!form.valid">Enregistrer</button>
+  </div>
+</section>

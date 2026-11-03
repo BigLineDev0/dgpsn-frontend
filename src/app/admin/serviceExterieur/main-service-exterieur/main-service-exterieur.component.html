@@ -1,0 +1,45 @@
+<nav class="page-breadcrumb" style="position: relative; top: 15px; left: 0px;">
+  <ol class="breadcrumb">
+    <!-- <li class="breadcrumb-item active"><a>Agents</a></li> -->
+    <li class="breadcrumb-item active"><a routerLink="/liste-agents">Services Exterieurs</a></li>
+  </ol>
+</nav>
+
+<ul ngbNav #fillJustifyNav="ngbNav" [(activeId)]="active" class="nav-tabs nav-fill">
+  
+  <!-- FORMATIONS EXTERIEURES -->
+  <li [ngbNavItem]="1">
+    <a ngbNavLink id="formation">
+      <mat-icon class="align-middle">school</mat-icon>
+      Formations Extérieures
+    </a>
+    <ng-template ngbNavContent>
+      <app-liste-formation-exterieur></app-liste-formation-exterieur>
+    </ng-template>
+  </li>
+
+<!--  &lt;!&ndash; MISSIONS ET SUPERVISIONS &ndash;&gt;
+  <li [ngbNavItem]="2">
+    <a ngbNavLink id="mission">
+      <mat-icon class="align-middle">travel_explore</mat-icon>
+      Missions et Supervisions
+    </a>
+    <ng-template ngbNavContent>
+      <app-liste-mission></app-liste-mission>
+    </ng-template>
+  </li>-->
+
+  <!-- ATELIERS -->
+  <li [ngbNavItem]="3">
+    <a ngbNavLink id="atelier">
+      <mat-icon class="align-middle">groups</mat-icon>
+      Ateliers
+    </a>
+    <ng-template ngbNavContent>
+      <app-liste-atelier></app-liste-atelier>
+    </ng-template>
+  </li>
+
+</ul>
+
+<div [ngbNavOutlet]="fillJustifyNav" class="border border-top-0 p-3"></div>
